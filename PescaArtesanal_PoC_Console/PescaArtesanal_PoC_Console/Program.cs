@@ -5,6 +5,8 @@ using System.Data.SQLite;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Dapper;
+using System.ComponentModel.Design;
+using System.Linq;
 
 namespace PescaArtesanal_PoC_Console
 {
@@ -18,8 +20,9 @@ namespace PescaArtesanal_PoC_Console
         {
             //Parametrizamos el acceso al archivo de configuración appsettings.json
             var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            
             IConfiguration miConfiguracion = builder.Build();
 
             return miConfiguracion["ConnectionString:Sqlite"];
@@ -56,26 +59,184 @@ namespace PescaArtesanal_PoC_Console
                 parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
                     DbType.String, ParameterDirection.Input);
 
-                string? sentenciaSQL = "SELECT m.codigo, m.nombre, m.codigo_departamento, " +
-                    "m.codigo_cuenca, d.nombre nombre_departamento, c.nombre nombre_cuenca " +
+                string? sentenciaSql = "SELECT m.codigo, m.nombre, m.codigo_departamento codigoDepartamento, " +
+                    "m.codigo_cuenca codigoCuenca, d.nombre nombreDepartamento, c.nombre nombreCuenca " +
                     "FROM municipios m JOIN cuencas c ON m.codigo_cuenca = c.codigo " +
                     "JOIN departamentos d ON m.codigo_departamento = d.codigo " +
                     "WHERE d.nombre = @nombre_departamento";
 
-                var resultadoMunicipios = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
+                var resultadoMunicipios = cxnDB.Query<Municipio>(sentenciaSql, parametrosSentencia);
 
                 return resultadoMunicipios.AsList();
             }
         }
-                
-        static void Main(string[] args)
+
+        /// <summary>
+        /// Inserta un nuevo registro para los departamentos
+        /// </summary>
+        /// <param name="nombreDepartamento">nombre del departamento</param>
+        /// <returns>verdadero si la inserción fue exitosa</returns>
+        static bool InsertaDepartamento(string nombreDepartamento)
         {
-            Console.WriteLine("PoC CRUD con SQLite y Dapper");
-
+            int cantidadFilas = 0;
+            bool resultado = false;
             string? cadenaConexion = ObtieneCadenaConexion();
-            Console.WriteLine($"El string de conexión obtenido es : {cadenaConexion}\n");
 
-            //Aqui demostramos una consulta a una tabla devolviendo una lista de strings
+            //Aqui validamos primero que el nombre del departamento no exista
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+
+                string consultaDepartamentoSql = "SELECT COUNT(codigo) total FROM departamentos " +
+                    "WHERE nombre = @nombre_departamento";
+
+                cantidadFilas = cxnDB.Query<int>(consultaDepartamentoSql, parametrosSentencia).FirstOrDefault();
+
+                //Si no hay filas, se puede insertar nuevo registro
+                if (cantidadFilas == 0)
+                {
+                    try
+                    {
+                        string insertaDepartamentoSql = "INSERT INTO departamentos (nombre) VALUES (@nombre_departamento)";
+                        cantidadFilas = cxnDB.Execute(insertaDepartamentoSql, parametrosSentencia);
+                    }
+                    catch (SQLiteException)
+                    {
+                        resultado = false;
+                        cantidadFilas = 0;
+                    }
+
+                    //Si la inserción fue correcta, devolvemos true
+                    if (cantidadFilas > 0)
+                        resultado = true;
+                }
+            }
+
+            return resultado;
+        }
+
+        /// <summary>
+        /// Actualiza el nombre de un departamento
+        /// </summary>
+        /// <param name="nombreDepartamento">Nombre del Departamento a actualizar</param>
+        /// <param name="nuevoNombreDepartamento">nuevo nombre a asignar</param>
+        /// <returns>verdadero si la operación fue exitosa</returns>
+        static bool ActualizaNombreDepartamento(string nombreDepartamento, string nuevoNombreDepartamento)
+        {
+            int cantidadFilas = 0;
+            bool resultado = false;
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el nombre previo del departamento exista
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+                parametrosSentencia.Add("@nuevo_nombre_departamento", nuevoNombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+
+                string consultaDepartamentoSql = "SELECT COUNT(codigo) total FROM departamentos " +
+                    "WHERE nombre = @nombre_departamento";
+
+                cantidadFilas = cxnDB.Query<int>(consultaDepartamentoSql, parametrosSentencia).FirstOrDefault();
+
+                //Si no hay filas, no existe departamento que actualizar
+                if (cantidadFilas == 0)
+                    return false;
+                else
+                {
+                    //Validamos si el nuevo nombre no exista
+                    consultaDepartamentoSql = "SELECT COUNT(codigo) total FROM departamentos " +
+                    "WHERE nombre = @nuevo_nombre_departamento";
+
+                    cantidadFilas = cxnDB.Query<int>(consultaDepartamentoSql, parametrosSentencia).FirstOrDefault();
+
+                    //Si hay filas, el nuevo nombre a utilizar ya existe!
+                    if (cantidadFilas != 0)
+                        return false;
+                    else
+                    {
+                        try
+                        {
+                            string actualizaDepartamentoSql = "UPDATE departamentos SET nombre = @nuevo_nombre_departamento " +
+                                "WHERE nombre = @nombre_departamento"; ;
+
+                            cantidadFilas = cxnDB.Execute(actualizaDepartamentoSql, parametrosSentencia);
+                        }
+                        catch (SQLiteException)
+                        {
+                            resultado = false;
+                            cantidadFilas = 0;
+                        }
+
+                        //Si la actualización fue correcta, devolvemos true
+                        if (cantidadFilas > 0)
+                            resultado = true;
+                    }
+                }
+            }
+
+            return resultado;
+        }
+
+        /// <summary>
+        /// Borra un registro de departamento a partir de su nombre
+        /// </summary>
+        /// <param name="nombreDepartamento">El departamento a borrar</param>
+        /// <returns>verdadero si la operación fue exitosa</returns>
+        static bool BorraDepartamento(string nombreDepartamento)
+        {
+            int cantidadFilas = 0;
+            bool resultado = false;
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el departamento exista
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+
+                string consultaDepartamentoSql = "SELECT COUNT(codigo) total FROM departamentos " +
+                    "WHERE nombre = @nombre_departamento";
+
+                cantidadFilas = cxnDB.Query<int>(consultaDepartamentoSql, parametrosSentencia).FirstOrDefault();
+
+                //Si no hay filas, no existe departamento que se va a borrar
+                if (cantidadFilas == 0)
+                    return false;
+                else
+                {
+                    try
+                    {
+                        string borraDepartamentoSql = "DELETE FROM departamentos " +
+                            "WHERE nombre = @nombre_departamento"; ;
+
+                        cantidadFilas = cxnDB.Execute(borraDepartamentoSql, parametrosSentencia);
+                    }
+                    catch (SQLiteException)
+                    {
+                        resultado = false;
+                        cantidadFilas = 0;
+                    }
+
+                    //Si el borrado fue correcto, devolvemos true
+                    if (cantidadFilas > 0)
+                        resultado = true;
+                }
+            }
+            
+            return resultado;
+        }
+
+        /// <summary>
+        /// Visualiza los nombres de los departamentos registrados en la DB
+        /// </summary>
+        static void VisualizaDepartamentos()
+        {
             Console.WriteLine($"Departamentos registrados en la DB:");
             List<string> losDepartamentos = ObtieneNombresDepartamentos();
 
@@ -88,6 +249,21 @@ namespace PescaArtesanal_PoC_Console
                 foreach (string departamento in losDepartamentos)
                     Console.WriteLine($"- {departamento}");
             }
+        }
+        
+        /// <summary>
+        /// Función Principal
+        /// </summary>
+        static void Main(string[] args)
+        {
+            Console.WriteLine("PoC CRUD con SQLite y Dapper");
+
+            string? cadenaConexion = ObtieneCadenaConexion();
+            Console.WriteLine($"El string de conexión obtenido es : {cadenaConexion}");
+
+            //Aqui demostramos una consulta a una tabla devolviendo una lista de strings
+            Console.WriteLine("\n*** Sentencias de Consulta ***");
+            VisualizaDepartamentos();
 
             //Aqui demostramos una consulta mapeada a un objeto:
             string miDepartamento = "Antioquia";
@@ -103,7 +279,49 @@ namespace PescaArtesanal_PoC_Console
 
                 foreach (Municipio unMunicipio in losMunicipios)
                     Console.WriteLine($"\nMunicipio: {unMunicipio.Nombre} " +
-                        $"\nCuenca: {unMunicipio.Nombre_Cuenca}");
+                        $"\nCuenca: {unMunicipio.NombreCuenca}");
+            }
+
+            //Aqui demostramos una inserción
+            Console.WriteLine("\n*** Sentencias de Inserción ***");
+            string nuevoDepartamento = "Risaralda";
+            Console.WriteLine($"\nRegistro de nuevo departamento: {nuevoDepartamento}:");
+
+            bool resultadoInsercion = InsertaDepartamento(nuevoDepartamento);
+
+            if (!resultadoInsercion)
+                Console.WriteLine($"No fue posible insertar nuevo departamento. Ya existe {nuevoDepartamento}");
+            else
+            {
+                Console.WriteLine($"\nInserción exitosa para el departamento: {nuevoDepartamento}");
+                VisualizaDepartamentos();
+            }
+
+            //Aqui demostramos una actualización
+            Console.WriteLine("\n*** Sentencias de Actualización ***");
+            string nuevoNombreDepartamento = "Gran Risaralda";
+
+            bool resultadoActualizacion = ActualizaNombreDepartamento(nuevoDepartamento, nuevoNombreDepartamento);
+
+            if(!resultadoActualizacion)
+                Console.WriteLine($"No fue posible actualizar el nombre del departamento. Ya existe registro para {nuevoNombreDepartamento}");
+            else
+            {
+                Console.WriteLine($"\nActualización exitosa. Ahora se llama {nuevoNombreDepartamento}");
+                VisualizaDepartamentos();
+            }
+
+            //Aqui demostramos un borrado
+            Console.WriteLine("\n*** Sentencias de Borrado ***");
+
+            bool resultadoBorrado = BorraDepartamento(nuevoNombreDepartamento);
+
+            if (!resultadoBorrado)
+                Console.WriteLine($"No fue posible borrar el departamento. {nuevoNombreDepartamento}");
+            else
+            {
+                Console.WriteLine($"\nBorrado exitoso. Eliminado departamento {nuevoNombreDepartamento}");
+                VisualizaDepartamentos();
             }
         }
     }
