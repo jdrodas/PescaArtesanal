@@ -10,42 +10,50 @@ namespace PescaArtesanal_PoC_Console
 {
     public class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Obtiene la cadena de conexión para utilizar en las operaciones CRUD
+        /// </summary>
+        /// <returns>string con la cadena de conexión</returns>
+        static string? ObtieneCadenaConexion()
         {
-            Console.WriteLine("PoC CRUD con SQLite y Dapper");
-
             //Parametrizamos el acceso al archivo de configuración appsettings.json
             var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());   
+            builder.SetBasePath(Directory.GetCurrentDirectory());
             builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             IConfiguration miConfiguracion = builder.Build();
 
-            string? cadenaConexion = miConfiguracion["ConnectionString:Sqlite"];
+            return miConfiguracion["ConnectionString:Sqlite"];
+        }
 
-            Console.WriteLine($"El string de conexión obtenido es : {cadenaConexion}");
+        /// <summary>
+        /// Obtiene la lista con los nombres de los departamentos
+        /// </summary>
+        /// <returns>lista de strings con los nombres de los departamentos</returns>
+        static List<string> ObtieneNombresDepartamentos()
+        {
+            string? cadenaConexion = ObtieneCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
-                var salida = cxnDB.Query<string>("SELECT DISTINCT nombre FROM departamentos ORDER BY nombre", new DynamicParameters());
-                List<string> nombresDepartamentos = salida.AsList();
+                var resultadoDepartamentos = cxnDB.Query<string>("SELECT DISTINCT nombre FROM departamentos ORDER BY nombre", new DynamicParameters());
 
-                if (nombresDepartamentos.Count == 0)
-                    Console.WriteLine("No se encontraron Departamentos registrados");
-                else
-                {
-                    Console.WriteLine("\nLos departamentos registrados son:");
+                return resultadoDepartamentos.AsList();
+            }
+        }
 
-                    foreach (string departamento in nombresDepartamentos)
-                        Console.WriteLine($"- {departamento}");
-                }
+        /// <summary>
+        /// Obtiene Los municipios asociados a un departamento
+        /// </summary>
+        /// <param name="nombreDepartamento">El nombre del departamento</param>
+        /// <returns>Lista de objetos del tipo Municipio</returns>
+        static List<Municipio> ObtieneMunicipiosDepartamento(string nombreDepartamento)
+        {
+            string? cadenaConexion = ObtieneCadenaConexion();
 
-                //Aqui demostramos una consulta mapeada a un objeto:
-                Console.WriteLine("\nInformación de los municipios de Antioquia:");
-
-                string miDepartamento = "Antioquia";
-
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
                 DynamicParameters parametrosSentencia = new DynamicParameters();
-                parametrosSentencia.Add("@nombre_departamento", miDepartamento, 
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
                     DbType.String, ParameterDirection.Input);
 
                 string? sentenciaSQL = "SELECT m.codigo, m.nombre, m.codigo_departamento, " +
@@ -54,18 +62,48 @@ namespace PescaArtesanal_PoC_Console
                     "JOIN departamentos d ON m.codigo_departamento = d.codigo " +
                     "WHERE d.nombre = @nombre_departamento";
 
-                var salidaMunicipios = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
+                var resultadoMunicipios = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
 
-                List<Municipio> losMunicipios = salidaMunicipios.AsList();
+                return resultadoMunicipios.AsList();
+            }
+        }
+                
+        static void Main(string[] args)
+        {
+            Console.WriteLine("PoC CRUD con SQLite y Dapper");
 
-                if (losMunicipios.Count == 0)
-                    Console.WriteLine($"No se encontraron municipios registrados para {miDepartamento}");
-                else
-                {
-                    foreach (Municipio unMunicipio in losMunicipios)
-                        Console.WriteLine($"\nMunicipio: {unMunicipio.Nombre} " +
-                            $"\nCuenca: {unMunicipio.Nombre_Cuenca}");                    
-                }
+            string? cadenaConexion = ObtieneCadenaConexion();
+            Console.WriteLine($"El string de conexión obtenido es : {cadenaConexion}\n");
+
+            //Aqui demostramos una consulta a una tabla devolviendo una lista de strings
+            Console.WriteLine($"Departamentos registrados en la DB:");
+            List<string> losDepartamentos = ObtieneNombresDepartamentos();
+
+            if (losDepartamentos.Count == 0)
+                Console.WriteLine("No se encontraron Departamentos registrados");
+            else
+            {
+                Console.WriteLine($"\nSe encontraron {losDepartamentos.Count} departamentos");
+
+                foreach (string departamento in losDepartamentos)
+                    Console.WriteLine($"- {departamento}");
+            }
+
+            //Aqui demostramos una consulta mapeada a un objeto:
+            string miDepartamento = "Antioquia";
+            Console.WriteLine($"\nInformación de los municipios de {miDepartamento}:");
+
+            List<Municipio> losMunicipios = ObtieneMunicipiosDepartamento(miDepartamento);
+
+            if (losMunicipios.Count == 0)
+                Console.WriteLine($"No se encontraron municipios registrados para {miDepartamento}");
+            else
+            {
+                Console.WriteLine($"\nSe encontraron {losMunicipios.Count} municipios");
+
+                foreach (Municipio unMunicipio in losMunicipios)
+                    Console.WriteLine($"\nMunicipio: {unMunicipio.Nombre} " +
+                        $"\nCuenca: {unMunicipio.Nombre_Cuenca}");
             }
         }
     }
