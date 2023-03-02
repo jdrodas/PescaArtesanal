@@ -44,6 +44,30 @@ namespace PescaArtesanal_PoC_Console
             }
         }
 
+        static List<string> ObtieneNombresCuencas()
+        {
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                var resultadoCuencas = cxnDB.Query<string>("SELECT DISTINCT nombre FROM cuencas ORDER BY nombre", new DynamicParameters());
+
+                return resultadoCuencas.AsList();
+            }
+        }
+
+        static List<Cuenca> ObtieneCuencas()
+        {
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                var resultadoCuencas = cxnDB.Query<Cuenca>("SELECT DISTINCT codigo, nombre FROM cuencas ORDER BY nombre DESC", new DynamicParameters());
+
+                return resultadoCuencas.AsList();
+            }
+        }
+
         /// <summary>
         /// Obtiene Los municipios asociados a un departamento
         /// </summary>
@@ -117,6 +141,47 @@ namespace PescaArtesanal_PoC_Console
             return resultado;
         }
 
+        static bool InsertaCuenca(string nombreCuenca)
+        {
+            int cantidadFilas = 0;
+            bool resultado = false;
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el nombre del departamento no exista
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_cuenca", nombreCuenca,
+                    DbType.String, ParameterDirection.Input);
+
+                string consultaCuencaSql = "SELECT COUNT(codigo) total FROM cuencas " +
+                    "WHERE nombre = @nombre_cuenca";
+
+                cantidadFilas = cxnDB.Query<int>(consultaCuencaSql, parametrosSentencia).FirstOrDefault();
+
+                //Si no hay filas, se puede insertar nuevo registro
+                if (cantidadFilas == 0)
+                {
+                    try
+                    {
+                        string insertaCuencaSql = "INSERT INTO cuencas (nombre) VALUES (@nombre_cuenca)";
+                        cantidadFilas = cxnDB.Execute(insertaCuencaSql, parametrosSentencia);
+                    }
+                    catch (SQLiteException)
+                    {
+                        resultado = false;
+                        cantidadFilas = 0;
+                    }
+
+                    //Si la inserción fue correcta, devolvemos true
+                    if (cantidadFilas > 0)
+                        resultado = true;
+                }
+            }
+
+            return resultado;
+        }
+
         /// <summary>
         /// Actualiza el nombre de un departamento
         /// </summary>
@@ -165,6 +230,65 @@ namespace PescaArtesanal_PoC_Console
                                 "WHERE nombre = @nombre_departamento"; ;
 
                             cantidadFilas = cxnDB.Execute(actualizaDepartamentoSql, parametrosSentencia);
+                        }
+                        catch (SQLiteException)
+                        {
+                            resultado = false;
+                            cantidadFilas = 0;
+                        }
+
+                        //Si la actualización fue correcta, devolvemos true
+                        if (cantidadFilas > 0)
+                            resultado = true;
+                    }
+                }
+            }
+
+            return resultado;
+        }
+
+        static bool ActualizaNombreCuenca(string nombreCuenca, string nuevoNombreCuenca)
+        {
+            int cantidadFilas = 0;
+            bool resultado = false;
+            string? cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el nombre previo del departamento exista
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_cuenca", nombreCuenca,
+                    DbType.String, ParameterDirection.Input);
+                parametrosSentencia.Add("@nuevo_nombre_cuenca", nuevoNombreCuenca,
+                    DbType.String, ParameterDirection.Input);
+
+                string consultaCuencaSql = "SELECT COUNT(codigo) total FROM cuencas " +
+                    "WHERE nombre = @nombre_cuenca";
+
+                cantidadFilas = cxnDB.Query<int>(consultaCuencaSql, parametrosSentencia).FirstOrDefault();
+
+                //Si no hay filas, no existe departamento que actualizar
+                if (cantidadFilas == 0)
+                    return false;
+                else
+                {
+                    //Validamos si el nuevo nombre no exista
+                    consultaCuencaSql = "SELECT COUNT(codigo) total FROM cuencas " +
+                    "WHERE nombre = @nuevo_nombre_cuenca";
+
+                    cantidadFilas = cxnDB.Query<int>(consultaCuencaSql, parametrosSentencia).FirstOrDefault();
+
+                    //Si hay filas, el nuevo nombre a utilizar ya existe!
+                    if (cantidadFilas != 0)
+                        return false;
+                    else
+                    {
+                        try
+                        {
+                            string actualizaCuencaSql = "UPDATE cuencas SET nombre = @nuevo_nombre_cuenca " +
+                                "WHERE nombre = @nombre_cuenca";
+
+                            cantidadFilas = cxnDB.Execute(actualizaCuencaSql, parametrosSentencia);
                         }
                         catch (SQLiteException)
                         {
@@ -250,6 +374,22 @@ namespace PescaArtesanal_PoC_Console
                     Console.WriteLine($"- {departamento}");
             }
         }
+
+        static void VisualizaCuencas()
+        {
+            Console.WriteLine($"Cuencas registrados en la DB:");
+            List<Cuenca> lasCuencas = ObtieneCuencas();
+
+            if (lasCuencas.Count == 0)
+                Console.WriteLine("No se encontraron cuencas registrados");
+            else
+            {
+                Console.WriteLine($"\nSe encontraron {lasCuencas.Count} cuencas");
+
+                foreach (Cuenca unaCuenca in lasCuencas)
+                    Console.WriteLine($"Código: {unaCuenca.Codigo}, Nombre: {unaCuenca.Nombre}");
+            }
+        }
         
         /// <summary>
         /// Función Principal
@@ -266,7 +406,7 @@ namespace PescaArtesanal_PoC_Console
             VisualizaDepartamentos();
 
             //Aqui demostramos una consulta mapeada a un objeto:
-            string miDepartamento = "Antioquia";
+            string miDepartamento = "Bolívar";
             Console.WriteLine($"\nInformación de los municipios de {miDepartamento}:");
 
             List<Municipio> losMunicipios = ObtieneMunicipiosDepartamento(miDepartamento);
@@ -323,6 +463,50 @@ namespace PescaArtesanal_PoC_Console
                 Console.WriteLine($"\nBorrado exitoso. Eliminado departamento {nuevoNombreDepartamento}");
                 VisualizaDepartamentos();
             }
+
+
+            //******* Operaciones CRUD para las cuencas *********************
+
+            //Demostración de la consulta (R)
+            Console.WriteLine("\n\nDemostración de CRUD con cuencas");
+            VisualizaCuencas();
+
+            //Demostración de la inserción (C)
+            Console.WriteLine("\n\nInserción de una Cuenca");
+            string nombreCuenca = "Orinoco";
+
+            resultadoInsercion = InsertaCuenca(nombreCuenca);
+
+            if (!resultadoInsercion)
+            {
+                Console.WriteLine($"Fallo en inserción de cuenca para {nombreCuenca}. Ya existe!");
+            }
+            else
+            {
+                Console.WriteLine($"Inserción exitosa para {nombreCuenca}");
+                VisualizaCuencas();
+            }
+
+            //Demostración de la actualización (U)
+            Console.WriteLine("\n\nActualización de una Cuenca");
+            string nuevoNombreCuenca = "Atrato";
+
+            resultadoActualizacion = ActualizaNombreCuenca(nombreCuenca, nuevoNombreCuenca);
+
+            if (!resultadoActualizacion)
+            {
+                Console.WriteLine($"Fallo en actualización de cuenca para {nombreCuenca}.\n" +
+                    $"Los datos ingresados no funcionaron");
+            }
+            else
+            {
+                Console.WriteLine($"actualización exitosa para {nombreCuenca}. \n" +
+                    $"Ahora se llama {nuevoNombreCuenca}");
+                VisualizaCuencas();
+            }
+
+
+
         }
     }
 }
