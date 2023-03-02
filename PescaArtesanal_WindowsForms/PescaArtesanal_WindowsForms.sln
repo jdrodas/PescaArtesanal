@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PescaArtesanal_WindowsForms", "PescaArtesanal_WindowsForms\PescaArtesanal_WindowsForms.csproj", "{F2E91135-50ED-4634-89D4-5BE0E22000E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PescaArtesanal_WindowsForms", "PescaArtesanal_WindowsForms\PescaArtesanal_WindowsForms.csproj", "{CAD80996-BD68-455B-B96B-1F7CA08615EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F2E91135-50ED-4634-89D4-5BE0E22000E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2E91135-50ED-4634-89D4-5BE0E22000E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2E91135-50ED-4634-89D4-5BE0E22000E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2E91135-50ED-4634-89D4-5BE0E22000E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAD80996-BD68-455B-B96B-1F7CA08615EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD80996-BD68-455B-B96B-1F7CA08615EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAD80996-BD68-455B-B96B-1F7CA08615EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD80996-BD68-455B-B96B-1F7CA08615EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C64B23A6-04DD-4496-BA13-175AE48AA5C9}
+		SolutionGuid = {D6C5173E-61F6-4C2F-A127-3AC3177C7EB2}
 	EndGlobalSection
 EndGlobal
