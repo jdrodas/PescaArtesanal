@@ -12,6 +12,16 @@ namespace PescaArtesanal_WindowsForms
             VisualizaPanelCrud(panelCrudMunicipios, btnFormasMunicipios);
         }
 
+        private void btnFormasMetodos_Click(object sender, EventArgs e)
+        {
+            VisualizaPanelCrud(panelCrudMetodos, btnFormasMetodos);
+        }
+
+        private void btnFormasActividades_Click(object sender, EventArgs e)
+        {
+            VisualizaPanelCrud(panelCrudActividades, btnFormasActividades);
+        }
+
         private void VisualizaPanelCrud(Panel elPanel, Button botonCrud)
         {
             if (!elPanel.Visible)
@@ -32,23 +42,33 @@ namespace PescaArtesanal_WindowsForms
         private void OcultaPanelesCrud()
         {
             Panel[] panelesCrud =
-                {
-                    panelCrudMunicipios
-                };
+            {
+                panelCrudMunicipios,
+                panelCrudMetodos,
+                panelCrudActividades
+
+            };
 
             foreach (Panel unPanel in panelesCrud)
                 unPanel.Visible = false;
 
             Button[] botonesCrud =
-                {
-                    btnFormasMunicipios
-                };
+            {
+                btnFormasMunicipios,
+                btnFormasMetodos,
+                btnFormasActividades
+            };
 
             foreach (Button unBoton in botonesCrud)
             {
                 unBoton.BackColor = Color.Gray;
                 unBoton.ForeColor = Color.White;
             }
+        }
+
+        private void Principal_Load(object sender, EventArgs e)
+        {
+            OcultaPanelesCrud();
         }
     }
 }

@@ -8,4 +8,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="pesca_artesanal_db.sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="pesca_artesanal_db.sqlite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
