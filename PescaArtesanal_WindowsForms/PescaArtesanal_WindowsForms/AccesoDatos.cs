@@ -149,6 +149,25 @@ namespace PescaArtesanal_WindowsForms
         }
 
         /// <summary>
+        /// Obtiene lista con información ampliada de los municipios
+        /// </summary>
+        /// <returns>Lista con información de los municipios</returns>
+        public static List<string> ObtieneListaInfoMunicipios()
+        {
+            cadenaConexion = ObtieneCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                var salida = cxnDB.Query<string>("SELECT (codigo_municipio || ' - ' || " +
+                    "nombre_municipio || ' - ' || " +
+                    "nombre_departamento || ' - ' || " +
+                    "nombre_cuenca) infoMunicipio FROM v_info_municipios ORDER BY codigo_municipio", new DynamicParameters());
+                
+                return salida.ToList();
+            }
+        }
+
+        /// <summary>
         /// Inserta un nuevo municipio
         /// </summary>
         /// <param name="nombreMunicipio">nombre del municipio</param>
@@ -208,6 +227,65 @@ namespace PescaArtesanal_WindowsForms
             return resultadoInsercion;
         }
 
+        public static bool ActualizaMunicipio(Municipio unMunicipio, out string mensajeActualizacion)
+        {
+            mensajeActualizacion = string.Empty;
+            bool resultadoActualizacion = false;
+
+            //Aqui actualizamos los códigos de cuenca y departamento
+            unMunicipio.CodigoCuenca = ObtieneCodigoCuenca(unMunicipio.NombreCuenca!);
+            unMunicipio.CodigoDepartamento = ObtieneCodigoDepartamento(unMunicipio.NombreDepartamento!);
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el nuevo nombre del municipio no exista para ese departamento
+
+            //Obtenemos el Objeto que representa este municipio
+            Municipio otroMunicipio = ObtieneMunicipio(unMunicipio.Nombre!,
+                unMunicipio.NombreCuenca!, unMunicipio.NombreDepartamento!);
+
+            //Si el código del municipio es != 0, el municipio ya existe y no se puede insertar
+            if (otroMunicipio.Codigo != 0 &&
+                unMunicipio.CodigoCuenca == otroMunicipio.CodigoCuenca
+                && unMunicipio.CodigoDepartamento == otroMunicipio.CodigoDepartamento)
+            {
+                resultadoActualizacion = false;
+                mensajeActualizacion = $"No se hizo actualización porque ya existe un municipio" +
+                    $"en el departamento {unMunicipio.NombreDepartamento} " +
+                    $"para la cuenca {unMunicipio.NombreCuenca}";
+            }
+            else
+            {
+                using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+                {
+                    try
+                    {
+                        string actualizaMunicipioSQL = "UPDATE municipios SET nombre = @Nombre, " +
+                            "codigo_cuenca = @CodigoCuenca, " +
+                            "codigo_departamento = @CodigoDepartamento " +
+                            "WHERE codigo = @Codigo"; ;
+
+                        cantidadFilas = cxnDB.Execute(actualizaMunicipioSQL, unMunicipio);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoActualizacion = true;
+                            mensajeActualizacion = "Inserción Exitosa";
+                        }
+                    }
+                    catch (SQLiteException elError)
+                    {
+                        resultadoActualizacion = false;
+                        cantidadFilas = 0;
+                        mensajeActualizacion = $"Error de Actualizción en la DB. {elError.Message}";
+                    }
+
+                }
+            }
+            return resultadoActualizacion;
+        }
+
         /// <summary>
         /// Obtiene el objeto municipio a partir del nombre, cuenca y departamento
         /// </summary>
@@ -229,7 +307,44 @@ namespace PescaArtesanal_WindowsForms
             return elMunicipio;
         }
 
+        /// <summary>
+        /// Obtiene el objeto municipio a partir del código
+        /// </summary>
+        /// <param name="codigoMunicipio">Codigo del municipio</param>
+        /// <returns></returns>
+        public static Municipio ObtieneMunicipio(int codigoMunicipio)
+        {
+            cadenaConexion = ObtieneCadenaConexion();
+            Municipio municipioResultado = new Municipio();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSQL = "SELECT codigo_municipio Codigo, nombre_municipio Nombre, " +
+                    "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento, " +
+                    "codigo_cuenca codigoCuenca, nombre_cuenca NombreCuenca FROM v_info_municipios " +
+                    "WHERE codigo_municipio = @codigo_municipio";
+
+                var salida = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
+
+                //validamos cuantos registros devuelve la lista
+                if (salida.ToArray().Length > 0 )
+                    municipioResultado = salida.First();
+
+                return municipioResultado;
+            }
+
+        }
+
         #endregion CRUD_Municipios
+
+        #region CRUD_Cuencas
+
+        #endregion CRUD_Cuencas
 
         #region CRUD_MetodosPesca
 

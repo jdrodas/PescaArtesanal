@@ -36,18 +36,18 @@
             lbxCuencas = new ListBox();
             label4 = new Label();
             txtNombreMunicipio = new TextBox();
-            btnGuardarMunicipio = new Button();
+            btnGuardaMunicipio = new Button();
             SuspendLayout();
             // 
             // label1
             // 
             label1.BackColor = Color.SteelBlue;
             label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Comic Sans MS", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            label1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
             label1.ForeColor = Color.AliceBlue;
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(1125, 41);
+            label1.Size = new Size(1125, 42);
             label1.TabIndex = 0;
             label1.Text = "Registra Nuevo Municipio";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -68,71 +68,82 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(142, 132);
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.Location = new Point(135, 132);
             label2.Name = "label2";
-            label2.Size = new Size(109, 20);
+            label2.Size = new Size(143, 28);
             label2.TabIndex = 2;
             label2.Text = "Departamento:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(503, 132);
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label3.Location = new Point(608, 132);
             label3.Name = "label3";
-            label3.Size = new Size(60, 20);
+            label3.Size = new Size(79, 28);
             label3.TabIndex = 3;
             label3.Text = "Cuenca:";
             // 
             // lbxDepartamentos
             // 
+            lbxDepartamentos.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxDepartamentos.FormattingEnabled = true;
-            lbxDepartamentos.ItemHeight = 20;
-            lbxDepartamentos.Location = new Point(257, 132);
+            lbxDepartamentos.ItemHeight = 28;
+            lbxDepartamentos.Location = new Point(282, 132);
+            lbxDepartamentos.Margin = new Padding(3, 2, 3, 2);
             lbxDepartamentos.Name = "lbxDepartamentos";
-            lbxDepartamentos.Size = new Size(207, 104);
+            lbxDepartamentos.Size = new Size(271, 144);
             lbxDepartamentos.TabIndex = 4;
             // 
             // lbxCuencas
             // 
+            lbxCuencas.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxCuencas.FormattingEnabled = true;
-            lbxCuencas.ItemHeight = 20;
-            lbxCuencas.Location = new Point(569, 132);
+            lbxCuencas.ItemHeight = 28;
+            lbxCuencas.Location = new Point(688, 132);
+            lbxCuencas.Margin = new Padding(3, 2, 3, 2);
             lbxCuencas.Name = "lbxCuencas";
-            lbxCuencas.Size = new Size(196, 104);
+            lbxCuencas.Size = new Size(276, 144);
             lbxCuencas.TabIndex = 5;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(203, 347);
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.Location = new Point(249, 331);
             label4.Name = "label4";
-            label4.Size = new Size(162, 20);
+            label4.Size = new Size(214, 28);
             label4.TabIndex = 6;
             label4.Text = "Nombre del Municipio:";
             // 
             // txtNombreMunicipio
             // 
-            txtNombreMunicipio.Location = new Point(371, 343);
+            txtNombreMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtNombreMunicipio.Location = new Point(464, 326);
+            txtNombreMunicipio.Margin = new Padding(3, 2, 3, 2);
             txtNombreMunicipio.Name = "txtNombreMunicipio";
-            txtNombreMunicipio.Size = new Size(125, 27);
+            txtNombreMunicipio.Size = new Size(326, 34);
             txtNombreMunicipio.TabIndex = 7;
             // 
-            // btnGuardarMunicipio
+            // btnGuardaMunicipio
             // 
-            btnGuardarMunicipio.Location = new Point(604, 343);
-            btnGuardarMunicipio.Name = "btnGuardarMunicipio";
-            btnGuardarMunicipio.Size = new Size(94, 29);
-            btnGuardarMunicipio.TabIndex = 8;
-            btnGuardarMunicipio.Text = "Guardar";
-            btnGuardarMunicipio.UseVisualStyleBackColor = true;
-            btnGuardarMunicipio.Click += btnGuardarMunicipio_Click;
+            btnGuardaMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            btnGuardaMunicipio.Location = new Point(813, 324);
+            btnGuardaMunicipio.Margin = new Padding(3, 2, 3, 2);
+            btnGuardaMunicipio.Name = "btnGuardaMunicipio";
+            btnGuardaMunicipio.Size = new Size(152, 40);
+            btnGuardaMunicipio.TabIndex = 8;
+            btnGuardaMunicipio.Text = "Guardar";
+            btnGuardaMunicipio.UseVisualStyleBackColor = true;
+            btnGuardaMunicipio.Click += btnGuardaMunicipio_Click;
             // 
             // MunicipioNuevo
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1125, 747);
-            Controls.Add(btnGuardarMunicipio);
+            ClientSize = new Size(1125, 746);
+            Controls.Add(btnGuardaMunicipio);
             Controls.Add(txtNombreMunicipio);
             Controls.Add(label4);
             Controls.Add(lbxCuencas);
@@ -160,6 +171,6 @@
         private ListBox lbxCuencas;
         private Label label4;
         private TextBox txtNombreMunicipio;
-        private Button btnGuardarMunicipio;
+        private Button btnGuardaMunicipio;
     }
 }

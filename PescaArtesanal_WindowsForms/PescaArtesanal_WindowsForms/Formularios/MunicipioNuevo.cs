@@ -44,7 +44,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
             lbxCuencas.SelectedIndex = 0;
         }
 
-        private void btnGuardarMunicipio_Click(object sender, EventArgs e)
+        private void btnGuardaMunicipio_Click(object sender, EventArgs e)
         {
             string? nombreCuenca = lbxCuencas.SelectedItem!.ToString();
             string? nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
@@ -52,8 +52,8 @@ namespace PescaArtesanal_WindowsForms.Formularios
             string? mensajeInsercion;
 
             bool resultadoInsercion = AccesoDatos.InsertaNuevoMunicipio(nombreMunicipio,
-                                        nombreDepartamento,
-                                        nombreCuenca,
+                                        nombreDepartamento!,
+                                        nombreCuenca!,
                                         out mensajeInsercion);
 
             if (resultadoInsercion)
