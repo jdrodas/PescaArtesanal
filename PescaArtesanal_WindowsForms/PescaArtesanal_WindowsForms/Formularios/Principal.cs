@@ -9,6 +9,16 @@ namespace PescaArtesanal_WindowsForms
             InitializeComponent();
         }
 
+        private void btnFormasCuencas_Click(object sender, EventArgs e)
+        {
+            VisualizaPanelCrud(panelCrudCuencas, btnFormasCuencas);
+        }
+
+        private void btnFormasDepartamentos_Click(object sender, EventArgs e)
+        {
+            VisualizaPanelCrud(panelCrudDepartamentos, btnFormasDepartamentos);
+        }
+
         private void btnFormasMunicipios_Click(object sender, EventArgs e)
         {
             VisualizaPanelCrud(panelCrudMunicipios, btnFormasMunicipios);
@@ -98,10 +108,11 @@ namespace PescaArtesanal_WindowsForms
         {
             Panel[] panelesCrud =
             {
+                panelCrudCuencas,
+                panelCrudDepartamentos,
                 panelCrudMunicipios,
                 panelCrudMetodos,
                 panelCrudActividades
-
             };
 
             foreach (Panel unPanel in panelesCrud)
@@ -109,6 +120,8 @@ namespace PescaArtesanal_WindowsForms
 
             Button[] botonesCrud =
             {
+                btnFormasCuencas,
+                btnFormasDepartamentos,
                 btnFormasMunicipios,
                 btnFormasMetodos,
                 btnFormasActividades
