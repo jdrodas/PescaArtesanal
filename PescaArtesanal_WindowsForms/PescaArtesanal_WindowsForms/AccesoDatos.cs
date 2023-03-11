@@ -227,6 +227,12 @@ namespace PescaArtesanal_WindowsForms
             return resultadoInsercion;
         }
 
+        /// <summary>
+        /// Actualiza un municipio existente
+        /// </summary>
+        /// <param name="unMunicipio">Objeto municipio a actualizar</param>
+        /// <param name="mensajeActualizacion">Resultado del proceso de actualización</param>
+        /// <returns>verdadero si la actualización fue exitosa</returns>
         public static bool ActualizaMunicipio(Municipio unMunicipio, out string mensajeActualizacion)
         {
             mensajeActualizacion = string.Empty;
@@ -284,6 +290,96 @@ namespace PescaArtesanal_WindowsForms
                 }
             }
             return resultadoActualizacion;
+        }
+
+        /// <summary>
+        /// Elimina un municipio existente
+        /// </summary>
+        /// <param name="codigoMunicipio">Codigo del municipio a eliminar</param>
+        /// <param name="mensajeEliminacion">Resultado del proceso de eliminación</param>
+        /// <returns>verdadero si la eliminación fue exitosa</returns>
+        public static bool EliminaMunicipio(int codigoMunicipio, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+            bool resultadoEliminacion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtieneCadenaConexion();
+
+            //Validaciones a realizar
+            //1. Que el municipio exista
+            //2. Que no tenga actividades de pesca asignadas
+
+            Municipio unMunicipio = ObtieneMunicipio(codigoMunicipio);
+            if (unMunicipio.Codigo == 0)
+            {
+                resultadoEliminacion = false;
+                mensajeEliminacion = "No se encontró municipio con ese código";
+            }
+            else
+            {
+                //Ya que sabemos existe, validemos que no haya actividades de pesca asociadas
+                int cantidadActividades = ObtieneCantidadActividadesPescaMunicipio(codigoMunicipio);
+
+                if (cantidadActividades != 0)
+                {
+                    resultadoEliminacion = false;
+                    mensajeEliminacion = $"No se pudo eliminar el municipio {unMunicipio.Nombre} " +
+                        $"porque tiene asociadas {cantidadActividades} actividades de pesca";
+                }
+                else 
+                {
+                    //Ya que sabemos que no tiene actividades de pesca asociada, se puede borrar
+                    using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+                    {
+                        try
+                        {
+                            DynamicParameters parametrosSentencia = new DynamicParameters();
+                            parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
+                                DbType.Int32, ParameterDirection.Input);
+
+                            string eliminaMunicipioSQL = "DELETE FROM municipios WHERE " +
+                                "codigo = @codigo_municipio";
+
+                            cantidadFilas = cxnDB.Execute(eliminaMunicipioSQL, parametrosSentencia);
+
+                            if (cantidadFilas > 0)
+                            {
+                                resultadoEliminacion = true;
+                                mensajeEliminacion = "Eliminación Exitosa";
+                            }
+
+                        }
+                        catch (SQLiteException elError)
+                        {
+                            resultadoEliminacion = false;
+                            cantidadFilas = 0;
+                            mensajeEliminacion = $"Error de Actualizción en la DB. {elError.Message}";
+                        }
+
+                    }
+
+                }
+            }
+
+            return resultadoEliminacion;
+        }
+
+        private static int ObtieneCantidadActividadesPescaMunicipio(int codigoMunicipio)
+        {
+            cadenaConexion = ObtieneCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
+                    DbType.Int32, ParameterDirection.Input);
+
+                int cantidadActividades = cxnDB.Query<int>("SELECT count(codigo) total FROM actividades " +
+                "WHERE codigo_municipio = @codigo_municipio", parametrosSentencia).FirstOrDefault();
+
+                return cantidadActividades;
+            }
         }
 
         /// <summary>

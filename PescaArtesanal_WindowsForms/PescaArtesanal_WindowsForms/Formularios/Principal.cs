@@ -34,11 +34,13 @@ namespace PescaArtesanal_WindowsForms
             VisualizaPanelCrud(panelCrudActividades, btnFormasActividades);
         }
 
+        /// <summary>
+        /// Abre una nueva instancia del formulario indicado, validando que no esté previamente cargado
+        /// </summary>
+        /// <typeparam name="unFormulario">El formulario a abrir</typeparam>
         private void AbrirFormulario<unFormulario>() where unFormulario : Form, new()
         {
-            Form formulario;
-            //Busca en la colecion el formulario
-            formulario = panelFormularios.Controls.OfType<unFormulario>().FirstOrDefault()!;
+            Form formulario = panelFormularios.Controls.OfType<unFormulario>().FirstOrDefault()!;
 
             //si el formulario/instancia no existe
             if (formulario == null)
@@ -57,6 +59,7 @@ namespace PescaArtesanal_WindowsForms
             {
                 //si el formulario/instancia existe
                 formulario.BringToFront();
+                formulario.Activate();
             }
         }
 
