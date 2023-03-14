@@ -270,7 +270,7 @@ namespace PescaArtesanal_WindowsForms
                         string actualizaMunicipioSQL = "UPDATE municipios SET nombre = @Nombre, " +
                             "codigo_cuenca = @CodigoCuenca, " +
                             "codigo_departamento = @CodigoDepartamento " +
-                            "WHERE codigo = @Codigo"; ;
+                            "WHERE codigo = @Codigo";
 
                         cantidadFilas = cxnDB.Execute(actualizaMunicipioSQL, unMunicipio);
 
@@ -354,7 +354,7 @@ namespace PescaArtesanal_WindowsForms
                         {
                             resultadoEliminacion = false;
                             cantidadFilas = 0;
-                            mensajeEliminacion = $"Error de Actualizción en la DB. {elError.Message}";
+                            mensajeEliminacion = $"Error de borrado en la DB. {elError.Message}";
                         }
 
                     }
@@ -422,7 +422,7 @@ namespace PescaArtesanal_WindowsForms
 
                 string sentenciaSQL = "SELECT codigo_municipio Codigo, nombre_municipio Nombre, " +
                     "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento, " +
-                    "codigo_cuenca codigoCuenca, nombre_cuenca NombreCuenca FROM v_info_municipios " +
+                    "codigo_cuenca CodigoCuenca, nombre_cuenca NombreCuenca FROM v_info_municipios " +
                     "WHERE codigo_municipio = @codigo_municipio";
 
                 var salida = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
@@ -438,15 +438,205 @@ namespace PescaArtesanal_WindowsForms
 
         #endregion CRUD_Municipios
 
-        #region CRUD_Cuencas
-
-        #endregion CRUD_Cuencas
-
         #region CRUD_MetodosPesca
 
         #endregion CRUD_MetodosPesca
 
         #region CRUD_ActividadesPesca
+
+        /// <summary>
+        /// Obtiene La actividad de pesca asociada al código
+        /// </summary>
+        /// <param name="codigoActividad">El código de la actividad de pesca</param>
+        /// <returns></returns>
+        public static Actividad ObtieneActividad(int codigoActividad)
+        {
+            cadenaConexion = ObtieneCadenaConexion();
+            Actividad actividadResultado = new Actividad();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_actividad", codigoActividad,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSQL = "SELECT codigo_actividad Codigo, codigo_municipio CodigoMunicipio, " +
+                    "nombre_municipio NombreMunicipio, codigo_metodo CodigoMetodo, " +
+                    "nombre_metodo NombreMetodo, fecha, cantidad_pescado CantidadPescado " +
+                    "FROM v_info_actividad " +
+                    "WHERE codigo_actividad = @codigo_actividad";
+
+
+                var salida = cxnDB.Query<Actividad>(sentenciaSQL, parametrosSentencia);
+
+                //validamos cuantos registros devuelve la lista
+                if (salida.ToArray().Length > 0)
+                    actividadResultado = salida.First();
+
+                return actividadResultado;
+            }
+        }
+
+        /// <summary>
+        /// Inserta una nueva actividad
+        /// </summary>
+        /// <param name="nuevaActividad">Actividad a insertar</param>
+        /// <param name="mensajeInsercion">Resultado del proceso de inserción</param>
+        /// <returns>verdadero si la inserción fue exitosa</returns>
+        public static bool InsertaNuevaActividad(Actividad nuevaActividad,
+                        out string mensajeInsercion)
+        {
+            mensajeInsercion = string.Empty;
+            bool resultadoInsercion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que el nombre del municipio no exista para ese departamento
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                try
+                {
+                    string insertaActividadSQL = "INSERT INTO actividades (codigo_municipio, codigo_metodo, " +
+                    "fecha, cantidad_pescado) VALUES (@CodigoMunicipio, @CodigoMetodo, @Fecha, @CantidadPescado)";
+
+                    cantidadFilas = cxnDB.Execute(insertaActividadSQL, nuevaActividad);
+                }
+                catch (SQLiteException)
+                {
+                    resultadoInsercion = false;
+                    mensajeInsercion = "Fallo de inserción a nivel de DB";
+                    cantidadFilas = 0;
+                }
+
+                //Si la inserción fue correcta, devolvemos true
+                if (cantidadFilas > 0)
+                {
+                    resultadoInsercion = true;
+                    mensajeInsercion = $"Inserción de actividad de pesca en {nuevaActividad.NombreMunicipio} con " +
+                        $"el método {nuevaActividad.NombreMetodo} el día {nuevaActividad.Fecha} con un total de " +
+                        $"{nuevaActividad.CantidadPescado} Kgs de pescado";
+                }
+            }
+            return resultadoInsercion;
+        }
+
+        /// <summary>
+        /// Actualiza una actividad existente
+        /// </summary>
+        /// <param name="unaActividad">Objeto actividad a actualizar</param>
+        /// <param name="mensajeActualizacion">Resultado del proceso de actualización</param>
+        /// <returns>verdadero si la actualización fue exitosa</returns>
+        public static bool ActualizaActividad(Actividad unaActividad, out string mensajeActualizacion)
+        {
+            mensajeActualizacion = string.Empty;
+            bool resultadoActualizacion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtieneCadenaConexion();
+
+            //Aqui validamos primero que la actividad a actualizar ya exista
+
+            //Obtenemos el Objeto que representa este municipio
+            Actividad otraActividad = ObtieneActividad(unaActividad.Codigo);
+
+            if (otraActividad.Codigo == 0)
+            {
+                resultadoActualizacion = false;
+                mensajeActualizacion = $"No existe actividad de pesca registrada con ese código.";
+            }
+            else
+            {
+                using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+                {
+                    try
+                    {
+                        string actualizaActividadSQL = "UPDATE actividades SET " +
+                            "codigo_municipio = @CodigoMunicipio, " +
+                            "codigo_metodo = @CodigoMetodo," +
+                            "cantidad_pescado = @CantidadPescado, " +
+                            "fecha = @Fecha " +
+                            "WHERE codigo = @Codigo";
+
+
+                        cantidadFilas = cxnDB.Execute(actualizaActividadSQL, unaActividad);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoActualizacion = true;
+                            mensajeActualizacion = "Inserción Exitosa";
+                        }
+                    }
+                    catch (SQLiteException elError)
+                    {
+                        resultadoActualizacion = false;
+                        cantidadFilas = 0;
+                        mensajeActualizacion = $"Error de Actualizción en la DB. {elError.Message}";
+                    }
+
+                }
+            }
+            return resultadoActualizacion;
+        }
+
+        /// <summary>
+        /// Elimina una actividad existente
+        /// </summary>
+        /// <param name="codigoActividad">Codigo de la actividad a eliminar</param>
+        /// <param name="mensajeEliminacion">Resultado del proceso de eliminación</param>
+        /// <returns>verdadero si la eliminación fue exitosa</returns>
+        public static bool EliminaActividad(int codigoActividad, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+            bool resultadoEliminacion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtieneCadenaConexion();
+
+            //Validaciones a realizar
+            //1. Que la actividad exista
+
+            Actividad unaActividad = ObtieneActividad(codigoActividad);
+            if (unaActividad.Codigo == 0)
+            {
+                resultadoEliminacion = false;
+                mensajeEliminacion = "No se encontró actividad con ese código";
+            }
+            else
+            {
+                //Ya que sabemos que existe la actividad, se puede borrar
+                using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+                {
+                    try
+                    {
+                        DynamicParameters parametrosSentencia = new DynamicParameters();
+                        parametrosSentencia.Add("@codigo_actividad", codigoActividad,
+                            DbType.Int32, ParameterDirection.Input);
+
+                        string eliminaActividadSQL = "DELETE FROM actividades WHERE " +
+                            "codigo = @codigo_actividad";
+
+                        cantidadFilas = cxnDB.Execute(eliminaActividadSQL, parametrosSentencia);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoEliminacion = true;
+                            mensajeEliminacion = "Eliminación Exitosa";
+                        }
+
+                    }
+                    catch (SQLiteException elError)
+                    {
+                        resultadoEliminacion = false;
+                        cantidadFilas = 0;
+                        mensajeEliminacion = $"Error de borrado en la DB. {elError.Message}";
+                    }
+                }
+            }
+
+            return resultadoEliminacion;
+        }
 
         #endregion CRUD_ActividadesPesca
     }

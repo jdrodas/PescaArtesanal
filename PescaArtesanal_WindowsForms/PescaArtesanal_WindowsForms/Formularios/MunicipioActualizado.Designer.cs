@@ -50,9 +50,8 @@
             label1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
             label1.ForeColor = Color.AliceBlue;
             label1.Location = new Point(0, 0);
-            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(1406, 52);
+            label1.Size = new Size(984, 31);
             label1.TabIndex = 0;
             label1.Text = "Actualiza Municipio existente";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -61,10 +60,9 @@
             // 
             btnCerrarForma.FlatStyle = FlatStyle.Flat;
             btnCerrarForma.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            btnCerrarForma.Location = new Point(1364, 5);
-            btnCerrarForma.Margin = new Padding(4, 5, 4, 5);
+            btnCerrarForma.Location = new Point(955, 3);
             btnCerrarForma.Name = "btnCerrarForma";
-            btnCerrarForma.Size = new Size(34, 40);
+            btnCerrarForma.Size = new Size(24, 24);
             btnCerrarForma.TabIndex = 1;
             btnCerrarForma.Text = "X";
             btnCerrarForma.UseVisualStyleBackColor = true;
@@ -74,10 +72,10 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(128, 140);
-            label2.Margin = new Padding(2, 0, 2, 0);
+            label2.Location = new Point(90, 84);
+            label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
-            label2.Size = new Size(260, 32);
+            label2.Size = new Size(171, 21);
             label2.TabIndex = 2;
             label2.Text = "Municipios registrados:";
             // 
@@ -85,11 +83,11 @@
             // 
             lbxInfoMunicipios.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxInfoMunicipios.FormattingEnabled = true;
-            lbxInfoMunicipios.ItemHeight = 32;
-            lbxInfoMunicipios.Location = new Point(410, 140);
-            lbxInfoMunicipios.Margin = new Padding(2);
+            lbxInfoMunicipios.ItemHeight = 21;
+            lbxInfoMunicipios.Location = new Point(287, 84);
+            lbxInfoMunicipios.Margin = new Padding(1, 1, 1, 1);
             lbxInfoMunicipios.Name = "lbxInfoMunicipios";
-            lbxInfoMunicipios.Size = new Size(742, 132);
+            lbxInfoMunicipios.Size = new Size(521, 67);
             lbxInfoMunicipios.TabIndex = 3;
             lbxInfoMunicipios.SelectedIndexChanged += lbxInfoMunicipios_SelectedIndexChanged;
             // 
@@ -97,10 +95,10 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(146, 312);
-            label3.Margin = new Padding(2, 0, 2, 0);
+            label3.Location = new Point(102, 187);
+            label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
-            label3.Size = new Size(241, 32);
+            label3.Size = new Size(156, 21);
             label3.TabIndex = 4;
             label3.Text = "Código seleccionado:";
             label3.TextAlign = ContentAlignment.MiddleRight;
@@ -110,10 +108,10 @@
             txtCodigoMunicipio.BackColor = Color.White;
             txtCodigoMunicipio.Enabled = false;
             txtCodigoMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtCodigoMunicipio.Location = new Point(410, 305);
-            txtCodigoMunicipio.Margin = new Padding(2);
+            txtCodigoMunicipio.Location = new Point(287, 183);
+            txtCodigoMunicipio.Margin = new Padding(1, 1, 1, 1);
             txtCodigoMunicipio.Name = "txtCodigoMunicipio";
-            txtCodigoMunicipio.Size = new Size(150, 39);
+            txtCodigoMunicipio.Size = new Size(106, 29);
             txtCodigoMunicipio.TabIndex = 5;
             txtCodigoMunicipio.TextAlign = HorizontalAlignment.Right;
             // 
@@ -121,21 +119,20 @@
             // 
             lbxDepartamentos.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxDepartamentos.FormattingEnabled = true;
-            lbxDepartamentos.ItemHeight = 32;
-            lbxDepartamentos.Location = new Point(330, 406);
-            lbxDepartamentos.Margin = new Padding(4, 2, 4, 2);
+            lbxDepartamentos.ItemHeight = 21;
+            lbxDepartamentos.Location = new Point(231, 244);
+            lbxDepartamentos.Margin = new Padding(3, 1, 3, 1);
             lbxDepartamentos.Name = "lbxDepartamentos";
-            lbxDepartamentos.Size = new Size(338, 132);
+            lbxDepartamentos.Size = new Size(238, 67);
             lbxDepartamentos.TabIndex = 7;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label4.Location = new Point(146, 406);
-            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Location = new Point(102, 244);
             label4.Name = "label4";
-            label4.Size = new Size(173, 32);
+            label4.Size = new Size(113, 21);
             label4.TabIndex = 6;
             label4.Text = "Departamento:";
             // 
@@ -143,41 +140,39 @@
             // 
             lbxCuencas.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxCuencas.FormattingEnabled = true;
-            lbxCuencas.ItemHeight = 32;
-            lbxCuencas.Location = new Point(802, 406);
-            lbxCuencas.Margin = new Padding(4, 2, 4, 2);
+            lbxCuencas.ItemHeight = 21;
+            lbxCuencas.Location = new Point(561, 244);
+            lbxCuencas.Margin = new Padding(3, 1, 3, 1);
             lbxCuencas.Name = "lbxCuencas";
-            lbxCuencas.Size = new Size(344, 132);
+            lbxCuencas.Size = new Size(242, 67);
             lbxCuencas.TabIndex = 9;
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label5.Location = new Point(702, 406);
-            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Location = new Point(491, 244);
             label5.Name = "label5";
-            label5.Size = new Size(98, 32);
+            label5.Size = new Size(64, 21);
             label5.TabIndex = 8;
             label5.Text = "Cuenca:";
             // 
             // txtNombreMunicipio
             // 
             txtNombreMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtNombreMunicipio.Location = new Point(410, 605);
-            txtNombreMunicipio.Margin = new Padding(4, 2, 4, 2);
+            txtNombreMunicipio.Location = new Point(287, 363);
+            txtNombreMunicipio.Margin = new Padding(3, 1, 3, 1);
             txtNombreMunicipio.Name = "txtNombreMunicipio";
-            txtNombreMunicipio.Size = new Size(406, 39);
+            txtNombreMunicipio.Size = new Size(285, 29);
             txtNombreMunicipio.TabIndex = 11;
             // 
             // label6
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label6.Location = new Point(126, 612);
-            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Location = new Point(88, 367);
             label6.Name = "label6";
-            label6.Size = new Size(261, 32);
+            label6.Size = new Size(169, 21);
             label6.TabIndex = 10;
             label6.Text = "Nombre del Municipio:";
             label6.TextAlign = ContentAlignment.MiddleRight;
@@ -185,10 +180,10 @@
             // btnActualizaMunicipio
             // 
             btnActualizaMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            btnActualizaMunicipio.Location = new Point(861, 602);
-            btnActualizaMunicipio.Margin = new Padding(4, 2, 4, 2);
+            btnActualizaMunicipio.Location = new Point(603, 361);
+            btnActualizaMunicipio.Margin = new Padding(3, 1, 3, 1);
             btnActualizaMunicipio.Name = "btnActualizaMunicipio";
-            btnActualizaMunicipio.Size = new Size(190, 50);
+            btnActualizaMunicipio.Size = new Size(133, 30);
             btnActualizaMunicipio.TabIndex = 12;
             btnActualizaMunicipio.Text = "Actualizar";
             btnActualizaMunicipio.UseVisualStyleBackColor = true;
@@ -196,9 +191,9 @@
             // 
             // MunicipioActualizado
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1406, 932);
+            ClientSize = new Size(984, 530);
             Controls.Add(btnActualizaMunicipio);
             Controls.Add(txtNombreMunicipio);
             Controls.Add(label6);
@@ -213,11 +208,10 @@
             Controls.Add(btnCerrarForma);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(6, 8, 6, 8);
+            Margin = new Padding(4, 5, 4, 5);
             Name = "MunicipioActualizado";
             Text = "Actualiza Municipio";
             Load += MunicipioActualizado_Load;
-            Paint += MunicipioActualizado_Paint;
             ResumeLayout(false);
             PerformLayout();
         }

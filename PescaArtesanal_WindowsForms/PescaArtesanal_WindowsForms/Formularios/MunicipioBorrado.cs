@@ -95,10 +95,5 @@ namespace PescaArtesanal_WindowsForms.Formularios
             //Finalmente, actualizamos la lista de información de Municipios
             InicializaLbxInfoMunicipios();
         }
-
-        private void MunicipioBorrado_Paint(object sender, PaintEventArgs e)
-        {
-            InicializaLbxInfoMunicipios();
-        }
     }
 }
