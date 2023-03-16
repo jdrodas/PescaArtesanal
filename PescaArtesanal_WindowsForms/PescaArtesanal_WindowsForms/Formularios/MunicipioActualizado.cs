@@ -32,7 +32,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         {
 
             lbxInfoMunicipios.DataSource = null;
-            lbxInfoMunicipios.DataSource = AccesoDatos.ObtieneListaInfoMunicipios();
+            lbxInfoMunicipios.DataSource = AccesoDatos.ObtenerListaInformacionMunicipios();
             lbxInfoMunicipios.DisplayMember = "infoMunicipio";
 
             //Seleccionamos el primer municipio de la lista
@@ -42,7 +42,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizaListaDepartamentos(string nombreDepartamento)
         {
             lbxDepartamentos.DataSource = null;
-            lbxDepartamentos.DataSource = AccesoDatos.ObtieneListaNombresDepartamentos();
+            lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
 
             //Seleccionamos el departamento que se llama igual al del municipio seleccionado
             if (string.IsNullOrEmpty(nombreDepartamento))
@@ -74,7 +74,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 txtCodigoMunicipio.Text = codigoMunicipio.ToString();
 
                 //Leemos desde la DB, el municipio asociado al código
-                Municipio unMunicipio = AccesoDatos.ObtieneMunicipio(codigoMunicipio);
+                Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(codigoMunicipio);
 
                 //Actualizamos las listas asignando como item seleccionado
                 //el valor correspondiente de la propiedad del municipio
@@ -97,7 +97,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 unMunicipio.NombreCuenca = lbxCuencas.SelectedItem!.ToString();
                 unMunicipio.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
 
-                bool resultadoActualizacion = AccesoDatos.ActualizaMunicipio(unMunicipio, out mensajeActualizacion);
+                bool resultadoActualizacion = AccesoDatos.ActualizarMunicipio(unMunicipio, out mensajeActualizacion);
 
                 if (resultadoActualizacion)
                 {

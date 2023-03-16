@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PescaArtesanal_WindowsForms.Modelos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,7 +32,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizaListaDepartamentos()
         {
             lbxDepartamentos.DataSource = null;
-            lbxDepartamentos.DataSource = AccesoDatos.ObtieneListaNombresDepartamentos();
+            lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
 
             lbxDepartamentos.SelectedIndex = 0;
         }
@@ -46,14 +47,16 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void btnGuardaMunicipio_Click(object sender, EventArgs e)
         {
-            string? nombreCuenca = lbxCuencas.SelectedItem!.ToString();
-            string? nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
-            string? nombreMunicipio = txtNombreMunicipio.Text;
+            Municipio nuevoMunicipio = new Municipio
+            {
+                NombreCuenca = lbxCuencas.SelectedItem!.ToString(),
+                NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString(),
+                Nombre = txtNombreMunicipio.Text
+            };
+
             string? mensajeInsercion;
 
-            bool resultadoInsercion = AccesoDatos.InsertaNuevoMunicipio(nombreMunicipio,
-                                        nombreDepartamento!,
-                                        nombreCuenca!,
+            bool resultadoInsercion = AccesoDatos.InsertarMunicipio(nuevoMunicipio,
                                         out mensajeInsercion);
 
             if (resultadoInsercion)

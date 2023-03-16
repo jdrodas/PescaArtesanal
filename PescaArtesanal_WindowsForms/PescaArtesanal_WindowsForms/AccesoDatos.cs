@@ -1,12 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PescaArtesanal_WindowsForms.Modelos;
 
 namespace PescaArtesanal_WindowsForms
@@ -15,11 +10,7 @@ namespace PescaArtesanal_WindowsForms
     {
         static string? cadenaConexion;
         
-        /// <summary>
-        /// Obtiene la cadena de conexión para utilizar en las operaciones CRUD
-        /// </summary>
-        /// <returns>string con la cadena de conexión</returns>
-        public static string? ObtieneCadenaConexion()
+        public static string? ObtenerCadenaConexion()
         {
             //Parametrizamos el acceso al archivo de configuración appsettings.json
             var builder = new ConfigurationBuilder();
@@ -32,14 +23,41 @@ namespace PescaArtesanal_WindowsForms
         }
 
         #region CRUD_Departamentos
-
-        /// <summary>
-        /// Obtiene la lista con los nombres de los departamentos
-        /// </summary>
-        /// <returns>lista de strings con los nombres de los departamentos</returns>
-        public static List<string> ObtieneListaNombresDepartamentos()
+        
+        public static int ObtenerCodigoDepartamento(string nombreDepartamento)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
+            int codigoDepartamento = 0;
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+
+                codigoDepartamento = cxnDB.Query<int>("SELECT DISTINCT codigo FROM departamentos " +
+                "WHERE nombre = @nombre_departamento", parametrosSentencia).FirstOrDefault();
+
+                return codigoDepartamento;
+            }
+        }
+
+        public static List<Departamento> ObtenerListaDepartamentos()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                string sentenciaSQL = "SELECT DISTINCT codigo, nombre FROM departamentos ORDER BY nombre";
+                var resultadoDepartamentos = cxnDB.Query<Departamento>(sentenciaSQL, new DynamicParameters());
+
+                return resultadoDepartamentos.AsList();
+            }
+        }
+
+        public static List<string> ObtenerListaNombresDepartamentos()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -49,26 +67,197 @@ namespace PescaArtesanal_WindowsForms
                 return resultadoDepartamentos.AsList();
             }
         }
-
-        /// <summary>
-        /// Obtiene el código del departamento a partir de su nombre
-        /// </summary>
-        /// <param name="nombreDepartamento">Nombre del Departamento</param>
-        /// <returns>0 si el departamento no existe o el código registrado</returns>
-        public static int ObtieneCodigoDepartamento(string nombreDepartamento)
+        
+        public static Departamento ObtenerDepartamento(int codigoDepartamento)
         {
-            cadenaConexion = ObtieneCadenaConexion();
-            
+            cadenaConexion = ObtenerCadenaConexion();
+            Departamento departamentoResultado = new Departamento();
+
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_departamento", codigoDepartamento,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSQL = "SELECT codigo, nombre FROM departamentos " +
+                    "WHERE codigo = @codigo_departamento";
+
+                var salida = cxnDB.Query<Departamento>(sentenciaSQL, parametrosSentencia);
+
+                if (salida.ToArray().Length > 0)
+                    departamentoResultado = salida.First();
+
+                return departamentoResultado;
+            }
+        }
+        
+        public static Departamento ObtenerDepartamento(string nombreDepartamento)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            Departamento departamentoResultado = new Departamento();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+
                 DynamicParameters parametrosSentencia = new DynamicParameters();
                 parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
                     DbType.String, ParameterDirection.Input);
 
-                int codigoDepartamento = cxnDB.Query<int>("SELECT DISTINCT codigo FROM departamentos " +
-                "WHERE nombre = @nombre_departamento", parametrosSentencia).FirstOrDefault();
+                string sentenciaSQL =   "SELECT codigo, nombre FROM departamentos " +
+                                        "WHERE nombre = @nombre_departamento";
 
-                return codigoDepartamento;
+                var salida = cxnDB.Query<Departamento>(sentenciaSQL, parametrosSentencia);
+
+                if (salida.ToArray().Length > 0)
+                    departamentoResultado = salida.First();
+
+                return departamentoResultado;
+            }
+        }
+
+        public static bool InsertarDepartamento(Departamento unDepartamento, out string mensajeInsercion)
+        {
+            mensajeInsercion = string.Empty;
+            bool resultadoInsercion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                //Validamos primero que el nombre del departamento no exista previamente
+                //Obtenemos el Objeto que representa este departamento
+                Departamento departamentoExistente = ObtenerDepartamento(unDepartamento.Nombre!);
+
+                if (departamentoExistente.Codigo != 0)
+                {
+                    resultadoInsercion = false;
+                    mensajeInsercion = $"Ya existe un departamento con el nombre {unDepartamento.Nombre}";
+                }
+                else
+                {
+                    try
+                    {
+                        string insertaDepartamentoSql = "INSERT INTO departamentos (nombre) " +
+                                                        "VALUES (@Nombre)";
+                        cantidadFilas = cxnDB.Execute(insertaDepartamentoSql, unDepartamento);
+                    }
+                    catch (SQLiteException)
+                    {
+                        resultadoInsercion = false;
+                        mensajeInsercion = "Fallo de inserción a nivel de DB";
+                        cantidadFilas = 0;
+                    }
+
+                    if (cantidadFilas > 0)
+                    {
+                        resultadoInsercion = true;
+                        mensajeInsercion = $"Inserción del departamento {unDepartamento.Nombre} se hizo correctamente";
+                    }
+                }
+            }
+            return resultadoInsercion;
+        }
+
+        public static bool ActualizarDepartamento(Departamento unDepartamento, out string mensajeActualizacion)
+        {
+            mensajeActualizacion = string.Empty;
+            bool resultadoActualizacion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                try
+                {
+                    string actualizaDepartamentoSql =  "UPDATE departamento SET nombre = @Nombre " +
+                                                    "WHERE codigo = @Codigo";
+
+                    cantidadFilas = cxnDB.Execute(actualizaDepartamentoSql, unDepartamento);
+
+                    if (cantidadFilas > 0)
+                    {
+                        resultadoActualizacion = true;
+                        mensajeActualizacion = $"Actualización Exitosa. Ahora el departamento se llama {unDepartamento.Nombre}";
+                    }
+                }
+                catch (SQLiteException elError)
+                {
+                    resultadoActualizacion = false;
+                    cantidadFilas = 0;
+                    mensajeActualizacion = $"Error de Actualización en la DB. {elError.Message}";
+                }
+            }
+            return resultadoActualizacion;
+        }
+
+        public static bool EliminarDepartamento(Departamento unDepartamento, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+            bool resultadoEliminacion = false;
+
+            int cantidadFilas = 0;
+            cadenaConexion = ObtenerCadenaConexion();
+
+            //Validamos primero que el departamento no tenga municipios asociados
+            int cantidadMunicipios = ObtenerCantidadMunicipiosDepartamento(unDepartamento.Codigo);
+
+            if (cantidadMunicipios != 0)
+            {
+                resultadoEliminacion = false;
+                mensajeEliminacion = $"No se pudo eliminar el departamento {unDepartamento.Nombre} " +
+                    $"porque tiene asociado {cantidadMunicipios} municipio(s).";
+            }
+            else
+            {
+                //Ya que sabemos que no tiene municipios asociados, se puede borrar
+                using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+                {
+                    try
+                    {
+                        string eliminaDepartamentoSql = "DELETE FROM departamentos WHERE " +
+                                                        "codigo = @Codigo";
+
+                        cantidadFilas = cxnDB.Execute(eliminaDepartamentoSql, unDepartamento);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoEliminacion = true;
+                            mensajeEliminacion = "Eliminación Exitosa";
+                        }
+
+                    }
+                    catch (SQLiteException elError)
+                    {
+                        resultadoEliminacion = false;
+                        cantidadFilas = 0;
+                        mensajeEliminacion = $"Error de borrado en la DB. {elError.Message}";
+                    }
+                }
+            }
+
+            return resultadoEliminacion;
+        }
+
+        private static int ObtenerCantidadMunicipiosDepartamento(int codigoDepartamento)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            int cantidadMunicipiosDepartamento = 0;
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_departamento", codigoDepartamento,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSql =   "SELECT count(codigo) total FROM municipios " +
+                                        "WHERE codigo_departamento = @codigo_departamento";
+
+                cantidadMunicipiosDepartamento = cxnDB.Query<int>(sentenciaSql, parametrosSentencia).FirstOrDefault();
+
+                return cantidadMunicipiosDepartamento;
             }
         }
 
@@ -76,13 +265,42 @@ namespace PescaArtesanal_WindowsForms
 
         #region CRUD_Cuencas
 
-        /// <summary>
-        /// Obtiene la lista con los nombres de las cuencas
-        /// </summary>
-        /// <returns>lista de strings con los nombres de las cuencas</returns>
+        public static int ObtenerCodigoCuenca(string nombreCuenca)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            int codigoCuenca = 0;
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_cuenca", nombreCuenca,
+                    DbType.String, ParameterDirection.Input);
+
+                string sentenciaSql =   "SELECT DISTINCT codigo FROM cuencas " +
+                                        "WHERE nombre = @nombre_cuenca";
+                
+                codigoCuenca = cxnDB.Query<int>(sentenciaSql, parametrosSentencia).FirstOrDefault();
+
+                return codigoCuenca;
+            }
+        }
+
+        public static List<Cuenca> ObtieneListaCuencas()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                string sentenciaSQL = "SELECT DISTINCT codigo, nombre FROM cuencas ORDER BY nombre";
+                var resultadoCuencas = cxnDB.Query<Cuenca>(sentenciaSQL, new DynamicParameters());
+
+                return resultadoCuencas.AsList();
+            }
+        }
+
         public static List<string> ObtieneListaNombresCuencas()
         {
-            string? cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -93,25 +311,51 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        /// <summary>
-        /// Obtiene el código de la cuenca a partir de su nombre
-        /// </summary>
-        /// <param name="nombreCuenca">Nombre de la cuenca</param>
-        /// <returns>0 si la cuenca no existe o el código registrado</returns>
-        public static int ObtieneCodigoCuenca(string nombreCuenca)
+        public static Cuenca ObtenerCuenca(int codigoCuenca)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
+            Cuenca cuencaResultado = new Cuenca();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_cuenca", codigoCuenca,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSQL =   "SELECT codigo, nombre FROM cuencas " +
+                                        "WHERE codigo = @codigo_cuenca";
+
+                var salida = cxnDB.Query<Cuenca>(sentenciaSQL, parametrosSentencia);
+
+                if (salida.ToArray().Length > 0)
+                    cuencaResultado = salida.First();
+
+                return cuencaResultado;
+            }
+        }
+
+        public static Cuenca ObtenerCuenca(string nombreCuenca)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            Cuenca cuencaResultado = new Cuenca();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+
                 DynamicParameters parametrosSentencia = new DynamicParameters();
                 parametrosSentencia.Add("@nombre_cuenca", nombreCuenca,
                     DbType.String, ParameterDirection.Input);
 
-                int codigoCuenca = cxnDB.Query<int>("SELECT DISTINCT codigo FROM cuencas " +
-                "WHERE nombre = @nombre_cuenca", parametrosSentencia).FirstOrDefault();
+                string sentenciaSQL =   "SELECT codigo, nombre FROM cuencas " +
+                                        "WHERE nombre = @nombre_cuenca";
 
-                return codigoCuenca;
+                var salida = cxnDB.Query<Cuenca>(sentenciaSQL, parametrosSentencia);
+
+                if (salida.ToArray().Length > 0)
+                    cuencaResultado = salida.First();
+
+                return cuencaResultado;
             }
         }
 
@@ -119,44 +363,51 @@ namespace PescaArtesanal_WindowsForms
 
         #region CRUD_Municipios
 
-        /// <summary>
-        /// Obtiene el código del Municipio a partir del nombre del municipio y el departamento
-        /// </summary>
-        /// <param name="nombreMunicipio">EL nombre del municipio</param>
-        /// <param name="nombreDepartamento">El nombre de la cuenca</param>
-        /// <returns>0 si el municipio no existe o el código registrado</returns>
-        public static int ObtieneCodigoMunicipio(string nombreMunicipio, string nombreDepartamento)
+        public static int ObtenerCodigoMunicipio(string nombreMunicipio, string nombreDepartamento)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            Municipio unMunicipio = ObtenerMunicipio(nombreMunicipio, nombreDepartamento);
+            return unMunicipio.Codigo;
+        }
+
+        public static List<Municipio> ObtenerListaMunicipios()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
-                //Se necesitan los dos parámetros porque existen municipios con el mismo nombre en diferente departamento
-                
-                DynamicParameters parametrosSentencia = new DynamicParameters();
-                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
-                    DbType.String, ParameterDirection.Input);
-                parametrosSentencia.Add("@nombre_municipio", nombreMunicipio,
-                    DbType.String, ParameterDirection.Input);
+                string consultaMunicipioSQL =   "SELECT DISTINCT codigo_municipio CodigoMunicipio, nombre_municipio NombreMunicipio, " +
+                                                "codigo_cuenca CodigoCuenca, nombre_cuenca NombreCuenca, " +
+                                                "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento " +
+                                                "FROM v_info_municipios ORDER BY nombre_municipio";
 
-                string consultaMunicipioSQL = "SELECT DISTINCT m.codigo FROM municipios m " +
-                "JOIN departamentos d ON m.codigo_departamento = d.codigo " +
-                "WHERE d.nombre = @nombre_departamento " +
-                "AND m.nombre = @nombre_municipio";
+                var resultadoMunicipios = cxnDB.Query<Municipio>(consultaMunicipioSQL, new DynamicParameters());
 
-                int codigoMunicipio = cxnDB.Query<int>(consultaMunicipioSQL, parametrosSentencia).FirstOrDefault();
-
-                return codigoMunicipio;
+                return resultadoMunicipios.AsList();
             }
         }
 
-        /// <summary>
-        /// Obtiene lista con información ampliada de los municipios
-        /// </summary>
-        /// <returns>Lista con información de los municipios</returns>
-        public static List<string> ObtieneListaInfoMunicipios()
+        public static List<string> ObtenerListaNombresMunicipios(string nombreDepartamento)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+
+                string sentenciaSQL =   "SELECT DISTINCT nombre_municipio nombre " +
+                                        "FROM v_info_municipios WHERE nombre_departamento = @nombre_Departamento " +
+                                        "ORDER BY nombre";
+                var resultadoMunicipios = cxnDB.Query<string>(sentenciaSQL, parametrosSentencia);
+
+                return resultadoMunicipios.AsList();
+            }
+        }
+
+        public static List<string> ObtenerListaInformacionMunicipios()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -169,37 +420,105 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        /// <summary>
-        /// Inserta un nuevo municipio
-        /// </summary>
-        /// <param name="nombreMunicipio">nombre del municipio</param>
-        /// <param name="nombreDepartamento">nombre del departamento</param>
-        /// <param name="nombreCuenca">nombre de la cuenca</param>
-        /// <param name="mensajeInsercion">Resultado del proceso de inserción</param>
-        /// <returns>verdadero si la inserción fue exitosa</returns>
-        public static bool InsertaNuevoMunicipio(string nombreMunicipio,
-                                string nombreDepartamento,
-                                string nombreCuenca,
-                                out string mensajeInsercion)
+        public static Municipio ObtenerMunicipio(int codigoMunicipio)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            Municipio unMunicipio = new Municipio();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                //Se necesitan los dos parámetros porque existen municipios con el mismo nombre en diferente departamento
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
+                    DbType.String, ParameterDirection.Input);
+
+                //Primero, validar la cantidad de municipios
+                string cantidadMunicipiosSql = "SELECT COUNT(v.codigo_municipio) cantidadMunicipios FROM v_info_municipios v " +
+                                                "WHERE v.codigo_municipio = @codigo_municipio";
+
+                int cantidadMunicipios = cxnDB.Query<int>(cantidadMunicipiosSql, parametrosSentencia).FirstOrDefault();
+
+                if (cantidadMunicipios != 0)
+                {
+                    string consultaMunicipioSQL = "SELECT DISTINCT codigo_municipio Codigo, nombre_municipio Nombre, " +
+                                                    "codigo_cuenca CodigoCuenca, nombre_cuenca NombreCuenca, " +
+                                                    "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento " +
+                                                    "FROM v_info_municipios WHERE codigo_municipio = @codigo_municipio " +
+                                                    "ORDER BY nombre_municipio";
+
+                    var salida = cxnDB.Query<Municipio>(consultaMunicipioSQL, parametrosSentencia);
+
+                    if (salida.ToArray().Length > 0)
+                        unMunicipio = salida.First();
+                }
+            }
+
+            return unMunicipio;
+        }
+
+        public static Municipio ObtenerMunicipio(string nombreMunicipio, string nombreDepartamento)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            Municipio unMunicipio = new Municipio();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                //Se necesitan los dos parámetros porque existen municipios con el mismo nombre en diferente departamento
+
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_departamento", nombreDepartamento,
+                    DbType.String, ParameterDirection.Input);
+                parametrosSentencia.Add("@nombre_municipio", nombreMunicipio,
+                    DbType.String, ParameterDirection.Input);
+
+                //Primero, validar la cantidad de municipios
+                string cantidadMunicipiosSql = "SELECT COUNT(codigo_municipio) cantidadMunicipios FROM v_info_municipios " +
+                                                "WHERE nombre_departamento = @nombre_departamento " +
+                                                "AND nombre_municipio = @nombre_municipio";
+
+                int cantidadMunicipios = cxnDB.Query<int>(cantidadMunicipiosSql, parametrosSentencia).FirstOrDefault();
+
+                if (cantidadMunicipios != 0)
+                {
+                    string consultaMunicipioSQL =   "SELECT DISTINCT codigo_municipio Codigo, nombre_municipio Nombre, " +
+                                                    "codigo_cuenca CodigoCuenca, nombre_cuenca NombreCuenca, " +
+                                                    "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento " +
+                                                    "FROM v_info_municipios " +
+                                                    "WHERE nombre_departamento = @nombre_departamento " +
+                                                    "AND nombre_municipio = @nombre_municipio " +
+                                                    "ORDER BY nombre_municipio";
+
+                    var salida = cxnDB.Query<Municipio>(consultaMunicipioSQL, parametrosSentencia);
+
+                    if (salida.ToArray().Length > 0)
+                        unMunicipio = salida.First();
+                }
+            }
+
+            return unMunicipio;
+        }
+
+        public static bool InsertarMunicipio(Municipio nuevoMunicipio, out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;
             bool resultadoInsercion = false;
 
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             //Aqui validamos primero que el nombre del municipio no exista para ese departamento
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
-                //Obtenemos el Objeto que representa este municipio
-                Municipio nuevoMunicipio = ObtieneMunicipio(nombreMunicipio, nombreCuenca, nombreDepartamento);
+                //Complementamos códigos del municipio
+                ComplementarCodigosEnMunicipio(nuevoMunicipio);
 
                 //Si el código del municipio es != 0, el municipio ya existe y no se puede insertar
                 if (nuevoMunicipio.Codigo != 0)
                 {
                     resultadoInsercion = false;
                     mensajeInsercion = $"Ya existe un municipio con ese nombre para " +
-                        $"el departamento {nombreDepartamento}";
+                        $"el departamento {nuevoMunicipio.NombreDepartamento}";
                 }
                 else
                 {
@@ -207,7 +526,8 @@ namespace PescaArtesanal_WindowsForms
                     try
                     {
                         string insertaDepartamentoSql = "INSERT INTO municipios (nombre, codigo_departamento, codigo_cuenca) " +
-                            " VALUES (@Nombre, @CodigoDepartamento, @CodigoCuenca)";
+                                                        "VALUES (@Nombre, @CodigoDepartamento, @CodigoCuenca)";
+                        
                         cantidadFilas = cxnDB.Execute(insertaDepartamentoSql, nuevoMunicipio);
                     }
                     catch (SQLiteException)
@@ -221,45 +541,43 @@ namespace PescaArtesanal_WindowsForms
                     if (cantidadFilas > 0)
                     {
                         resultadoInsercion = true;
-                        mensajeInsercion = $"Inserción del municipio {nombreMunicipio} se hizo para " +
-                            $"el departamento {nombreDepartamento} en la cuenca {nombreCuenca}";
+                        mensajeInsercion = $"Inserción del municipio {nuevoMunicipio.Nombre} se hizo para " +
+                            $"el departamento {nuevoMunicipio.NombreDepartamento} en la cuenca {nuevoMunicipio.NombreCuenca}";
                     }
                 }
             }            
             return resultadoInsercion;
         }
-
-        /// <summary>
-        /// Actualiza un municipio existente
-        /// </summary>
-        /// <param name="unMunicipio">Objeto municipio a actualizar</param>
-        /// <param name="mensajeActualizacion">Resultado del proceso de actualización</param>
-        /// <returns>verdadero si la actualización fue exitosa</returns>
-        public static bool ActualizaMunicipio(Municipio unMunicipio, out string mensajeActualizacion)
+        
+        public static bool ActualizarMunicipio(Municipio unMunicipio, out string mensajeActualizacion)
         {
             mensajeActualizacion = string.Empty;
             bool resultadoActualizacion = false;
 
-            //Aqui actualizamos los códigos de cuenca y departamento
-            unMunicipio.CodigoCuenca = ObtieneCodigoCuenca(unMunicipio.NombreCuenca!);
-            unMunicipio.CodigoDepartamento = ObtieneCodigoDepartamento(unMunicipio.NombreDepartamento!);
-
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
-            //Aqui validamos primero que el nuevo nombre del municipio no exista para ese departamento
+            /*
+                Actualización:
+                Busca permitir el cambio de nombre, departamento o cuenca a un municipio siempre y cuando
+                el resultado no coincida con la misma combinación de otro municipio que ya exista
+            */
 
-            //Obtenemos el Objeto que representa este municipio
-            Municipio otroMunicipio = ObtieneMunicipio(unMunicipio.Nombre!,
-                unMunicipio.NombreCuenca!, unMunicipio.NombreDepartamento!);
+            //Complementamos códigos de Cuenca y Departamento según los datos que viene de la Interfaz
+            unMunicipio.CodigoCuenca = ObtenerCodigoCuenca(unMunicipio.NombreCuenca!);
+            unMunicipio.CodigoDepartamento = ObtenerCodigoDepartamento(unMunicipio.NombreDepartamento!);
 
-            //Si el código del municipio es != 0, el municipio ya existe y no se puede insertar
-            if (otroMunicipio.Codigo != 0 &&
-                unMunicipio.CodigoCuenca == otroMunicipio.CodigoCuenca
-                && unMunicipio.CodigoDepartamento == otroMunicipio.CodigoDepartamento)
+            //Con esos mismos nombres de municipio y departamento, buscamos si existe un municipio
+            Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
+
+            //Si el código es distinto entre estos dos municipios pero con mismo nombre de municipio y departamento,
+            //no se puede hacer la actualización porque ya hay otro municipio con ese nombre
+            if(unMunicipio.Codigo != municipioExistente.Codigo &&
+                unMunicipio.Nombre == municipioExistente.Nombre &&
+                unMunicipio.NombreDepartamento == municipioExistente.NombreDepartamento)
             {
                 resultadoActualizacion = false;
-                mensajeActualizacion = $"No se hizo actualización porque ya existe un municipio" +
+                mensajeActualizacion = $"No se hizo actualización porque ya existe un municipio " +
                     $"en el departamento {unMunicipio.NombreDepartamento} " +
                     $"para la cuenca {unMunicipio.NombreCuenca}";
             }
@@ -269,10 +587,10 @@ namespace PescaArtesanal_WindowsForms
                 {
                     try
                     {
-                        string actualizaMunicipioSQL = "UPDATE municipios SET nombre = @Nombre, " +
-                            "codigo_cuenca = @CodigoCuenca, " +
-                            "codigo_departamento = @CodigoDepartamento " +
-                            "WHERE codigo = @Codigo";
+                        string actualizaMunicipioSQL =  "UPDATE municipios SET nombre = @Nombre, " +
+                                                        "codigo_cuenca = @CodigoCuenca, " +
+                                                        "codigo_departamento = @CodigoDepartamento " +
+                                                        "WHERE codigo = @Codigo";
 
                         cantidadFilas = cxnDB.Execute(actualizaMunicipioSQL, unMunicipio);
 
@@ -288,46 +606,40 @@ namespace PescaArtesanal_WindowsForms
                         cantidadFilas = 0;
                         mensajeActualizacion = $"Error de Actualizción en la DB. {elError.Message}";
                     }
-
                 }
             }
             return resultadoActualizacion;
         }
 
-        /// <summary>
-        /// Elimina un municipio existente
-        /// </summary>
-        /// <param name="codigoMunicipio">Codigo del municipio a eliminar</param>
-        /// <param name="mensajeEliminacion">Resultado del proceso de eliminación</param>
-        /// <returns>verdadero si la eliminación fue exitosa</returns>
-        public static bool EliminaMunicipio(int codigoMunicipio, out string mensajeEliminacion)
+        public static bool EliminarMunicipio(Municipio unMunicipio, out string mensajeEliminacion)
         {
             mensajeEliminacion = string.Empty;
             bool resultadoEliminacion = false;
 
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             //Validaciones a realizar
             //1. Que el municipio exista
             //2. Que no tenga actividades de pesca asignadas
 
-            Municipio unMunicipio = ObtieneMunicipio(codigoMunicipio);
-            if (unMunicipio.Codigo == 0)
+            Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Codigo);
+
+            if (municipioExistente.Codigo == 0)
             {
                 resultadoEliminacion = false;
-                mensajeEliminacion = "No se encontró municipio con ese código";
+                mensajeEliminacion = $"No se encontró municipio {unMunicipio.Nombre} para eliminar";
             }
             else
             {
                 //Ya que sabemos existe, validemos que no haya actividades de pesca asociadas
-                int cantidadActividades = ObtieneCantidadActividadesPescaMunicipio(codigoMunicipio);
+                int cantidadActividades = ObtenerCantidadActividadesPescaMunicipio(unMunicipio);
 
                 if (cantidadActividades != 0)
                 {
                     resultadoEliminacion = false;
                     mensajeEliminacion = $"No se pudo eliminar el municipio {unMunicipio.Nombre} " +
-                        $"porque tiene asociadas {cantidadActividades} actividades de pesca";
+                        $"porque tiene asociadas {cantidadActividades} actividad(es) de pesca";
                 }
                 else 
                 {
@@ -336,14 +648,10 @@ namespace PescaArtesanal_WindowsForms
                     {
                         try
                         {
-                            DynamicParameters parametrosSentencia = new DynamicParameters();
-                            parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
-                                DbType.Int32, ParameterDirection.Input);
+                            string eliminaMunicipioSQL = "DELETE FROM municipios " +
+                                                         "WHERE codigo = @Codigo";
 
-                            string eliminaMunicipioSQL = "DELETE FROM municipios WHERE " +
-                                "codigo = @codigo_municipio";
-
-                            cantidadFilas = cxnDB.Execute(eliminaMunicipioSQL, parametrosSentencia);
+                            cantidadFilas = cxnDB.Execute(eliminaMunicipioSQL, unMunicipio);
 
                             if (cantidadFilas > 0)
                             {
@@ -367,14 +675,14 @@ namespace PescaArtesanal_WindowsForms
             return resultadoEliminacion;
         }
 
-        private static int ObtieneCantidadActividadesPescaMunicipio(int codigoMunicipio)
+        private static int ObtenerCantidadActividadesPescaMunicipio(Municipio unMunicipio)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 DynamicParameters parametrosSentencia = new DynamicParameters();
-                parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
+                parametrosSentencia.Add("@codigo_municipio", unMunicipio.Codigo,
                     DbType.Int32, ParameterDirection.Input);
 
                 int cantidadActividades = cxnDB.Query<int>("SELECT count(codigo) total FROM actividades " +
@@ -384,63 +692,50 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        /// <summary>
-        /// Obtiene el objeto municipio a partir del nombre, cuenca y departamento
-        /// </summary>
-        /// <param name="nombreMunicipio">nombre del municipio</param>
-        /// <param name="nombreDepartamento">nombre del departamento</param>
-        /// <param name="nombreCuenca">nombre de la cuenca</param>
-        /// <returns></returns>
-        private static Municipio ObtieneMunicipio(string nombreMunicipio, string nombreCuenca, string nombreDepartamento)
+        private static void ComplementarCodigosEnMunicipio(Municipio municipioIncompleto)
         {
-            Municipio elMunicipio = new Municipio();
-
-            elMunicipio.Nombre = nombreMunicipio;
-            elMunicipio.NombreCuenca = nombreCuenca;
-            elMunicipio.NombreDepartamento = nombreDepartamento;
-            elMunicipio.Codigo = ObtieneCodigoMunicipio(nombreMunicipio, nombreDepartamento);
-            elMunicipio.CodigoCuenca = ObtieneCodigoCuenca(nombreCuenca);
-            elMunicipio.CodigoDepartamento = ObtieneCodigoDepartamento(nombreDepartamento);
-
-            return elMunicipio;
-        }
-
-        /// <summary>
-        /// Obtiene el objeto municipio a partir del código
-        /// </summary>
-        /// <param name="codigoMunicipio">Codigo del municipio</param>
-        /// <returns></returns>
-        public static Municipio ObtieneMunicipio(int codigoMunicipio)
-        {
-            cadenaConexion = ObtieneCadenaConexion();
-            Municipio municipioResultado = new Municipio();
-
-            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
-            {
-
-                DynamicParameters parametrosSentencia = new DynamicParameters();
-                parametrosSentencia.Add("@codigo_municipio", codigoMunicipio,
-                    DbType.Int32, ParameterDirection.Input);
-
-                string sentenciaSQL = "SELECT codigo_municipio Codigo, nombre_municipio Nombre, " +
-                    "codigo_departamento CodigoDepartamento, nombre_departamento NombreDepartamento, " +
-                    "codigo_cuenca CodigoCuenca, nombre_cuenca NombreCuenca FROM v_info_municipios " +
-                    "WHERE codigo_municipio = @codigo_municipio";
-
-                var salida = cxnDB.Query<Municipio>(sentenciaSQL, parametrosSentencia);
-
-                //validamos cuantos registros devuelve la lista
-                if (salida.ToArray().Length > 0 )
-                    municipioResultado = salida.First();
-
-                return municipioResultado;
-            }
-
+            municipioIncompleto.Codigo = ObtenerCodigoMunicipio(municipioIncompleto.Nombre!, municipioIncompleto.NombreDepartamento!);
+            municipioIncompleto.CodigoCuenca = ObtenerCodigoCuenca(municipioIncompleto.NombreCuenca!);
+            municipioIncompleto.CodigoDepartamento = ObtenerCodigoDepartamento(municipioIncompleto.NombreDepartamento!);
         }
 
         #endregion CRUD_Municipios
 
         #region CRUD_MetodosPesca
+
+        /// <summary>
+        /// Obtiene la lista con objetos tipo Metodo
+        /// </summary>
+        /// <returns>lista de objetos tipo Metodo</returns>
+        public static List<Metodo> ObtieneListaMetodos()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                string sentenciaSQL = "SELECT DISTINCT codigo, nombre FROM metodos ORDER BY nombre";
+                var resultadoMetodos = cxnDB.Query<Metodo>(sentenciaSQL, new DynamicParameters());
+
+                return resultadoMetodos.AsList();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la lista los nombres de ls métodos
+        /// </summary>
+        /// <returns>lista de strings con los nombres de los Metodo</returns>
+        public static List<string> ObtenerListaNombresMetodos()
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                string sentenciaSQL = "SELECT DISTINCT nombre FROM metodos ORDER BY nombre";
+                var resultadoMetodos = cxnDB.Query<string>(sentenciaSQL, new DynamicParameters());
+
+                return resultadoMetodos.AsList();
+            }
+        }
 
         #endregion CRUD_MetodosPesca
 
@@ -453,7 +748,7 @@ namespace PescaArtesanal_WindowsForms
         /// <returns></returns>
         public static Actividad ObtieneActividad(int codigoActividad)
         {
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
             Actividad actividadResultado = new Actividad();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
@@ -493,7 +788,7 @@ namespace PescaArtesanal_WindowsForms
             bool resultadoInsercion = false;
 
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             //Aqui validamos primero que el nombre del municipio no exista para ese departamento
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
@@ -536,7 +831,7 @@ namespace PescaArtesanal_WindowsForms
             bool resultadoActualizacion = false;
 
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             //Aqui validamos primero que la actividad a actualizar ya exista
 
@@ -594,7 +889,7 @@ namespace PescaArtesanal_WindowsForms
             bool resultadoEliminacion = false;
 
             int cantidadFilas = 0;
-            cadenaConexion = ObtieneCadenaConexion();
+            cadenaConexion = ObtenerCadenaConexion();
 
             //Validaciones a realizar
             //1. Que la actividad exista

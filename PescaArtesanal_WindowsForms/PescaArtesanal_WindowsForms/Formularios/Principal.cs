@@ -34,33 +34,23 @@ namespace PescaArtesanal_WindowsForms
             VisualizaPanelCrud(panelCrudActividades, btnFormasActividades);
         }
 
-        /// <summary>
-        /// Abre una nueva instancia del formulario indicado, validando que no esté previamente cargado
-        /// </summary>
-        /// <typeparam name="unFormulario">El formulario a abrir</typeparam>
         private void AbrirFormulario<unFormulario>() where unFormulario : Form, new()
         {
             Form formulario = panelFormularios.Controls.OfType<unFormulario>().FirstOrDefault()!;
 
-            //si el formulario/instancia no existe
-            if (formulario == null)
-            {
-                formulario = new unFormulario();
-                formulario.TopLevel = false;
-                formulario.FormBorderStyle = FormBorderStyle.None;
-                formulario.Dock = DockStyle.Fill;
-                panelFormularios.Controls.Add(formulario);
-                panelFormularios.Tag = formulario;
-                formulario.Show();
-                formulario.BringToFront();
-                formulario.FormClosed += new FormClosedEventHandler(CerrarFormulario!);
-            }
-            else
-            {
-                //si el formulario/instancia existe
-                formulario.BringToFront();
-                formulario.Activate();
-            }
+            //Si el formulario existe, se cierra
+            if (formulario != null)
+                formulario.Close();
+
+            formulario = new unFormulario();
+            formulario.TopLevel = false;
+            formulario.FormBorderStyle = FormBorderStyle.None;
+            formulario.Dock = DockStyle.Fill;
+            panelFormularios.Controls.Add(formulario);
+            panelFormularios.Tag = formulario;
+            formulario.Show();
+            formulario.BringToFront();
+            formulario.FormClosed += new FormClosedEventHandler(CerrarFormulario!);
         }
 
         private void CerrarFormulario(object sender, FormClosedEventArgs e)
@@ -87,6 +77,12 @@ namespace PescaArtesanal_WindowsForms
             {
                 btnFormaReportesMunicipio.BackColor = Color.LightGray;
                 btnFormaReportesMunicipio.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["ActividadNueva"] == null)
+            {
+                btnFormaNuevaActividad.BackColor = Color.LightGray;
+                btnFormaNuevaActividad.ForeColor = Color.Black;
             }
         }
 
@@ -168,6 +164,13 @@ namespace PescaArtesanal_WindowsForms
             AbrirFormulario<MunicipioReportes>();
             btnFormaReportesMunicipio.BackColor = Color.SteelBlue;
             btnFormaReportesMunicipio.ForeColor = Color.White;
+        }
+
+        private void btnFormaNuevaActividad_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario<ActividadNueva>();
+            btnFormaNuevaActividad.BackColor = Color.SteelBlue;
+            btnFormaNuevaActividad.ForeColor = Color.White;
         }
     }
 }

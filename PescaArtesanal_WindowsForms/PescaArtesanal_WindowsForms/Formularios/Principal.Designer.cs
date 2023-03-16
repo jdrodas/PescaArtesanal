@@ -56,14 +56,14 @@
             btnFormaNuevoDepartamento = new Button();
             btnFormasDepartamentos = new Button();
             panelCrudCuencas = new Panel();
-            btnFormasCuencas = new Button();
-            pbxLogoPesca = new PictureBox();
-            panelTitulo = new Panel();
-            etiquetaTituloAplicacion = new Label();
             btnFormaReportesCuenca = new Button();
             btnFormaBorraCuenca = new Button();
             btnFormaActualizaCuenca = new Button();
             btnFormaNuevaCuenca = new Button();
+            btnFormasCuencas = new Button();
+            pbxLogoPesca = new PictureBox();
+            panelTitulo = new Panel();
+            etiquetaTituloAplicacion = new Label();
             panelContenedor.SuspendLayout();
             panelMenu.SuspendLayout();
             panelCrudActividades.SuspendLayout();
@@ -83,17 +83,21 @@
             panelContenedor.Controls.Add(panelTitulo);
             panelContenedor.Dock = DockStyle.Fill;
             panelContenedor.Location = new Point(0, 0);
+            panelContenedor.Margin = new Padding(2, 2, 2, 2);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1691, 1018);
+            panelContenedor.Size = new Size(1080, 513);
             panelContenedor.TabIndex = 0;
             // 
             // panelFormularios
             // 
             panelFormularios.BackColor = Color.FromArgb(224, 224, 224);
             panelFormularios.Dock = DockStyle.Fill;
-            panelFormularios.Location = new Point(286, 83);
+            panelFormularios.Location = new Point(200, 50);
+            panelFormularios.Margin = new Padding(2, 2, 2, 2);
+            panelFormularios.MaximumSize = new Size(880, 463);
+            panelFormularios.MinimumSize = new Size(880, 463);
             panelFormularios.Name = "panelFormularios";
-            panelFormularios.Size = new Size(1405, 935);
+            panelFormularios.Size = new Size(880, 463);
             panelFormularios.TabIndex = 2;
             // 
             // panelMenu
@@ -112,9 +116,10 @@
             panelMenu.Controls.Add(btnFormasCuencas);
             panelMenu.Controls.Add(pbxLogoPesca);
             panelMenu.Dock = DockStyle.Left;
-            panelMenu.Location = new Point(0, 83);
+            panelMenu.Location = new Point(0, 50);
+            panelMenu.Margin = new Padding(2, 2, 2, 2);
             panelMenu.Name = "panelMenu";
-            panelMenu.Size = new Size(286, 935);
+            panelMenu.Size = new Size(200, 463);
             panelMenu.TabIndex = 1;
             // 
             // panelCrudActividades
@@ -124,10 +129,9 @@
             panelCrudActividades.Controls.Add(btnFormaActualizaActividad);
             panelCrudActividades.Controls.Add(btnFormaNuevaActividad);
             panelCrudActividades.Dock = DockStyle.Top;
-            panelCrudActividades.Location = new Point(0, 1050);
-            panelCrudActividades.Margin = new Padding(4, 5, 4, 5);
+            panelCrudActividades.Location = new Point(0, 630);
             panelCrudActividades.Name = "panelCrudActividades";
-            panelCrudActividades.Size = new Size(260, 167);
+            panelCrudActividades.Size = new Size(183, 100);
             panelCrudActividades.TabIndex = 5;
             panelCrudActividades.Visible = false;
             // 
@@ -138,11 +142,10 @@
             btnFormaReportesActividad.FlatAppearance.BorderSize = 0;
             btnFormaReportesActividad.FlatStyle = FlatStyle.Flat;
             btnFormaReportesActividad.ForeColor = Color.Black;
-            btnFormaReportesActividad.Location = new Point(0, 126);
-            btnFormaReportesActividad.Margin = new Padding(4, 5, 4, 5);
+            btnFormaReportesActividad.Location = new Point(0, 75);
             btnFormaReportesActividad.Name = "btnFormaReportesActividad";
-            btnFormaReportesActividad.Padding = new Padding(14, 0, 0, 0);
-            btnFormaReportesActividad.Size = new Size(260, 42);
+            btnFormaReportesActividad.Padding = new Padding(10, 0, 0, 0);
+            btnFormaReportesActividad.Size = new Size(183, 25);
             btnFormaReportesActividad.TabIndex = 11;
             btnFormaReportesActividad.Text = "Reportes Actividad";
             btnFormaReportesActividad.TextAlign = ContentAlignment.MiddleLeft;
@@ -155,11 +158,10 @@
             btnFormaBorraActividad.FlatAppearance.BorderSize = 0;
             btnFormaBorraActividad.FlatStyle = FlatStyle.Flat;
             btnFormaBorraActividad.ForeColor = Color.Black;
-            btnFormaBorraActividad.Location = new Point(0, 84);
-            btnFormaBorraActividad.Margin = new Padding(4, 5, 4, 5);
+            btnFormaBorraActividad.Location = new Point(0, 50);
             btnFormaBorraActividad.Name = "btnFormaBorraActividad";
-            btnFormaBorraActividad.Padding = new Padding(14, 0, 0, 0);
-            btnFormaBorraActividad.Size = new Size(260, 42);
+            btnFormaBorraActividad.Padding = new Padding(10, 0, 0, 0);
+            btnFormaBorraActividad.Size = new Size(183, 25);
             btnFormaBorraActividad.TabIndex = 10;
             btnFormaBorraActividad.Text = "Borra Actividad";
             btnFormaBorraActividad.TextAlign = ContentAlignment.MiddleLeft;
@@ -172,11 +174,10 @@
             btnFormaActualizaActividad.FlatAppearance.BorderSize = 0;
             btnFormaActualizaActividad.FlatStyle = FlatStyle.Flat;
             btnFormaActualizaActividad.ForeColor = Color.Black;
-            btnFormaActualizaActividad.Location = new Point(0, 42);
-            btnFormaActualizaActividad.Margin = new Padding(4, 5, 4, 5);
+            btnFormaActualizaActividad.Location = new Point(0, 25);
             btnFormaActualizaActividad.Name = "btnFormaActualizaActividad";
-            btnFormaActualizaActividad.Padding = new Padding(14, 0, 0, 0);
-            btnFormaActualizaActividad.Size = new Size(260, 42);
+            btnFormaActualizaActividad.Padding = new Padding(10, 0, 0, 0);
+            btnFormaActualizaActividad.Size = new Size(183, 25);
             btnFormaActualizaActividad.TabIndex = 9;
             btnFormaActualizaActividad.Text = "Actualiza Actividad";
             btnFormaActualizaActividad.TextAlign = ContentAlignment.MiddleLeft;
@@ -190,14 +191,14 @@
             btnFormaNuevaActividad.FlatStyle = FlatStyle.Flat;
             btnFormaNuevaActividad.ForeColor = Color.Black;
             btnFormaNuevaActividad.Location = new Point(0, 0);
-            btnFormaNuevaActividad.Margin = new Padding(4, 5, 4, 5);
             btnFormaNuevaActividad.Name = "btnFormaNuevaActividad";
-            btnFormaNuevaActividad.Padding = new Padding(14, 0, 0, 0);
-            btnFormaNuevaActividad.Size = new Size(260, 42);
+            btnFormaNuevaActividad.Padding = new Padding(10, 0, 0, 0);
+            btnFormaNuevaActividad.Size = new Size(183, 25);
             btnFormaNuevaActividad.TabIndex = 8;
             btnFormaNuevaActividad.Text = "Nueva Actividad";
             btnFormaNuevaActividad.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaNuevaActividad.UseVisualStyleBackColor = true;
+            btnFormaNuevaActividad.Click += btnFormaNuevaActividad_Click;
             // 
             // btnFormasActividades
             // 
@@ -205,10 +206,9 @@
             btnFormasActividades.Dock = DockStyle.Top;
             btnFormasActividades.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             btnFormasActividades.ForeColor = Color.White;
-            btnFormasActividades.Location = new Point(0, 992);
-            btnFormasActividades.Margin = new Padding(4, 5, 4, 5);
+            btnFormasActividades.Location = new Point(0, 595);
             btnFormasActividades.Name = "btnFormasActividades";
-            btnFormasActividades.Size = new Size(260, 58);
+            btnFormasActividades.Size = new Size(183, 35);
             btnFormasActividades.TabIndex = 4;
             btnFormasActividades.Text = "Actividades de Pesca";
             btnFormasActividades.TextAlign = ContentAlignment.MiddleLeft;
@@ -222,10 +222,9 @@
             panelCrudMetodos.Controls.Add(btnFormaActualizaMetodo);
             panelCrudMetodos.Controls.Add(btnFormaNuevoMetodo);
             panelCrudMetodos.Dock = DockStyle.Top;
-            panelCrudMetodos.Location = new Point(0, 825);
-            panelCrudMetodos.Margin = new Padding(4, 5, 4, 5);
+            panelCrudMetodos.Location = new Point(0, 495);
             panelCrudMetodos.Name = "panelCrudMetodos";
-            panelCrudMetodos.Size = new Size(260, 167);
+            panelCrudMetodos.Size = new Size(183, 100);
             panelCrudMetodos.TabIndex = 3;
             panelCrudMetodos.Visible = false;
             // 
@@ -236,11 +235,10 @@
             btnFormaReportesMetodo.FlatAppearance.BorderSize = 0;
             btnFormaReportesMetodo.FlatStyle = FlatStyle.Flat;
             btnFormaReportesMetodo.ForeColor = Color.Black;
-            btnFormaReportesMetodo.Location = new Point(0, 126);
-            btnFormaReportesMetodo.Margin = new Padding(4, 5, 4, 5);
+            btnFormaReportesMetodo.Location = new Point(0, 75);
             btnFormaReportesMetodo.Name = "btnFormaReportesMetodo";
-            btnFormaReportesMetodo.Padding = new Padding(14, 0, 0, 0);
-            btnFormaReportesMetodo.Size = new Size(260, 42);
+            btnFormaReportesMetodo.Padding = new Padding(10, 0, 0, 0);
+            btnFormaReportesMetodo.Size = new Size(183, 25);
             btnFormaReportesMetodo.TabIndex = 7;
             btnFormaReportesMetodo.Text = "Reportes Método";
             btnFormaReportesMetodo.TextAlign = ContentAlignment.MiddleLeft;
@@ -253,11 +251,10 @@
             btnFormaBorraMetodo.FlatAppearance.BorderSize = 0;
             btnFormaBorraMetodo.FlatStyle = FlatStyle.Flat;
             btnFormaBorraMetodo.ForeColor = Color.Black;
-            btnFormaBorraMetodo.Location = new Point(0, 84);
-            btnFormaBorraMetodo.Margin = new Padding(4, 5, 4, 5);
+            btnFormaBorraMetodo.Location = new Point(0, 50);
             btnFormaBorraMetodo.Name = "btnFormaBorraMetodo";
-            btnFormaBorraMetodo.Padding = new Padding(14, 0, 0, 0);
-            btnFormaBorraMetodo.Size = new Size(260, 42);
+            btnFormaBorraMetodo.Padding = new Padding(10, 0, 0, 0);
+            btnFormaBorraMetodo.Size = new Size(183, 25);
             btnFormaBorraMetodo.TabIndex = 6;
             btnFormaBorraMetodo.Text = "Borra Método";
             btnFormaBorraMetodo.TextAlign = ContentAlignment.MiddleLeft;
@@ -270,11 +267,10 @@
             btnFormaActualizaMetodo.FlatAppearance.BorderSize = 0;
             btnFormaActualizaMetodo.FlatStyle = FlatStyle.Flat;
             btnFormaActualizaMetodo.ForeColor = Color.Black;
-            btnFormaActualizaMetodo.Location = new Point(0, 42);
-            btnFormaActualizaMetodo.Margin = new Padding(4, 5, 4, 5);
+            btnFormaActualizaMetodo.Location = new Point(0, 25);
             btnFormaActualizaMetodo.Name = "btnFormaActualizaMetodo";
-            btnFormaActualizaMetodo.Padding = new Padding(14, 0, 0, 0);
-            btnFormaActualizaMetodo.Size = new Size(260, 42);
+            btnFormaActualizaMetodo.Padding = new Padding(10, 0, 0, 0);
+            btnFormaActualizaMetodo.Size = new Size(183, 25);
             btnFormaActualizaMetodo.TabIndex = 5;
             btnFormaActualizaMetodo.Text = "Actualiza Método";
             btnFormaActualizaMetodo.TextAlign = ContentAlignment.MiddleLeft;
@@ -288,10 +284,9 @@
             btnFormaNuevoMetodo.FlatStyle = FlatStyle.Flat;
             btnFormaNuevoMetodo.ForeColor = Color.Black;
             btnFormaNuevoMetodo.Location = new Point(0, 0);
-            btnFormaNuevoMetodo.Margin = new Padding(4, 5, 4, 5);
             btnFormaNuevoMetodo.Name = "btnFormaNuevoMetodo";
-            btnFormaNuevoMetodo.Padding = new Padding(14, 0, 0, 0);
-            btnFormaNuevoMetodo.Size = new Size(260, 42);
+            btnFormaNuevoMetodo.Padding = new Padding(10, 0, 0, 0);
+            btnFormaNuevoMetodo.Size = new Size(183, 25);
             btnFormaNuevoMetodo.TabIndex = 4;
             btnFormaNuevoMetodo.Text = "Nuevo Método";
             btnFormaNuevoMetodo.TextAlign = ContentAlignment.MiddleLeft;
@@ -303,10 +298,9 @@
             btnFormasMetodos.Dock = DockStyle.Top;
             btnFormasMetodos.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             btnFormasMetodos.ForeColor = Color.White;
-            btnFormasMetodos.Location = new Point(0, 767);
-            btnFormasMetodos.Margin = new Padding(4, 5, 4, 5);
+            btnFormasMetodos.Location = new Point(0, 460);
             btnFormasMetodos.Name = "btnFormasMetodos";
-            btnFormasMetodos.Size = new Size(260, 58);
+            btnFormasMetodos.Size = new Size(183, 35);
             btnFormasMetodos.TabIndex = 2;
             btnFormasMetodos.Text = "Métodos de Pesca";
             btnFormasMetodos.TextAlign = ContentAlignment.MiddleLeft;
@@ -320,10 +314,9 @@
             panelCrudMunicipios.Controls.Add(btnFormaActualizaMunicipio);
             panelCrudMunicipios.Controls.Add(btnFormaNuevoMunicipio);
             panelCrudMunicipios.Dock = DockStyle.Top;
-            panelCrudMunicipios.Location = new Point(0, 600);
-            panelCrudMunicipios.Margin = new Padding(4, 5, 4, 5);
+            panelCrudMunicipios.Location = new Point(0, 360);
             panelCrudMunicipios.Name = "panelCrudMunicipios";
-            panelCrudMunicipios.Size = new Size(260, 167);
+            panelCrudMunicipios.Size = new Size(183, 100);
             panelCrudMunicipios.TabIndex = 1;
             panelCrudMunicipios.Visible = false;
             // 
@@ -334,11 +327,10 @@
             btnFormaReportesMunicipio.FlatAppearance.BorderSize = 0;
             btnFormaReportesMunicipio.FlatStyle = FlatStyle.Flat;
             btnFormaReportesMunicipio.ForeColor = Color.Black;
-            btnFormaReportesMunicipio.Location = new Point(0, 126);
-            btnFormaReportesMunicipio.Margin = new Padding(4, 5, 4, 5);
+            btnFormaReportesMunicipio.Location = new Point(0, 75);
             btnFormaReportesMunicipio.Name = "btnFormaReportesMunicipio";
-            btnFormaReportesMunicipio.Padding = new Padding(14, 0, 0, 0);
-            btnFormaReportesMunicipio.Size = new Size(260, 42);
+            btnFormaReportesMunicipio.Padding = new Padding(10, 0, 0, 0);
+            btnFormaReportesMunicipio.Size = new Size(183, 25);
             btnFormaReportesMunicipio.TabIndex = 3;
             btnFormaReportesMunicipio.Text = "Reportes Municipio";
             btnFormaReportesMunicipio.TextAlign = ContentAlignment.MiddleLeft;
@@ -352,11 +344,10 @@
             btnFormaBorraMunicipio.FlatAppearance.BorderSize = 0;
             btnFormaBorraMunicipio.FlatStyle = FlatStyle.Flat;
             btnFormaBorraMunicipio.ForeColor = Color.Black;
-            btnFormaBorraMunicipio.Location = new Point(0, 84);
-            btnFormaBorraMunicipio.Margin = new Padding(4, 5, 4, 5);
+            btnFormaBorraMunicipio.Location = new Point(0, 50);
             btnFormaBorraMunicipio.Name = "btnFormaBorraMunicipio";
-            btnFormaBorraMunicipio.Padding = new Padding(14, 0, 0, 0);
-            btnFormaBorraMunicipio.Size = new Size(260, 42);
+            btnFormaBorraMunicipio.Padding = new Padding(10, 0, 0, 0);
+            btnFormaBorraMunicipio.Size = new Size(183, 25);
             btnFormaBorraMunicipio.TabIndex = 2;
             btnFormaBorraMunicipio.Text = "Borra Municipio";
             btnFormaBorraMunicipio.TextAlign = ContentAlignment.MiddleLeft;
@@ -370,11 +361,10 @@
             btnFormaActualizaMunicipio.FlatAppearance.BorderSize = 0;
             btnFormaActualizaMunicipio.FlatStyle = FlatStyle.Flat;
             btnFormaActualizaMunicipio.ForeColor = Color.Black;
-            btnFormaActualizaMunicipio.Location = new Point(0, 42);
-            btnFormaActualizaMunicipio.Margin = new Padding(4, 5, 4, 5);
+            btnFormaActualizaMunicipio.Location = new Point(0, 25);
             btnFormaActualizaMunicipio.Name = "btnFormaActualizaMunicipio";
-            btnFormaActualizaMunicipio.Padding = new Padding(14, 0, 0, 0);
-            btnFormaActualizaMunicipio.Size = new Size(260, 42);
+            btnFormaActualizaMunicipio.Padding = new Padding(10, 0, 0, 0);
+            btnFormaActualizaMunicipio.Size = new Size(183, 25);
             btnFormaActualizaMunicipio.TabIndex = 1;
             btnFormaActualizaMunicipio.Text = "Actualiza Municipio";
             btnFormaActualizaMunicipio.TextAlign = ContentAlignment.MiddleLeft;
@@ -389,10 +379,9 @@
             btnFormaNuevoMunicipio.FlatStyle = FlatStyle.Flat;
             btnFormaNuevoMunicipio.ForeColor = Color.Black;
             btnFormaNuevoMunicipio.Location = new Point(0, 0);
-            btnFormaNuevoMunicipio.Margin = new Padding(4, 5, 4, 5);
             btnFormaNuevoMunicipio.Name = "btnFormaNuevoMunicipio";
-            btnFormaNuevoMunicipio.Padding = new Padding(14, 0, 0, 0);
-            btnFormaNuevoMunicipio.Size = new Size(260, 42);
+            btnFormaNuevoMunicipio.Padding = new Padding(10, 0, 0, 0);
+            btnFormaNuevoMunicipio.Size = new Size(183, 25);
             btnFormaNuevoMunicipio.TabIndex = 0;
             btnFormaNuevoMunicipio.Text = "Nuevo Municipio";
             btnFormaNuevoMunicipio.TextAlign = ContentAlignment.MiddleLeft;
@@ -405,10 +394,9 @@
             btnFormasMunicipios.Dock = DockStyle.Top;
             btnFormasMunicipios.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             btnFormasMunicipios.ForeColor = Color.White;
-            btnFormasMunicipios.Location = new Point(0, 542);
-            btnFormasMunicipios.Margin = new Padding(4, 5, 4, 5);
+            btnFormasMunicipios.Location = new Point(0, 325);
             btnFormasMunicipios.Name = "btnFormasMunicipios";
-            btnFormasMunicipios.Size = new Size(260, 58);
+            btnFormasMunicipios.Size = new Size(183, 35);
             btnFormasMunicipios.TabIndex = 0;
             btnFormasMunicipios.Text = "Municipios";
             btnFormasMunicipios.TextAlign = ContentAlignment.MiddleLeft;
@@ -422,10 +410,9 @@
             panelCrudDepartamentos.Controls.Add(btnFormaActualizaDepartamento);
             panelCrudDepartamentos.Controls.Add(btnFormaNuevoDepartamento);
             panelCrudDepartamentos.Dock = DockStyle.Top;
-            panelCrudDepartamentos.Location = new Point(0, 375);
-            panelCrudDepartamentos.Margin = new Padding(4, 5, 4, 5);
+            panelCrudDepartamentos.Location = new Point(0, 225);
             panelCrudDepartamentos.Name = "panelCrudDepartamentos";
-            panelCrudDepartamentos.Size = new Size(260, 167);
+            panelCrudDepartamentos.Size = new Size(183, 100);
             panelCrudDepartamentos.TabIndex = 6;
             panelCrudDepartamentos.Visible = false;
             // 
@@ -436,11 +423,10 @@
             btnFormaReportesDepartamento.FlatAppearance.BorderSize = 0;
             btnFormaReportesDepartamento.FlatStyle = FlatStyle.Flat;
             btnFormaReportesDepartamento.ForeColor = Color.Black;
-            btnFormaReportesDepartamento.Location = new Point(0, 126);
-            btnFormaReportesDepartamento.Margin = new Padding(4, 5, 4, 5);
+            btnFormaReportesDepartamento.Location = new Point(0, 75);
             btnFormaReportesDepartamento.Name = "btnFormaReportesDepartamento";
-            btnFormaReportesDepartamento.Padding = new Padding(14, 0, 0, 0);
-            btnFormaReportesDepartamento.Size = new Size(260, 42);
+            btnFormaReportesDepartamento.Padding = new Padding(10, 0, 0, 0);
+            btnFormaReportesDepartamento.Size = new Size(183, 25);
             btnFormaReportesDepartamento.TabIndex = 7;
             btnFormaReportesDepartamento.Text = "Reportes Departamento";
             btnFormaReportesDepartamento.TextAlign = ContentAlignment.MiddleLeft;
@@ -453,11 +439,10 @@
             btnFormaBorraDepartamento.FlatAppearance.BorderSize = 0;
             btnFormaBorraDepartamento.FlatStyle = FlatStyle.Flat;
             btnFormaBorraDepartamento.ForeColor = Color.Black;
-            btnFormaBorraDepartamento.Location = new Point(0, 84);
-            btnFormaBorraDepartamento.Margin = new Padding(4, 5, 4, 5);
+            btnFormaBorraDepartamento.Location = new Point(0, 50);
             btnFormaBorraDepartamento.Name = "btnFormaBorraDepartamento";
-            btnFormaBorraDepartamento.Padding = new Padding(14, 0, 0, 0);
-            btnFormaBorraDepartamento.Size = new Size(260, 42);
+            btnFormaBorraDepartamento.Padding = new Padding(10, 0, 0, 0);
+            btnFormaBorraDepartamento.Size = new Size(183, 25);
             btnFormaBorraDepartamento.TabIndex = 6;
             btnFormaBorraDepartamento.Text = "Borra Departamento";
             btnFormaBorraDepartamento.TextAlign = ContentAlignment.MiddleLeft;
@@ -470,11 +455,10 @@
             btnFormaActualizaDepartamento.FlatAppearance.BorderSize = 0;
             btnFormaActualizaDepartamento.FlatStyle = FlatStyle.Flat;
             btnFormaActualizaDepartamento.ForeColor = Color.Black;
-            btnFormaActualizaDepartamento.Location = new Point(0, 42);
-            btnFormaActualizaDepartamento.Margin = new Padding(4, 5, 4, 5);
+            btnFormaActualizaDepartamento.Location = new Point(0, 25);
             btnFormaActualizaDepartamento.Name = "btnFormaActualizaDepartamento";
-            btnFormaActualizaDepartamento.Padding = new Padding(14, 0, 0, 0);
-            btnFormaActualizaDepartamento.Size = new Size(260, 42);
+            btnFormaActualizaDepartamento.Padding = new Padding(10, 0, 0, 0);
+            btnFormaActualizaDepartamento.Size = new Size(183, 25);
             btnFormaActualizaDepartamento.TabIndex = 5;
             btnFormaActualizaDepartamento.Text = "Actualiza Departamento";
             btnFormaActualizaDepartamento.TextAlign = ContentAlignment.MiddleLeft;
@@ -488,10 +472,9 @@
             btnFormaNuevoDepartamento.FlatStyle = FlatStyle.Flat;
             btnFormaNuevoDepartamento.ForeColor = Color.Black;
             btnFormaNuevoDepartamento.Location = new Point(0, 0);
-            btnFormaNuevoDepartamento.Margin = new Padding(4, 5, 4, 5);
             btnFormaNuevoDepartamento.Name = "btnFormaNuevoDepartamento";
-            btnFormaNuevoDepartamento.Padding = new Padding(14, 0, 0, 0);
-            btnFormaNuevoDepartamento.Size = new Size(260, 42);
+            btnFormaNuevoDepartamento.Padding = new Padding(10, 0, 0, 0);
+            btnFormaNuevoDepartamento.Size = new Size(183, 25);
             btnFormaNuevoDepartamento.TabIndex = 4;
             btnFormaNuevoDepartamento.Text = "Nuevo Departamento";
             btnFormaNuevoDepartamento.TextAlign = ContentAlignment.MiddleLeft;
@@ -503,10 +486,9 @@
             btnFormasDepartamentos.Dock = DockStyle.Top;
             btnFormasDepartamentos.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             btnFormasDepartamentos.ForeColor = Color.White;
-            btnFormasDepartamentos.Location = new Point(0, 317);
-            btnFormasDepartamentos.Margin = new Padding(4, 5, 4, 5);
+            btnFormasDepartamentos.Location = new Point(0, 190);
             btnFormasDepartamentos.Name = "btnFormasDepartamentos";
-            btnFormasDepartamentos.Size = new Size(260, 58);
+            btnFormasDepartamentos.Size = new Size(183, 35);
             btnFormasDepartamentos.TabIndex = 2;
             btnFormasDepartamentos.Text = "Departamentos";
             btnFormasDepartamentos.TextAlign = ContentAlignment.MiddleLeft;
@@ -520,62 +502,11 @@
             panelCrudCuencas.Controls.Add(btnFormaActualizaCuenca);
             panelCrudCuencas.Controls.Add(btnFormaNuevaCuenca);
             panelCrudCuencas.Dock = DockStyle.Top;
-            panelCrudCuencas.Location = new Point(0, 150);
-            panelCrudCuencas.Margin = new Padding(4, 5, 4, 5);
+            panelCrudCuencas.Location = new Point(0, 90);
             panelCrudCuencas.Name = "panelCrudCuencas";
-            panelCrudCuencas.Size = new Size(260, 167);
+            panelCrudCuencas.Size = new Size(183, 100);
             panelCrudCuencas.TabIndex = 1;
             panelCrudCuencas.Visible = false;
-            // 
-            // btnFormasCuencas
-            // 
-            btnFormasCuencas.BackColor = Color.Gray;
-            btnFormasCuencas.Dock = DockStyle.Top;
-            btnFormasCuencas.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
-            btnFormasCuencas.ForeColor = Color.White;
-            btnFormasCuencas.Location = new Point(0, 92);
-            btnFormasCuencas.Margin = new Padding(4, 5, 4, 5);
-            btnFormasCuencas.Name = "btnFormasCuencas";
-            btnFormasCuencas.Size = new Size(260, 58);
-            btnFormasCuencas.TabIndex = 0;
-            btnFormasCuencas.Text = "Cuencas";
-            btnFormasCuencas.TextAlign = ContentAlignment.MiddleLeft;
-            btnFormasCuencas.UseVisualStyleBackColor = false;
-            btnFormasCuencas.Click += btnFormasCuencas_Click;
-            // 
-            // pbxLogoPesca
-            // 
-            pbxLogoPesca.BackColor = Color.FromArgb(255, 255, 192);
-            pbxLogoPesca.Dock = DockStyle.Top;
-            pbxLogoPesca.Location = new Point(0, 0);
-            pbxLogoPesca.Name = "pbxLogoPesca";
-            pbxLogoPesca.Size = new Size(260, 92);
-            pbxLogoPesca.SizeMode = PictureBoxSizeMode.StretchImage;
-            pbxLogoPesca.TabIndex = 0;
-            pbxLogoPesca.TabStop = false;
-            // 
-            // panelTitulo
-            // 
-            panelTitulo.BackColor = Color.SteelBlue;
-            panelTitulo.Controls.Add(etiquetaTituloAplicacion);
-            panelTitulo.Dock = DockStyle.Top;
-            panelTitulo.Location = new Point(0, 0);
-            panelTitulo.Margin = new Padding(1, 2, 1, 2);
-            panelTitulo.Name = "panelTitulo";
-            panelTitulo.Size = new Size(1691, 83);
-            panelTitulo.TabIndex = 3;
-            // 
-            // etiquetaTituloAplicacion
-            // 
-            etiquetaTituloAplicacion.Dock = DockStyle.Top;
-            etiquetaTituloAplicacion.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            etiquetaTituloAplicacion.ForeColor = Color.White;
-            etiquetaTituloAplicacion.Location = new Point(0, 0);
-            etiquetaTituloAplicacion.Name = "etiquetaTituloAplicacion";
-            etiquetaTituloAplicacion.Size = new Size(1691, 83);
-            etiquetaTituloAplicacion.TabIndex = 0;
-            etiquetaTituloAplicacion.Text = "Pesca Artesanal en Colombia";
-            etiquetaTituloAplicacion.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnFormaReportesCuenca
             // 
@@ -584,11 +515,10 @@
             btnFormaReportesCuenca.FlatAppearance.BorderSize = 0;
             btnFormaReportesCuenca.FlatStyle = FlatStyle.Flat;
             btnFormaReportesCuenca.ForeColor = Color.Black;
-            btnFormaReportesCuenca.Location = new Point(0, 126);
-            btnFormaReportesCuenca.Margin = new Padding(4, 5, 4, 5);
+            btnFormaReportesCuenca.Location = new Point(0, 75);
             btnFormaReportesCuenca.Name = "btnFormaReportesCuenca";
-            btnFormaReportesCuenca.Padding = new Padding(14, 0, 0, 0);
-            btnFormaReportesCuenca.Size = new Size(260, 42);
+            btnFormaReportesCuenca.Padding = new Padding(10, 0, 0, 0);
+            btnFormaReportesCuenca.Size = new Size(183, 25);
             btnFormaReportesCuenca.TabIndex = 11;
             btnFormaReportesCuenca.Text = "Reportes Cuenca";
             btnFormaReportesCuenca.TextAlign = ContentAlignment.MiddleLeft;
@@ -601,11 +531,10 @@
             btnFormaBorraCuenca.FlatAppearance.BorderSize = 0;
             btnFormaBorraCuenca.FlatStyle = FlatStyle.Flat;
             btnFormaBorraCuenca.ForeColor = Color.Black;
-            btnFormaBorraCuenca.Location = new Point(0, 84);
-            btnFormaBorraCuenca.Margin = new Padding(4, 5, 4, 5);
+            btnFormaBorraCuenca.Location = new Point(0, 50);
             btnFormaBorraCuenca.Name = "btnFormaBorraCuenca";
-            btnFormaBorraCuenca.Padding = new Padding(14, 0, 0, 0);
-            btnFormaBorraCuenca.Size = new Size(260, 42);
+            btnFormaBorraCuenca.Padding = new Padding(10, 0, 0, 0);
+            btnFormaBorraCuenca.Size = new Size(183, 25);
             btnFormaBorraCuenca.TabIndex = 10;
             btnFormaBorraCuenca.Text = "Borra Cuenca";
             btnFormaBorraCuenca.TextAlign = ContentAlignment.MiddleLeft;
@@ -618,11 +547,10 @@
             btnFormaActualizaCuenca.FlatAppearance.BorderSize = 0;
             btnFormaActualizaCuenca.FlatStyle = FlatStyle.Flat;
             btnFormaActualizaCuenca.ForeColor = Color.Black;
-            btnFormaActualizaCuenca.Location = new Point(0, 42);
-            btnFormaActualizaCuenca.Margin = new Padding(4, 5, 4, 5);
+            btnFormaActualizaCuenca.Location = new Point(0, 25);
             btnFormaActualizaCuenca.Name = "btnFormaActualizaCuenca";
-            btnFormaActualizaCuenca.Padding = new Padding(14, 0, 0, 0);
-            btnFormaActualizaCuenca.Size = new Size(260, 42);
+            btnFormaActualizaCuenca.Padding = new Padding(10, 0, 0, 0);
+            btnFormaActualizaCuenca.Size = new Size(183, 25);
             btnFormaActualizaCuenca.TabIndex = 9;
             btnFormaActualizaCuenca.Text = "Actualiza Cuenca";
             btnFormaActualizaCuenca.TextAlign = ContentAlignment.MiddleLeft;
@@ -636,21 +564,74 @@
             btnFormaNuevaCuenca.FlatStyle = FlatStyle.Flat;
             btnFormaNuevaCuenca.ForeColor = Color.Black;
             btnFormaNuevaCuenca.Location = new Point(0, 0);
-            btnFormaNuevaCuenca.Margin = new Padding(4, 5, 4, 5);
             btnFormaNuevaCuenca.Name = "btnFormaNuevaCuenca";
-            btnFormaNuevaCuenca.Padding = new Padding(14, 0, 0, 0);
-            btnFormaNuevaCuenca.Size = new Size(260, 42);
+            btnFormaNuevaCuenca.Padding = new Padding(10, 0, 0, 0);
+            btnFormaNuevaCuenca.Size = new Size(183, 25);
             btnFormaNuevaCuenca.TabIndex = 8;
             btnFormaNuevaCuenca.Text = "Nueva Cuenca";
             btnFormaNuevaCuenca.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaNuevaCuenca.UseVisualStyleBackColor = true;
             // 
+            // btnFormasCuencas
+            // 
+            btnFormasCuencas.BackColor = Color.Gray;
+            btnFormasCuencas.Dock = DockStyle.Top;
+            btnFormasCuencas.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnFormasCuencas.ForeColor = Color.White;
+            btnFormasCuencas.Location = new Point(0, 55);
+            btnFormasCuencas.Name = "btnFormasCuencas";
+            btnFormasCuencas.Size = new Size(183, 35);
+            btnFormasCuencas.TabIndex = 0;
+            btnFormasCuencas.Text = "Cuencas";
+            btnFormasCuencas.TextAlign = ContentAlignment.MiddleLeft;
+            btnFormasCuencas.UseVisualStyleBackColor = false;
+            btnFormasCuencas.Click += btnFormasCuencas_Click;
+            // 
+            // pbxLogoPesca
+            // 
+            pbxLogoPesca.BackColor = Color.FromArgb(255, 255, 192);
+            pbxLogoPesca.Dock = DockStyle.Top;
+            pbxLogoPesca.Location = new Point(0, 0);
+            pbxLogoPesca.Margin = new Padding(2, 2, 2, 2);
+            pbxLogoPesca.Name = "pbxLogoPesca";
+            pbxLogoPesca.Size = new Size(183, 55);
+            pbxLogoPesca.SizeMode = PictureBoxSizeMode.StretchImage;
+            pbxLogoPesca.TabIndex = 0;
+            pbxLogoPesca.TabStop = false;
+            // 
+            // panelTitulo
+            // 
+            panelTitulo.BackColor = Color.SteelBlue;
+            panelTitulo.Controls.Add(etiquetaTituloAplicacion);
+            panelTitulo.Dock = DockStyle.Top;
+            panelTitulo.Location = new Point(0, 0);
+            panelTitulo.Margin = new Padding(1);
+            panelTitulo.Name = "panelTitulo";
+            panelTitulo.Size = new Size(1080, 50);
+            panelTitulo.TabIndex = 3;
+            // 
+            // etiquetaTituloAplicacion
+            // 
+            etiquetaTituloAplicacion.Dock = DockStyle.Top;
+            etiquetaTituloAplicacion.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            etiquetaTituloAplicacion.ForeColor = Color.White;
+            etiquetaTituloAplicacion.Location = new Point(0, 0);
+            etiquetaTituloAplicacion.Margin = new Padding(2, 0, 2, 0);
+            etiquetaTituloAplicacion.Name = "etiquetaTituloAplicacion";
+            etiquetaTituloAplicacion.Size = new Size(1080, 50);
+            etiquetaTituloAplicacion.TabIndex = 0;
+            etiquetaTituloAplicacion.Text = "Pesca Artesanal en Colombia";
+            etiquetaTituloAplicacion.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // Principal
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1691, 1018);
+            ClientSize = new Size(1080, 513);
             Controls.Add(panelContenedor);
+            Margin = new Padding(2, 2, 2, 2);
+            MaximumSize = new Size(1096, 552);
+            MinimumSize = new Size(1096, 552);
             Name = "Principal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Pesca Artesanal en Colombia";

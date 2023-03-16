@@ -47,7 +47,7 @@
             label1.ForeColor = Color.AliceBlue;
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(984, 32);
+            label1.Size = new Size(880, 32);
             label1.TabIndex = 0;
             label1.Text = "Borrar Municipio existente";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -56,7 +56,7 @@
             // 
             btnCerrarForma.FlatStyle = FlatStyle.Flat;
             btnCerrarForma.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            btnCerrarForma.Location = new Point(955, 3);
+            btnCerrarForma.Location = new Point(850, 3);
             btnCerrarForma.Name = "btnCerrarForma";
             btnCerrarForma.Size = new Size(24, 24);
             btnCerrarForma.TabIndex = 1;
@@ -69,8 +69,8 @@
             lbxInfoMunicipios.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxInfoMunicipios.FormattingEnabled = true;
             lbxInfoMunicipios.ItemHeight = 21;
-            lbxInfoMunicipios.Location = new Point(289, 56);
-            lbxInfoMunicipios.Margin = new Padding(2, 2, 2, 2);
+            lbxInfoMunicipios.Location = new Point(247, 102);
+            lbxInfoMunicipios.Margin = new Padding(2);
             lbxInfoMunicipios.Name = "lbxInfoMunicipios";
             lbxInfoMunicipios.Size = new Size(578, 67);
             lbxInfoMunicipios.TabIndex = 5;
@@ -80,7 +80,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(103, 56);
+            label2.Location = new Point(61, 102);
             label2.Margin = new Padding(2, 0, 2, 0);
             label2.Name = "label2";
             label2.Size = new Size(171, 21);
@@ -91,7 +91,7 @@
             // 
             txtNombreMunicipio.Enabled = false;
             txtNombreMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtNombreMunicipio.Location = new Point(592, 172);
+            txtNombreMunicipio.Location = new Point(550, 218);
             txtNombreMunicipio.Margin = new Padding(3, 2, 3, 2);
             txtNombreMunicipio.Name = "txtNombreMunicipio";
             txtNombreMunicipio.Size = new Size(276, 29);
@@ -101,7 +101,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label6.Location = new Point(388, 175);
+            label6.Location = new Point(346, 221);
             label6.Name = "label6";
             label6.Size = new Size(169, 21);
             label6.TabIndex = 14;
@@ -112,8 +112,8 @@
             txtCodigoMunicipio.BackColor = Color.White;
             txtCodigoMunicipio.Enabled = false;
             txtCodigoMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtCodigoMunicipio.Location = new Point(289, 172);
-            txtCodigoMunicipio.Margin = new Padding(2, 2, 2, 2);
+            txtCodigoMunicipio.Location = new Point(247, 218);
+            txtCodigoMunicipio.Margin = new Padding(2);
             txtCodigoMunicipio.Name = "txtCodigoMunicipio";
             txtCodigoMunicipio.Size = new Size(60, 29);
             txtCodigoMunicipio.TabIndex = 13;
@@ -123,7 +123,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(118, 175);
+            label3.Location = new Point(76, 221);
             label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
             label3.Size = new Size(156, 21);
@@ -134,7 +134,7 @@
             // btnBorraMunicipio
             // 
             btnBorraMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            btnBorraMunicipio.Location = new Point(374, 246);
+            btnBorraMunicipio.Location = new Point(332, 292);
             btnBorraMunicipio.Margin = new Padding(3, 2, 3, 2);
             btnBorraMunicipio.Name = "btnBorraMunicipio";
             btnBorraMunicipio.Size = new Size(221, 30);
@@ -147,7 +147,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(984, 530);
+            ClientSize = new Size(880, 463);
             Controls.Add(btnBorraMunicipio);
             Controls.Add(txtNombreMunicipio);
             Controls.Add(label6);
@@ -158,7 +158,7 @@
             Controls.Add(btnCerrarForma);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(4, 4, 4, 4);
+            Margin = new Padding(4);
             Name = "MunicipioBorrado";
             Text = "Borra Municipio";
             Load += MunicipioBorrado_Load;

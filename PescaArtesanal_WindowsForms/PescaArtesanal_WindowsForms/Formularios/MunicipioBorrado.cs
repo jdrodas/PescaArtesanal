@@ -32,7 +32,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         {
 
             lbxInfoMunicipios.DataSource = null;
-            lbxInfoMunicipios.DataSource = AccesoDatos.ObtieneListaInfoMunicipios();
+            lbxInfoMunicipios.DataSource = AccesoDatos.ObtenerListaInformacionMunicipios();
             lbxInfoMunicipios.DisplayMember = "infoMunicipio";
 
             //Seleccionamos el primer municipio de la lista
@@ -46,7 +46,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 //Obtenemos el código del municipio
                 string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
                 int codigoMunicipio = int.Parse(infoMunicipio[0]!.Trim());
-                txtCodigoMunicipio.Text = codigoMunicipio.ToString(); ;
+                txtCodigoMunicipio.Text = codigoMunicipio.ToString();
 
                 txtNombreMunicipio.Text = infoMunicipio[1]!.Trim();
             }
@@ -65,9 +65,15 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 try
                 {
                     string mensajeEliminacion;
-                    int codigoMunicipio = int.Parse(txtCodigoMunicipio.Text);
+                    string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
 
-                    bool resultadoEliminacion = AccesoDatos.EliminaMunicipio(codigoMunicipio, out mensajeEliminacion);
+                    Municipio unMunicipio = new Municipio
+                    {
+                        Codigo = int.Parse(txtCodigoMunicipio.Text),
+                        Nombre = infoMunicipio[1]!.Trim()
+                    };
+
+                    bool resultadoEliminacion = AccesoDatos.EliminarMunicipio(unMunicipio, out mensajeEliminacion);
 
                     if (resultadoEliminacion)
                     {
