@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PescaArtesanal_WindowsForms.Formularios
 {
-    public partial class MunicipioNuevo : Form
+    public partial class ActividadNueva : Form
     {
-        public MunicipioNuevo()
+        public ActividadNueva()
         {
             InitializeComponent();
         }
@@ -46,32 +46,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void btnGuardaMunicipio_Click(object sender, EventArgs e)
         {
-            string? nombreCuenca = lbxCuencas.SelectedItem!.ToString();
-            string? nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
-            string? nombreMunicipio = txtNombreMunicipio.Text;
-            string? mensajeInsercion;
-
-            bool resultadoInsercion = AccesoDatos.InsertaNuevoMunicipio(nombreMunicipio,
-                                        nombreDepartamento!,
-                                        nombreCuenca!,
-                                        out mensajeInsercion);
-
-            if (resultadoInsercion)
-            {
-                MessageBox.Show(mensajeInsercion,
-                    "Se logró guardar el nuevo municipio",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                txtNombreMunicipio.Text = string.Empty;
-            }
-            else
-            {
-                MessageBox.Show(mensajeInsercion,
-                "Inserción Fallida",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            }
+            
         }
     }
 }

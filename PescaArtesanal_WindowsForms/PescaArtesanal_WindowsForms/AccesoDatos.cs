@@ -80,13 +80,14 @@ namespace PescaArtesanal_WindowsForms
         /// Obtiene la lista con los nombres de las cuencas
         /// </summary>
         /// <returns>lista de strings con los nombres de las cuencas</returns>
-        public static List<string> ObtieneNombresCuencas()
+        public static List<string> ObtieneListaNombresCuencas()
         {
             string? cadenaConexion = ObtieneCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
-                var resultadoCuencas = cxnDB.Query<string>("SELECT DISTINCT nombre FROM cuencas ORDER BY nombre", new DynamicParameters());
+                string sentenciaSQL = "SELECT DISTINCT nombre FROM cuencas ORDER BY nombre";
+                var resultadoCuencas = cxnDB.Query<string>(sentenciaSQL, new DynamicParameters());
 
                 return resultadoCuencas.AsList();
             }

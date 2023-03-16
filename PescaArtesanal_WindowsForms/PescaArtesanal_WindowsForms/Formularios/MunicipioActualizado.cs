@@ -55,7 +55,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizaListaCuencas(string nombreCuenca)
         {
             lbxCuencas.DataSource = null;
-            lbxCuencas.DataSource = AccesoDatos.ObtieneNombresCuencas();
+            lbxCuencas.DataSource = AccesoDatos.ObtieneListaNombresCuencas();
 
             //Seleccionamos la cuenca que se llama igual al del municipio seleccionado
             if (string.IsNullOrEmpty(nombreCuenca))
