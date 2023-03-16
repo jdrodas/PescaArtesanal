@@ -42,7 +42,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizaListaDepartamentos(string nombreDepartamento)
         {
             lbxDepartamentos.DataSource = null;
-            lbxDepartamentos.DataSource = AccesoDatos.ObtieneNombresDepartamentos();
+            lbxDepartamentos.DataSource = AccesoDatos.ObtieneListaNombresDepartamentos();
 
             //Seleccionamos el departamento que se llama igual al del municipio seleccionado
             if (string.IsNullOrEmpty(nombreDepartamento))

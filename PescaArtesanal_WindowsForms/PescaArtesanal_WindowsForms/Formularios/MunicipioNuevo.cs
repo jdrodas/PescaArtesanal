@@ -31,7 +31,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizaListaDepartamentos()
         {
             lbxDepartamentos.DataSource = null;
-            lbxDepartamentos.DataSource = AccesoDatos.ObtieneNombresDepartamentos();
+            lbxDepartamentos.DataSource = AccesoDatos.ObtieneListaNombresDepartamentos();
 
             lbxDepartamentos.SelectedIndex = 0;
         }

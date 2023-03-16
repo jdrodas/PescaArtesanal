@@ -37,13 +37,14 @@ namespace PescaArtesanal_WindowsForms
         /// Obtiene la lista con los nombres de los departamentos
         /// </summary>
         /// <returns>lista de strings con los nombres de los departamentos</returns>
-        public static List<string> ObtieneNombresDepartamentos()
+        public static List<string> ObtieneListaNombresDepartamentos()
         {
             cadenaConexion = ObtieneCadenaConexion();
 
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
-                var resultadoDepartamentos = cxnDB.Query<string>("SELECT DISTINCT nombre FROM departamentos ORDER BY nombre", new DynamicParameters());
+                string sentenciaSQL = "SELECT DISTINCT nombre FROM departamentos ORDER BY nombre";
+                var resultadoDepartamentos = cxnDB.Query<string>(sentenciaSQL, new DynamicParameters());
 
                 return resultadoDepartamentos.AsList();
             }
