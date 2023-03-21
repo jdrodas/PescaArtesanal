@@ -598,7 +598,8 @@ namespace PescaArtesanal_WindowsForms
                         if (cantidadFilas > 0)
                         {
                             resultadoActualizacion = true;
-                            mensajeActualizacion = "Inserción Exitosa";
+                            mensajeActualizacion = $"Municipio actualizado correctamente. Nombre {unMunicipio.Nombre}, " +
+                                $"en la cuenca {unMunicipio.NombreCuenca}, en el departamento {unMunicipio.NombreDepartamento}";
                         }
                     }
                     catch (SQLiteException elError)

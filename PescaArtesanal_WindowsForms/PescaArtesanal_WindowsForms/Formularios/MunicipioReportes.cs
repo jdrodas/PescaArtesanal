@@ -25,10 +25,10 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void MunicipioReportes_Load(object sender, EventArgs e)
         {
-            ActualizaListaDepartamentos();
+            ActualizarListaDepartamentos();
         }
 
-        private void ActualizaListaDepartamentos()
+        private void ActualizarListaDepartamentos()
         {
             lbxDepartamentos.DataSource = null;
             lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
@@ -37,7 +37,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
             lbxDepartamentos.SelectedIndex = 0;
         }
 
-        private void ActualizaListaMunicipios()
+        private void ActualizarListaMunicipios()
         {
             //Se hace esta actualización si hay un departamento seleccionado
             if (lbxDepartamentos.SelectedItems.Count > 0)
@@ -54,7 +54,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void lbxDepartamentos_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbxDepartamentos.DataSource != null)
-                ActualizaListaMunicipios();
+                ActualizarListaMunicipios();
         }
 
         private void lbxMunicipios_SelectedIndexChanged(object sender, EventArgs e)

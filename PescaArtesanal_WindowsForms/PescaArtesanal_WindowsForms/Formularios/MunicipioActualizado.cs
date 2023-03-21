@@ -20,7 +20,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void MunicipioActualizado_Load(object sender, EventArgs e)
         {
-            InicializaLbxInfoMunicipios();
+            InicializarLbxInfoMunicipios();
         }
 
         private void btnCerrarForma_Click(object sender, EventArgs e)
@@ -28,7 +28,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
             this.Close();
         }
 
-        private void InicializaLbxInfoMunicipios()
+        private void InicializarLbxInfoMunicipios()
         {
 
             lbxInfoMunicipios.DataSource = null;
@@ -39,7 +39,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
             lbxInfoMunicipios.SelectedIndex = 0;
         }
 
-        private void ActualizaListaDepartamentos(string nombreDepartamento)
+        private void ActualizarListaDepartamentos(string nombreDepartamento)
         {
             lbxDepartamentos.DataSource = null;
             lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
@@ -52,7 +52,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         }
 
-        private void ActualizaListaCuencas(string nombreCuenca)
+        private void ActualizarListaCuencas(string nombreCuenca)
         {
             lbxCuencas.DataSource = null;
             lbxCuencas.DataSource = AccesoDatos.ObtieneListaNombresCuencas();
@@ -78,8 +78,8 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
                 //Actualizamos las listas asignando como item seleccionado
                 //el valor correspondiente de la propiedad del municipio
-                ActualizaListaDepartamentos(unMunicipio.NombreDepartamento!);
-                ActualizaListaCuencas(unMunicipio.NombreCuenca!);
+                ActualizarListaDepartamentos(unMunicipio.NombreDepartamento!);
+                ActualizarListaCuencas(unMunicipio.NombreCuenca!);
 
                 txtNombreMunicipio.Text = unMunicipio.Nombre;
             }
@@ -101,10 +101,13 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
                 if (resultadoActualizacion)
                 {
-                    MessageBox.Show("El municipio se actualizó correctamente",
+                    MessageBox.Show(mensajeActualizacion,
                     "Actualización exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
+                    //Si la actualización fue exitosa, se puede cerrar el formulario
+                    this.Close();
                 }
                 else
                 {
@@ -118,9 +121,6 @@ namespace PescaArtesanal_WindowsForms.Formularios
             {
                 MessageBox.Show($"Datos numéricos no tienen el formato Esperado. {unErrorFormato.Message}");
             }
-
-            //Finalmente, actualizamos la lista de información de Municipios
-            InicializaLbxInfoMunicipios();
         }
     }
 }

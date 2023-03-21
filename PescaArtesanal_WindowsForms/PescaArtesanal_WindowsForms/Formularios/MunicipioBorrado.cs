@@ -25,10 +25,10 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void MunicipioBorrado_Load(object sender, EventArgs e)
         {
-            InicializaLbxInfoMunicipios();
+            InicializarLbxInfoMunicipios();
         }
 
-        private void InicializaLbxInfoMunicipios()
+        private void InicializarLbxInfoMunicipios()
         {
 
             lbxInfoMunicipios.DataSource = null;
@@ -81,6 +81,9 @@ namespace PescaArtesanal_WindowsForms.Formularios
                         "Borrado exitoso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
+                        //Si la eliminación fue exitosa, se puede cerrar el formulario
+                        this.Close();
                     }
                     else
                     {
@@ -96,10 +99,6 @@ namespace PescaArtesanal_WindowsForms.Formularios
                     MessageBox.Show($"Datos numéricos no tienen el formato Esperado. {unErrorFormato.Message}");
                 }
             }
-
-
-            //Finalmente, actualizamos la lista de información de Municipios
-            InicializaLbxInfoMunicipios();
         }
     }
 }

@@ -25,11 +25,11 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void MunicipioNuevo_Load(object sender, EventArgs e)
         {
-            ActualizaListaDepartamentos();
-            ActualizaListaCuencas();
+            ActualizarListaDepartamentos();
+            ActualizarListaCuencas();
         }
 
-        private void ActualizaListaDepartamentos()
+        private void ActualizarListaDepartamentos()
         {
             lbxDepartamentos.DataSource = null;
             lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
@@ -37,7 +37,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
             lbxDepartamentos.SelectedIndex = 0;
         }
 
-        private void ActualizaListaCuencas()
+        private void ActualizarListaCuencas()
         {
             lbxCuencas.DataSource = null;
             lbxCuencas.DataSource = AccesoDatos.ObtieneListaNombresCuencas();
@@ -66,7 +66,8 @@ namespace PescaArtesanal_WindowsForms.Formularios
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
-                txtNombreMunicipio.Text = string.Empty;
+                //Si la inserción fue exitosa, se puede cerrar el formulario
+                this.Close();
             }
             else
             {
