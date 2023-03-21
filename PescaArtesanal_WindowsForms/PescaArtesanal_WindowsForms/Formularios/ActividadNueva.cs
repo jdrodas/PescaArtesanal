@@ -79,33 +79,41 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
         private void btnGuardaActividad_Click(object sender, EventArgs e)
         {
-            //Actividad nuevaActividad = new Actividad();
+            Actividad nuevaActividad = new Actividad();
 
-            //nuevaActividad.NombreMetodo = lbxMetodos.SelectedItem!.ToString()!;
-            //nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
-            //nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
-            //nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
+            nuevaActividad.NombreMetodo = lbxMetodos.SelectedItem!.ToString()!;
+            nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
+            nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
+            nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
+            nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
 
-            //string mensajeInsercion = string.Empty;
+            string mensajeInsercion = string.Empty;
 
-            //bool resultadoInsercion = AccesoDatos.InsertaNuevaActividad(nuevaActividad,
-            //                            out mensajeInsercion);
+            bool resultadoInsercion = AccesoDatos.InsertarActividad(nuevaActividad,
+                                        out mensajeInsercion);
 
-            //if (resultadoInsercion)
-            //{
-            //    MessageBox.Show(mensajeInsercion,
-            //        "Se logró guardar la nueva actividad",
-            //        MessageBoxButtons.OK,
-            //        MessageBoxIcon.Information);
+            if (resultadoInsercion)
+            {
+                MessageBox.Show(mensajeInsercion,
+                    "Se logró guardar la nueva actividad",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(mensajeInsercion,
+                "Inserción Fallida",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            }
 
-            //}
-            //else
-            //{
-            //    MessageBox.Show(mensajeInsercion,
-            //    "Inserción Fallida",
-            //    MessageBoxButtons.OK,
-            //    MessageBoxIcon.Error);
-            //}
+            //Reiniciamos los controles de la forma
+            txtxCantidadPescado.Text = string.Empty;
+            dtpFecha.Value = DateTime.Now;
+
+            lbxDepartamentos.SelectedIndex = 0;
+            lbxMetodos.SelectedIndex = 0;
+
         }
     }
 }

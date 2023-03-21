@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SQLite;
 using System.Data;
 using PescaArtesanal_WindowsForms.Modelos;
+using System.Data.SqlClient;
 
 namespace PescaArtesanal_WindowsForms
 {
@@ -737,16 +738,31 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
+        public static int ObtenerCodigoMetodo(string nombreMetodo)
+        {
+            cadenaConexion = ObtenerCadenaConexion();
+            int codigoMetodo = 0;
+
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@nombre_metodo", nombreMetodo,
+                    DbType.String, ParameterDirection.Input);
+
+                string sentenciaSql = "SELECT DISTINCT codigo FROM metodos " +
+                                        "WHERE nombre = @nombre_metodo";
+
+                codigoMetodo = cxnDB.Query<int>(sentenciaSql, parametrosSentencia).FirstOrDefault();
+
+                return codigoMetodo;
+            }
+        }
+
         #endregion CRUD_MetodosPesca
 
         #region CRUD_ActividadesPesca
 
-        /// <summary>
-        /// Obtiene La actividad de pesca asociada al código
-        /// </summary>
-        /// <param name="codigoActividad">El código de la actividad de pesca</param>
-        /// <returns></returns>
-        public static Actividad ObtieneActividad(int codigoActividad)
+        public static Actividad ObtenerActividad(int codigoActividad)
         {
             cadenaConexion = ObtenerCadenaConexion();
             Actividad actividadResultado = new Actividad();
@@ -774,14 +790,7 @@ namespace PescaArtesanal_WindowsForms
                 return actividadResultado;
             }
         }
-
-        /// <summary>
-        /// Inserta una nueva actividad
-        /// </summary>
-        /// <param name="nuevaActividad">Actividad a insertar</param>
-        /// <param name="mensajeInsercion">Resultado del proceso de inserción</param>
-        /// <returns>verdadero si la inserción fue exitosa</returns>
-        public static bool InsertaNuevaActividad(Actividad nuevaActividad,
+        public static bool InsertarActividad(Actividad nuevaActividad,
                         out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;
@@ -789,6 +798,8 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas = 0;
             cadenaConexion = ObtenerCadenaConexion();
+
+            ComplementarCodigosEnActividad(nuevaActividad);
 
             //Aqui validamos primero que el nombre del municipio no exista para ese departamento
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
@@ -819,13 +830,7 @@ namespace PescaArtesanal_WindowsForms
             return resultadoInsercion;
         }
 
-        /// <summary>
-        /// Actualiza una actividad existente
-        /// </summary>
-        /// <param name="unaActividad">Objeto actividad a actualizar</param>
-        /// <param name="mensajeActualizacion">Resultado del proceso de actualización</param>
-        /// <returns>verdadero si la actualización fue exitosa</returns>
-        public static bool ActualizaActividad(Actividad unaActividad, out string mensajeActualizacion)
+        public static bool ActualizarActividad(Actividad unaActividad, out string mensajeActualizacion)
         {
             mensajeActualizacion = string.Empty;
             bool resultadoActualizacion = false;
@@ -836,7 +841,7 @@ namespace PescaArtesanal_WindowsForms
             //Aqui validamos primero que la actividad a actualizar ya exista
 
             //Obtenemos el Objeto que representa este municipio
-            Actividad otraActividad = ObtieneActividad(unaActividad.Codigo);
+            Actividad otraActividad = ObtenerActividad(unaActividad.Codigo);
 
             if (otraActividad.Codigo == 0)
             {
@@ -862,14 +867,14 @@ namespace PescaArtesanal_WindowsForms
                         if (cantidadFilas > 0)
                         {
                             resultadoActualizacion = true;
-                            mensajeActualizacion = "Inserción Exitosa";
+                            mensajeActualizacion = "Actualización Exitosa";
                         }
                     }
                     catch (SQLiteException elError)
                     {
                         resultadoActualizacion = false;
                         cantidadFilas = 0;
-                        mensajeActualizacion = $"Error de Actualizción en la DB. {elError.Message}";
+                        mensajeActualizacion = $"Error de Actualización en la DB. {elError.Message}";
                     }
 
                 }
@@ -877,13 +882,7 @@ namespace PescaArtesanal_WindowsForms
             return resultadoActualizacion;
         }
 
-        /// <summary>
-        /// Elimina una actividad existente
-        /// </summary>
-        /// <param name="codigoActividad">Codigo de la actividad a eliminar</param>
-        /// <param name="mensajeEliminacion">Resultado del proceso de eliminación</param>
-        /// <returns>verdadero si la eliminación fue exitosa</returns>
-        public static bool EliminaActividad(int codigoActividad, out string mensajeEliminacion)
+        public static bool EliminarActividad(int codigoActividad, out string mensajeEliminacion)
         {
             mensajeEliminacion = string.Empty;
             bool resultadoEliminacion = false;
@@ -894,7 +893,8 @@ namespace PescaArtesanal_WindowsForms
             //Validaciones a realizar
             //1. Que la actividad exista
 
-            Actividad unaActividad = ObtieneActividad(codigoActividad);
+            Actividad unaActividad = ObtenerActividad(codigoActividad);
+
             if (unaActividad.Codigo == 0)
             {
                 resultadoEliminacion = false;
@@ -935,6 +935,35 @@ namespace PescaArtesanal_WindowsForms
             return resultadoEliminacion;
         }
 
+        private static void ComplementarCodigosEnActividad(Actividad actividadIncompleta)
+        {
+            actividadIncompleta.CodigoMunicipio = ObtenerCodigoMunicipio(actividadIncompleta.NombreMunicipio!, actividadIncompleta.NombreDepartamento!);
+            actividadIncompleta.CodigoMetodo = ObtenerCodigoMetodo(actividadIncompleta.NombreMetodo!);
+        }
+
+        public static DataTable ObtenerTablaActividadesPorMunicipio(int codigoMuninicipio)
+        {
+            DataTable tablaResultado = new DataTable();
+
+            cadenaConexion = ObtenerCadenaConexion();
+
+            using (SQLiteConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+
+                string sentenciaSQL = "SELECT fecha, nombre_cuenca, nombre_metodo, cantidad_pescado " +
+                    "FROM v_info_Actividad WHERE codigo_municipio = @codigo_municipio ORDER BY fecha";
+
+                SQLiteCommand comandoSQL = new SQLiteCommand(sentenciaSQL, cxnDB);
+                comandoSQL.Parameters.AddWithValue("@codigo_municipio",codigoMuninicipio);
+
+                SQLiteDataAdapter daActividades = new SQLiteDataAdapter(comandoSQL);
+                daActividades.Fill(tablaResultado);
+
+                return tablaResultado;
+            }
+        }
+
         #endregion CRUD_ActividadesPesca
     }
 }
+
