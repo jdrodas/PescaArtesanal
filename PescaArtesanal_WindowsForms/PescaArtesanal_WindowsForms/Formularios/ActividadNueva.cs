@@ -85,6 +85,9 @@ namespace PescaArtesanal_WindowsForms.Formularios
             nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
             nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
             nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
+
+            // TODO Se debe validar que se utilice el separador decimal adecuado para la cantidad de pescado
+            // TODO Se debe hacer control de excepciones para la conversión del texto a número en cantidad de pescado
             nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
 
             string mensajeInsercion = string.Empty;

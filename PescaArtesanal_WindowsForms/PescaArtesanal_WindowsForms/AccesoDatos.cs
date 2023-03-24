@@ -159,6 +159,7 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
+            // TODO Se debe validar previamente que el nuevo nombre del departamento no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
@@ -391,9 +392,7 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
-            //************************ Esto debería ser un issue en GitHub! ;-) *****************
-            //Pendiente: Se debe validar previamente que el nuevo nombre de la cuenca no exista.
-            //***********************************************************************************
+            // TODO Se debe validar previamente que el nuevo nombre de la cuenca no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
@@ -943,9 +942,7 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
-            //************************ Esto debería ser un issue en GitHub! ;-) *****************
-            //Pendiente: Se debe validar previamente que el nuevo nombre del método no exista.
-            //***********************************************************************************
+            // TODO Se debe validar previamente que el nuevo nombre del método no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
@@ -1275,7 +1272,7 @@ namespace PescaArtesanal_WindowsForms
             return tablaResultado;
         }
 
-        private static int ObtenerCantidadActividadesPorMunicipio(int codigoMuninicipio)
+        public static int ObtenerCantidadActividadesPorMunicipio(int codigoMuninicipio)
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -1290,7 +1287,7 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        private static int ObtenerCantidadActividadesPorDepartamento(int codigoDepartamento)
+        public static int ObtenerCantidadActividadesPorDepartamento(int codigoDepartamento)
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -1305,7 +1302,7 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        private static int ObtenerCantidadActividadesPorMetodo(int codigoMetodo)
+        public static int ObtenerCantidadActividadesPorMetodo(int codigoMetodo)
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -1320,7 +1317,7 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        private static int ObtenerCantidadActividadesPorCuenca(int codigoCuenca)
+        public static int ObtenerCantidadActividadesPorCuenca(int codigoCuenca)
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {

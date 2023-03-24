@@ -83,7 +83,7 @@
             panelContenedor.Controls.Add(panelTitulo);
             panelContenedor.Dock = DockStyle.Fill;
             panelContenedor.Location = new Point(0, 0);
-            panelContenedor.Margin = new Padding(2, 2, 2, 2);
+            panelContenedor.Margin = new Padding(2);
             panelContenedor.Name = "panelContenedor";
             panelContenedor.Size = new Size(1080, 513);
             panelContenedor.TabIndex = 0;
@@ -93,7 +93,7 @@
             panelFormularios.BackColor = Color.FromArgb(224, 224, 224);
             panelFormularios.Dock = DockStyle.Fill;
             panelFormularios.Location = new Point(200, 50);
-            panelFormularios.Margin = new Padding(2, 2, 2, 2);
+            panelFormularios.Margin = new Padding(2);
             panelFormularios.MaximumSize = new Size(880, 463);
             panelFormularios.MinimumSize = new Size(880, 463);
             panelFormularios.Name = "panelFormularios";
@@ -117,7 +117,7 @@
             panelMenu.Controls.Add(pbxLogoPesca);
             panelMenu.Dock = DockStyle.Left;
             panelMenu.Location = new Point(0, 50);
-            panelMenu.Margin = new Padding(2, 2, 2, 2);
+            panelMenu.Margin = new Padding(2);
             panelMenu.Name = "panelMenu";
             panelMenu.Size = new Size(200, 463);
             panelMenu.TabIndex = 1;
@@ -150,6 +150,7 @@
             btnFormaReportesActividad.Text = "Reportes Actividad";
             btnFormaReportesActividad.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaReportesActividad.UseVisualStyleBackColor = true;
+            btnFormaReportesActividad.Click += btnFormaReportesActividad_Click;
             // 
             // btnFormaBorraActividad
             // 
@@ -166,6 +167,7 @@
             btnFormaBorraActividad.Text = "Borra Actividad";
             btnFormaBorraActividad.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaBorraActividad.UseVisualStyleBackColor = true;
+            btnFormaBorraActividad.Click += btnFormaBorraActividad_Click;
             // 
             // btnFormaActualizaActividad
             // 
@@ -182,6 +184,7 @@
             btnFormaActualizaActividad.Text = "Actualiza Actividad";
             btnFormaActualizaActividad.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaActualizaActividad.UseVisualStyleBackColor = true;
+            btnFormaActualizaActividad.Click += btnFormaActualizaActividad_Click;
             // 
             // btnFormaNuevaActividad
             // 
@@ -243,6 +246,7 @@
             btnFormaReportesMetodo.Text = "Reportes Método";
             btnFormaReportesMetodo.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaReportesMetodo.UseVisualStyleBackColor = true;
+            btnFormaReportesMetodo.Click += btnFormaReportesMetodo_Click;
             // 
             // btnFormaBorraMetodo
             // 
@@ -259,6 +263,7 @@
             btnFormaBorraMetodo.Text = "Borra Método";
             btnFormaBorraMetodo.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaBorraMetodo.UseVisualStyleBackColor = true;
+            btnFormaBorraMetodo.Click += btnFormaBorraMetodo_Click;
             // 
             // btnFormaActualizaMetodo
             // 
@@ -275,6 +280,7 @@
             btnFormaActualizaMetodo.Text = "Actualiza Método";
             btnFormaActualizaMetodo.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaActualizaMetodo.UseVisualStyleBackColor = true;
+            btnFormaActualizaMetodo.Click += btnFormaActualizaMetodo_Click;
             // 
             // btnFormaNuevoMetodo
             // 
@@ -291,6 +297,7 @@
             btnFormaNuevoMetodo.Text = "Nuevo Método";
             btnFormaNuevoMetodo.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaNuevoMetodo.UseVisualStyleBackColor = true;
+            btnFormaNuevoMetodo.Click += btnFormaNuevoMetodo_Click;
             // 
             // btnFormasMetodos
             // 
@@ -431,6 +438,7 @@
             btnFormaReportesDepartamento.Text = "Reportes Departamento";
             btnFormaReportesDepartamento.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaReportesDepartamento.UseVisualStyleBackColor = true;
+            btnFormaReportesDepartamento.Click += btnFormaReportesDepartamento_Click;
             // 
             // btnFormaBorraDepartamento
             // 
@@ -447,6 +455,7 @@
             btnFormaBorraDepartamento.Text = "Borra Departamento";
             btnFormaBorraDepartamento.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaBorraDepartamento.UseVisualStyleBackColor = true;
+            btnFormaBorraDepartamento.Click += btnFormaBorraDepartamento_Click;
             // 
             // btnFormaActualizaDepartamento
             // 
@@ -463,6 +472,7 @@
             btnFormaActualizaDepartamento.Text = "Actualiza Departamento";
             btnFormaActualizaDepartamento.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaActualizaDepartamento.UseVisualStyleBackColor = true;
+            btnFormaActualizaDepartamento.Click += btnFormaActualizaDepartamento_Click;
             // 
             // btnFormaNuevoDepartamento
             // 
@@ -479,6 +489,7 @@
             btnFormaNuevoDepartamento.Text = "Nuevo Departamento";
             btnFormaNuevoDepartamento.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaNuevoDepartamento.UseVisualStyleBackColor = true;
+            btnFormaNuevoDepartamento.Click += btnFormaNuevoDepartamento_Click;
             // 
             // btnFormasDepartamentos
             // 
@@ -523,6 +534,7 @@
             btnFormaReportesCuenca.Text = "Reportes Cuenca";
             btnFormaReportesCuenca.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaReportesCuenca.UseVisualStyleBackColor = true;
+            btnFormaReportesCuenca.Click += btnFormaReportesCuenca_Click;
             // 
             // btnFormaBorraCuenca
             // 
@@ -539,6 +551,7 @@
             btnFormaBorraCuenca.Text = "Borra Cuenca";
             btnFormaBorraCuenca.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaBorraCuenca.UseVisualStyleBackColor = true;
+            btnFormaBorraCuenca.Click += btnFormaBorraCuenca_Click;
             // 
             // btnFormaActualizaCuenca
             // 
@@ -555,6 +568,7 @@
             btnFormaActualizaCuenca.Text = "Actualiza Cuenca";
             btnFormaActualizaCuenca.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaActualizaCuenca.UseVisualStyleBackColor = true;
+            btnFormaActualizaCuenca.Click += btnFormaActualizaCuenca_Click;
             // 
             // btnFormaNuevaCuenca
             // 
@@ -571,6 +585,7 @@
             btnFormaNuevaCuenca.Text = "Nueva Cuenca";
             btnFormaNuevaCuenca.TextAlign = ContentAlignment.MiddleLeft;
             btnFormaNuevaCuenca.UseVisualStyleBackColor = true;
+            btnFormaNuevaCuenca.Click += btnFormaNuevaCuenca_Click;
             // 
             // btnFormasCuencas
             // 
@@ -592,7 +607,7 @@
             pbxLogoPesca.BackColor = Color.FromArgb(255, 255, 192);
             pbxLogoPesca.Dock = DockStyle.Top;
             pbxLogoPesca.Location = new Point(0, 0);
-            pbxLogoPesca.Margin = new Padding(2, 2, 2, 2);
+            pbxLogoPesca.Margin = new Padding(2);
             pbxLogoPesca.Name = "pbxLogoPesca";
             pbxLogoPesca.Size = new Size(183, 55);
             pbxLogoPesca.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -629,7 +644,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1080, 513);
             Controls.Add(panelContenedor);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             MaximumSize = new Size(1096, 552);
             MinimumSize = new Size(1096, 552);
             Name = "Principal";

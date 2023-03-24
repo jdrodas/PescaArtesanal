@@ -68,14 +68,14 @@ namespace PescaArtesanal_WindowsForms.Formularios
 
                 //Actualizamos el dataSource del DataGridView de actividades asociadas al municipio
                 dgvActividades.DataSource = null;
-                DataTable tablaActividades = AccesoDatos.ObtenerTablaActividadesPorMunicipio(codigoMunicipio);
+                int totalActividadesMunicipio = AccesoDatos.ObtenerCantidadActividadesPorMunicipio(codigoMunicipio);
 
-                if (tablaActividades.Rows.Count == 0)
+                if (totalActividadesMunicipio == 0)
                     gbxActividades.Visible = false;
                 else
                 {
-                    dgvActividades.DataSource = tablaActividades;
-                    txtTotalActividades.Text = tablaActividades.Rows.Count.ToString();
+                    dgvActividades.DataSource = AccesoDatos.ObtenerTablaActividadesPorMunicipio(codigoMunicipio);
+                    txtTotalActividades.Text = totalActividadesMunicipio.ToString();
                     gbxActividades.Visible = true;
                 }
             }
