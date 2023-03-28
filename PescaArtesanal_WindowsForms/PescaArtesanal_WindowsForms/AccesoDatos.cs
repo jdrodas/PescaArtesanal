@@ -4,6 +4,9 @@ using System.Data.SQLite;
 using System.Data;
 using PescaArtesanal_WindowsForms.Modelos;
 using System.Data.SqlClient;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
+using System.Text;
 
 namespace PescaArtesanal_WindowsForms
 {
@@ -1251,6 +1254,76 @@ namespace PescaArtesanal_WindowsForms
             }
 
             return tablaResultado;
+        }
+
+        private static List<Actividad> ObtenerListaActividadesPorMetodo(int codigoMetodo)
+        {
+            using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
+            {
+                DynamicParameters parametrosSentencia = new DynamicParameters();
+                parametrosSentencia.Add("@codigo_metodo", codigoMetodo,
+                    DbType.Int32, ParameterDirection.Input);
+
+                string sentenciaSQL = "SELECT codigo_actividad codigo, fecha, codigo_municipio codigoMunicipio, " +
+                    "nombre_municipio nombreMunicipio, codigo_departamento codigoDepartamento, " +
+                    "nombre_departamento nombreDepartamento, codigo_cuenca codigoCuenca, " +
+                    "nombre_cuenca nombreCuenca, codigo_metodo codigoMetodo, nombre_metodo nombreMetodo, " +
+                    "cantidad_pescado cantidadPescado " +
+                    "FROM v_info_Actividad WHERE codigo_metodo = @codigo_metodo ORDER BY fecha";
+
+                var resultadoActividades = cxnDB.Query<Actividad>(sentenciaSQL, parametrosSentencia);
+
+                return resultadoActividades.AsList();
+            }
+        }
+
+        public static string ObtenerJsonActividadesPorMetodo(int codigoMetodo)
+        {            
+            List<Actividad> lasActividades = ObtenerListaActividadesPorMetodo(codigoMetodo);
+            string resultado = string.Empty;
+
+            if(lasActividades.Count>0)
+                resultado = JsonConvert.SerializeObject(lasActividades, Formatting.Indented);
+
+            return resultado;
+        }
+
+        public static string ObtenerXMLActividadesPorMetodo(int codigoMetodo)
+        {
+            List<Actividad> lasActividades = ObtenerListaActividadesPorMetodo(codigoMetodo);
+            string resultado = string.Empty;
+
+            if (lasActividades.Count > 0)
+            {
+                //Llenamos la versión en formato XML
+                var stringwriter = new StringWriter();
+                var serializadorXML = new XmlSerializer(lasActividades.GetType());
+                serializadorXML.Serialize(stringwriter, lasActividades);
+
+                resultado = stringwriter.ToString();
+            }
+
+            return resultado;
+        }
+
+        public static string ObtenerTextoPlanoActividadesPorMetodo(int codigoMetodo)
+        {
+            List<Actividad> lasActividades = ObtenerListaActividadesPorMetodo(codigoMetodo);
+            string resultado = string.Empty;
+
+            if (lasActividades.Count > 0)
+            {
+                StringBuilder sbLasActividades = new StringBuilder();
+
+                //Llenamos la versión en formato XML
+                foreach (Actividad unaActividad in lasActividades)
+                    sbLasActividades.Append($"{unaActividad.ToString()} {Environment.NewLine}");
+
+
+                resultado = sbLasActividades.ToString();
+            }
+
+            return resultado;
         }
 
         public static DataTable ObtenerTablaActividadesPorCuenca(int codigoCuenca)

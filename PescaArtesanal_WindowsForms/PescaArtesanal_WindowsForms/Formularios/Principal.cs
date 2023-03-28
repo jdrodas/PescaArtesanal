@@ -63,6 +63,12 @@ namespace PescaArtesanal_WindowsForms
                 btnFormaNuevaActividad.BackColor = Color.LightGray;
                 btnFormaNuevaActividad.ForeColor = Color.Black;
             }
+
+            if (Application.OpenForms["MetodoReportes"] == null)
+            {
+                btnFormaReportesMetodo.BackColor = Color.LightGray;
+                btnFormaReportesMetodo.ForeColor = Color.Black;
+            }
         }
 
         private void VisualizaPanelCrud(Panel elPanel, Button botonCrud)
@@ -243,7 +249,9 @@ namespace PescaArtesanal_WindowsForms
         // TODO Implementar el formulario para generar reportes de método de pesca
         private void btnFormaReportesMetodo_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<MetodoReportes>();
+            btnFormaReportesMetodo.BackColor = Color.SteelBlue;
+            btnFormaReportesMetodo.ForeColor = Color.White;
         }
 
         #endregion Botones Métodos

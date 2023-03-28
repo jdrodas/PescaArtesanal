@@ -38,8 +38,8 @@
             lbxMunicipios = new ListBox();
             label5 = new Label();
             gbxActividades = new GroupBox();
-            label4 = new Label();
             txtTotalActividades = new TextBox();
+            label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvActividades).BeginInit();
             gbxActividades.SuspendLayout();
             SuspendLayout();
@@ -161,18 +161,18 @@
             gbxActividades.Location = new Point(48, 317);
             gbxActividades.Margin = new Padding(3, 2, 3, 2);
             gbxActividades.Name = "gbxActividades";
-            gbxActividades.Size = new Size(875, 252);
-            gbxActividades.Size = new Size(766, 189);
+            gbxActividades.Size = new Size(890, 247);
             gbxActividades.TabIndex = 16;
             gbxActividades.TabStop = false;
             gbxActividades.Text = "Actividades de pesca en el municipio:";
             // 
             // txtTotalActividades
             // 
-            txtTotalActividades.Location = new Point(165, 143);
+            txtTotalActividades.Enabled = false;
+            txtTotalActividades.Location = new Point(189, 191);
             txtTotalActividades.Margin = new Padding(3, 2, 3, 2);
             txtTotalActividades.Name = "txtTotalActividades";
-            txtTotalActividades.Size = new Size(110, 29);
+            txtTotalActividades.Size = new Size(125, 34);
             txtTotalActividades.TabIndex = 12;
             // 
             // label4
@@ -184,10 +184,6 @@
             label4.TabIndex = 11;
             label4.Text = "Total actividades:";
             // 
-            txtTotalActividades.Location = new Point(189, 191);
-            txtTotalActividades.Name = "txtTotalActividades";
-            txtTotalActividades.Size = new Size(125, 34);
-            txtTotalActividades.TabIndex = 12;
             // MunicipioReportes
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
