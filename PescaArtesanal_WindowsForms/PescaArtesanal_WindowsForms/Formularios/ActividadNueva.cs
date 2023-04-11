@@ -80,27 +80,53 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void btnGuardaActividad_Click(object sender, EventArgs e)
         {
             Actividad nuevaActividad = new Actividad();
-
-            nuevaActividad.NombreMetodo = lbxMetodos.SelectedItem!.ToString()!;
-            nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
-            nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
-            nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
+            string mensajeInsercion = string.Empty;
+            bool resultadoInsercion;
 
             // TODO Se debe validar que se utilice el separador decimal adecuado para la cantidad de pescado
+
+
             // TODO Se debe hacer control de excepciones para la conversión del texto a número en cantidad de pescado
-            nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
+            try
+            {
 
-            string mensajeInsercion = string.Empty;
+                nuevaActividad.NombreMetodo = lbxMetodos.SelectedItem!.ToString()!;
+                nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
+                nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
+                nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
+                nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
 
-            bool resultadoInsercion = AccesoDatos.InsertarActividad(nuevaActividad,
+                if (nuevaActividad.CantidadPescado <= 0)
+                {
+                    mensajeInsercion = "La cantidad de pescado debe ser un número positivo mayor que cero.";
+                    resultadoInsercion = false;
+                }
+                else
+                {
+                    resultadoInsercion = AccesoDatos.InsertarActividad(nuevaActividad,
                                         out mensajeInsercion);
-
+                }
+                
+            }
+            catch (FormatException unError)
+            {
+                mensajeInsercion = $"Error de conversión de formato. La cantidad de pescado debe ser un número positivo mayor que cero. {unError.Message}";
+                resultadoInsercion = false;
+            }
+            
             if (resultadoInsercion)
             {
                 MessageBox.Show(mensajeInsercion,
                     "Se logró guardar la nueva actividad",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
+                //Reiniciamos los controles de la forma
+                txtxCantidadPescado.Text = string.Empty;
+                dtpFecha.Value = DateTime.Now;
+
+                lbxDepartamentos.SelectedIndex = 0;
+                lbxMetodos.SelectedIndex = 0;
             }
             else
             {
@@ -109,14 +135,6 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             }
-
-            //Reiniciamos los controles de la forma
-            txtxCantidadPescado.Text = string.Empty;
-            dtpFecha.Value = DateTime.Now;
-
-            lbxDepartamentos.SelectedIndex = 0;
-            lbxMetodos.SelectedIndex = 0;
-
         }
     }
 }
