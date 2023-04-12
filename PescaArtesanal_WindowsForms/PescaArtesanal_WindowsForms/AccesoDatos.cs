@@ -162,20 +162,30 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
-            // TODO Se debe validar previamente que el nuevo nombre del departamento no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
                 {
-                    string actualizaDepartamentoSql =   "UPDATE departamentos SET nombre = @Nombre " +
-                                                        "WHERE codigo = @Codigo";
+                    //Primero identificamos que el nuevo nombre del departamento no exista
+                    int codigoDepartamentoExistente = ObtenerCodigoDepartamento(unDepartamento.Nombre!);
 
-                    cantidadFilas = cxnDB.Execute(actualizaDepartamentoSql, unDepartamento);
-
-                    if (cantidadFilas > 0)
+                    if (codigoDepartamentoExistente != 0)
                     {
-                        resultadoActualizacion = true;
-                        mensajeActualizacion = $"Actualización Exitosa. Ahora el departamento se llama {unDepartamento.Nombre}";
+                        resultadoActualizacion = false;
+                        mensajeActualizacion = $"Error de Actualización del departamento. Ya existe un registro para {unDepartamento.Nombre}";
+                    }
+                    else
+                    {
+                        string actualizaDepartamentoSql = "UPDATE departamentos SET nombre = @Nombre " +
+                                                            "WHERE codigo = @Codigo";
+
+                        cantidadFilas = cxnDB.Execute(actualizaDepartamentoSql, unDepartamento);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoActualizacion = true;
+                            mensajeActualizacion = $"Actualización Exitosa. Ahora el departamento se llama {unDepartamento.Nombre}";
+                        }
                     }
                 }
                 catch (SQLiteException elError)
@@ -395,20 +405,30 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
-            // TODO Se debe validar previamente que el nuevo nombre de la cuenca no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
                 {
-                    string actualizaCuencaSql = "UPDATE cuencas SET nombre = @Nombre " +
-                                                "WHERE codigo = @Codigo";
+                    //Primero identificamos que el nuevo nombre de la cuenca no exista
+                    int codigoCuencaExistente = ObtenerCodigoCuenca(unaCuenca.Nombre!);
 
-                    cantidadFilas = cxnDB.Execute(actualizaCuencaSql, unaCuenca);
-
-                    if (cantidadFilas > 0)
+                    if (codigoCuencaExistente != 0)
                     {
-                        resultadoActualizacion = true;
-                        mensajeActualizacion = $"Actualización Exitosa. Ahora la cuenca se llama {unaCuenca.Nombre}";
+                        resultadoActualizacion = false;
+                        mensajeActualizacion = $"Error de Actualización de la cuenca. Ya existe un registro para {unaCuenca.Nombre}";
+                    }
+                    else
+                    {
+                        string actualizaCuencaSql = "UPDATE cuencas SET nombre = @Nombre " +
+                                                    "WHERE codigo = @Codigo";
+
+                        cantidadFilas = cxnDB.Execute(actualizaCuencaSql, unaCuenca);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoActualizacion = true;
+                            mensajeActualizacion = $"Actualización Exitosa. Ahora la cuenca se llama {unaCuenca.Nombre}";
+                        }
                     }
                 }
                 catch (SQLiteException elError)
@@ -945,20 +965,30 @@ namespace PescaArtesanal_WindowsForms
 
             int cantidadFilas;
 
-            // TODO Se debe validar previamente que el nuevo nombre del método no exista.
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
                 try
                 {
-                    string actualizaMetodoSql = "UPDATE metodos SET nombre = @Nombre " +
-                                                "WHERE codigo = @Codigo";
+                    //Primero identificamos que el nuevo nombre del departamento no exista
+                    int codigoMetodoExistente = ObtenerCodigoMetodo(unMetodo.Nombre!);
 
-                    cantidadFilas = cxnDB.Execute(actualizaMetodoSql, unMetodo);
-
-                    if (cantidadFilas > 0)
+                    if (codigoMetodoExistente != 0)
                     {
-                        resultadoActualizacion = true;
-                        mensajeActualizacion = $"Actualización Exitosa. Ahora el método se llama {unMetodo.Nombre}";
+                        resultadoActualizacion = false;
+                        mensajeActualizacion = $"Error de Actualización del método. Ya existe un registro para {unMetodo.Nombre}";
+                    }
+                    else
+                    {
+                        string actualizaMetodoSql = "UPDATE metodos SET nombre = @Nombre " +
+                            "WHERE codigo = @Codigo";
+
+                        cantidadFilas = cxnDB.Execute(actualizaMetodoSql, unMetodo);
+
+                        if (cantidadFilas > 0)
+                        {
+                            resultadoActualizacion = true;
+                            mensajeActualizacion = $"Actualización Exitosa. Ahora el método se llama {unMetodo.Nombre}";
+                        }
                     }
                 }
                 catch (SQLiteException elError)
