@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,11 +83,9 @@ namespace PescaArtesanal_WindowsForms.Formularios
             Actividad nuevaActividad = new Actividad();
             string mensajeInsercion = string.Empty;
             bool resultadoInsercion;
+            
+            string separadorDecimal = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
-            // TODO Se debe validar que se utilice el separador decimal adecuado para la cantidad de pescado
-
-
-            // TODO Se debe hacer control de excepciones para la conversión del texto a número en cantidad de pescado
             try
             {
 
@@ -94,7 +93,10 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
                 nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
                 nuevaActividad.Fecha = dtpFecha.Value.ToShortDateString();
-                nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text);
+                nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text
+                                                                .Replace(",", separadorDecimal)
+                                                                .Replace(".", separadorDecimal)
+                                                             );
 
                 if (nuevaActividad.CantidadPescado <= 0)
                 {
