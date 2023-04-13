@@ -7,5 +7,9 @@
         public string DatabaseName { get; set; } = null!;
 
         public string DepartamentosCollectionName { get; set; } = null!;
+
+        public string MunicipiosCollectionName { get; set; } = null!;
+
+        public string CuencasCollectionName { get; set; } = null!;
     }
 }

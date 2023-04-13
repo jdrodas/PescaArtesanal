@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace PescaArtesanal_PoC_NoSQL_Console
 {
-    public class Departamento
+    public class Cuenca
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -15,7 +15,7 @@ namespace PescaArtesanal_PoC_NoSQL_Console
         [BsonElement("nombre")]
         public string Nombre { get; set; }
 
-        public Departamento()
+        public Cuenca()
         {
             Id = string.Empty;
             Codigo = 0;
@@ -23,3 +23,4 @@ namespace PescaArtesanal_PoC_NoSQL_Console
         }
     }
 }
+
