@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Data;
 
 namespace PescaArtesanal_PoC_NoSQL_Console
 {
@@ -23,7 +22,8 @@ namespace PescaArtesanal_PoC_NoSQL_Console
                 DatabaseName = miConfiguracion["PescaArtesanalDatabase:DatabaseName"]!,
                 DepartamentosCollectionName = miConfiguracion["PescaArtesanalDatabase:DepartamentosCollectionName"]!,
                 MunicipiosCollectionName = miConfiguracion["PescaArtesanalDatabase:MunicipiosCollectionName"]!,
-                CuencasCollectionName = miConfiguracion["PescaArtesanalDatabase:CuencasCollectionName"]!
+                CuencasCollectionName = miConfiguracion["PescaArtesanalDatabase:CuencasCollectionName"]!,
+                MetodosCollectionName = miConfiguracion["PescaArtesanalDatabase:MetodosCollectionName"]!
             };
 
             return miConfigDB;
@@ -91,7 +91,7 @@ namespace PescaArtesanal_PoC_NoSQL_Console
 
             var lista = miDB.GetCollection<Cuenca>(coleccionCuencas)
                 .Find(new BsonDocument())
-                .SortBy(depto => depto.Nombre)
+                .SortBy(cuenca => cuenca.Nombre)
                 .ToList();
 
             return lista;
@@ -138,9 +138,84 @@ namespace PescaArtesanal_PoC_NoSQL_Console
                 return false;
             else
                 return true;
-
         }
 
         #endregion CRUD_Cuencas
+
+        #region CRUD_Metodos
+
+        public static string ObtenerIdMetodo(string nombreMetodo)
+        {
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+            var filtroMetodo = new BsonDocument { { "nombre", nombreMetodo } };
+
+            Metodo metodoEnconrado = miDB.GetCollection<Metodo>(coleccionMetodos)
+                .Find(filtroMetodo)
+                .First();
+
+            return metodoEnconrado.Id!;
+        }
+
+        public static List<Metodo> ObtenerListaMetodos()
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var lista = miDB.GetCollection<Metodo>(coleccionMetodos)
+                .Find(new BsonDocument())
+                .SortBy(metodo => metodo.Nombre)
+                .ToList();
+
+            return lista;
+        }
+
+        public static bool InsertarMetodo(Metodo unMetodo)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodos);
+            miColeccion.InsertOne(unMetodo);
+
+            //Necesitamos corroborar que la inserción fue exitosa
+            string? idMetodo = ObtenerIdMetodo(unMetodo.Nombre);
+
+            if (string.IsNullOrEmpty(idMetodo))
+                return false;
+            else
+                return true;
+        }
+
+        public static bool ActualizarMetodo(Metodo unMetodo)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodos);
+            var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Codigo == unMetodo.Codigo,
+                unMetodo);
+
+            return resultadoActualizacion.IsAcknowledged;
+        }
+
+        public static bool EliminarMetodo(Metodo unMetodo)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodos);
+            var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Codigo == unMetodo.Codigo);
+
+            return resultadoEliminacion.IsAcknowledged;
+        }
+
+        #endregion CRUD_Metodos
     }
 }

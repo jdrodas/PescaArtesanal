@@ -1,0 +1,50 @@
+[
+  {
+    "codigo": 1,
+    "nombre": "Chocó"
+  },
+  {
+    "codigo": 2,
+    "nombre": "Sucre"
+  },
+  {
+    "codigo": 3,
+    "nombre": "Córdoba"
+  },
+  {
+    "codigo": 4,
+    "nombre": "Bolívar"
+  },
+  {
+    "codigo": 5,
+    "nombre": "Antioquia"
+  },
+  {
+    "codigo": 6,
+    "nombre": "Atlántico"
+  },
+  {
+    "codigo": 7,
+    "nombre": "Magdalena"
+  },
+  {
+    "codigo": 8,
+    "nombre": "La Guajira"
+  },
+  {
+    "codigo": 9,
+    "nombre": "Huila"
+  },
+  {
+    "codigo": 10,
+    "nombre": "Santander"
+  },
+  {
+    "codigo": 11,
+    "nombre": "Caldas"
+  },
+  {
+    "codigo": 12,
+    "nombre": "Cesar"
+  }
+]

@@ -11,5 +11,7 @@
         public string MunicipiosCollectionName { get; set; } = null!;
 
         public string CuencasCollectionName { get; set; } = null!;
+
+        public string MetodosCollectionName { get; set; } = null!;
     }
 }

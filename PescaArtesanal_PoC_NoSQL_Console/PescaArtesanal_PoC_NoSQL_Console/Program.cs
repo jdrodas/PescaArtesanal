@@ -82,6 +82,69 @@ namespace PescaArtesanal_PoC_NoSQL_Console
             foreach (Cuenca laCuenca in listaCuencas)
                 Console.WriteLine($" - {laCuenca.Nombre}");
 
+            // Operaciones CRUD con los Métodos de Pesca
+
+            Console.WriteLine("\nMétodos en la DB:");
+            List<Metodo> listaMetodos = AccesoDatos.ObtenerListaMetodos();
+
+            foreach (Metodo elMetodo in listaMetodos)
+                Console.WriteLine($" - {elMetodo.Nombre}");
+
+            //Aqui insertamos una nuevo Metodo
+            Metodo unMetodo = new Metodo
+            {
+                Codigo = 15,
+                Nombre = "Cauchera"
+            };
+
+            resultadoInsercion = AccesoDatos.InsertarMetodo(unMetodo);
+
+            if (resultadoInsercion)
+                Console.WriteLine($"Método insertado correctamente.");
+            else
+                Console.WriteLine($"Error al insertar Método");
+
+
+            //Aqui verificamos que esté insertado
+            listaMetodos = AccesoDatos.ObtenerListaMetodos();
+
+            Console.WriteLine("\nMétodos en la DB luego de la inserción:");
+            foreach (Metodo elMetodo in listaMetodos)
+                Console.WriteLine($" - {elMetodo.Nombre}");
+
+            //Aqui actualizamos el nombre del método de pesca
+            unMetodo.Nombre = "Cauchera con Poliuretano";
+
+            resultadoActualizacion = AccesoDatos.ActualizarMetodo(unMetodo);
+
+            if (resultadoActualizacion)
+                Console.WriteLine($"Método actualizado correctamente. Ahora se llama {unMetodo.Nombre}");
+            else
+                Console.WriteLine($"Error al actualizar cuenca");
+
+            //Aqui verificamos que esté actualizado
+            listaMetodos = AccesoDatos.ObtenerListaMetodos();
+
+            Console.WriteLine("\nMétodos en la DB luego de la actualización:");
+            foreach (Metodo elMetodo in listaMetodos)
+                Console.WriteLine($" - {elMetodo.Nombre}");
+
+            //Aqui borramos el método de pesca
+            resultadoEliminacion = AccesoDatos.EliminarMetodo(unMetodo);
+
+            if (resultadoEliminacion)
+                Console.WriteLine($"Método eliminado correctamente.");
+            else
+                Console.WriteLine($"Error al eliminar método");
+
+            //Aqui verificamos que esté eliminado
+            listaMetodos = AccesoDatos.ObtenerListaMetodos();
+
+            Console.WriteLine("\nMétodo en la DB luego de la eliminación:");
+
+            foreach (Metodo elMetodo in listaMetodos)
+                Console.WriteLine($" - {elMetodo.Nombre}");
+
         }
     }
 }

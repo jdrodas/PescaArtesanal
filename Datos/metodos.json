@@ -1,0 +1,46 @@
+[
+  {
+    "codigo": 1,
+    "nombre": "Aros"
+  },
+  {
+    "codigo": 2,
+    "nombre": "Arpón"
+  },
+  {
+    "codigo": 3,
+    "nombre": "Atarraya"
+  },
+  {
+    "codigo": 4,
+    "nombre": "Ballestilla"
+  },
+  {
+    "codigo": 5,
+    "nombre": "Buceo"
+  },
+  {
+    "codigo": 6,
+    "nombre": "Chinchorro"
+  },
+  {
+    "codigo": 7,
+    "nombre": "Flecha"
+  },
+  {
+    "codigo": 8,
+    "nombre": "Linea de mano"
+  },
+  {
+    "codigo": 9,
+    "nombre": "Nasa"
+  },
+  {
+    "codigo": 10,
+    "nombre": "Palangre"
+  },
+  {
+    "codigo": 11,
+    "nombre": "Red"
+  }
+]
