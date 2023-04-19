@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PescaArtesanal_NoSQL_WindowsForms.Modelos;
 
-namespace PescaArtesanal_WindowsForms.Formularios
+namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 {
     public partial class MunicipioActualizado : Form
     {
@@ -55,7 +55,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
         private void ActualizarListaCuencas(string nombreCuenca)
         {
             lbxCuencas.DataSource = null;
-            lbxCuencas.DataSource = AccesoDatos.ObtieneListaNombresCuencas();
+            lbxCuencas.DataSource = AccesoDatos.ObtenerListaNombresCuencas();
 
             //Seleccionamos la cuenca que se llama igual al del municipio seleccionado
             if (string.IsNullOrEmpty(nombreCuenca))
@@ -68,13 +68,14 @@ namespace PescaArtesanal_WindowsForms.Formularios
         {
             if (lbxInfoMunicipios.DataSource != null)
             {
-                //Obtenemos el código del municipio
+                //Obtenemos el Id del municipio
                 string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
-                int codigoMunicipio = int.Parse(infoMunicipio[0]!.Trim());
-                txtCodigoMunicipio.Text = codigoMunicipio.ToString();
+                string? nombreMunicipio = infoMunicipio[0];
+                string? nombreDepartamento = infoMunicipio[1];
 
                 //Leemos desde la DB, el municipio asociado al código
-                Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(codigoMunicipio);
+                Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(nombreMunicipio!, nombreDepartamento!);
+                txtIdMunicipio.Text = unMunicipio.Id;
 
                 //Actualizamos las listas asignando como item seleccionado
                 //el valor correspondiente de la propiedad del municipio
@@ -92,7 +93,7 @@ namespace PescaArtesanal_WindowsForms.Formularios
                 string mensajeActualizacion;
                 Municipio unMunicipio = new Municipio();
 
-                unMunicipio.Codigo = int.Parse(txtCodigoMunicipio.Text);
+                unMunicipio.Id = txtIdMunicipio.Text;
                 unMunicipio.Nombre = txtNombreMunicipio.Text;
                 unMunicipio.NombreCuenca = lbxCuencas.SelectedItem!.ToString();
                 unMunicipio.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();

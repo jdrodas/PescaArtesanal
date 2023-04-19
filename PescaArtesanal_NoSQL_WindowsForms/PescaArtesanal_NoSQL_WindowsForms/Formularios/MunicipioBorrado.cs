@@ -43,12 +43,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
         {
             if (lbxInfoMunicipios.DataSource != null)
             {
-                //Obtenemos el código del municipio
+                //Obtenemos el Id del municipio
                 string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
-                int codigoMunicipio = int.Parse(infoMunicipio[0]!.Trim());
-                txtCodigoMunicipio.Text = codigoMunicipio.ToString();
+                string? nombreMunicipio = infoMunicipio[0];
+                string? nombreDepartamento = infoMunicipio[1];
 
-                txtNombreMunicipio.Text = infoMunicipio[1]!.Trim();
+                //Leemos desde la DB, el municipio asociado al código
+                Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(nombreMunicipio!, nombreDepartamento!);
+                txtIdMunicipio.Text = unMunicipio.Id;
             }
         }
 
@@ -67,17 +69,13 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
                     string mensajeEliminacion;
                     string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
 
-                    Municipio unMunicipio = new Municipio
-                    {
-                        Codigo = int.Parse(txtCodigoMunicipio.Text),
-                        Nombre = infoMunicipio[1]!.Trim()
-                    };
+                    Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(txtIdMunicipio.Text);
 
                     bool resultadoEliminacion = AccesoDatos.EliminarMunicipio(unMunicipio, out mensajeEliminacion);
 
                     if (resultadoEliminacion)
                     {
-                        MessageBox.Show("El municipio se eliminó correctamente",
+                        MessageBox.Show(mensajeEliminacion,
                         "Borrado exitoso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
@@ -88,7 +86,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
                     else
                     {
                         MessageBox.Show(mensajeEliminacion,
-                        "Fallo en el borrado del municipio",
+                        "Borrado Fallido",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     }

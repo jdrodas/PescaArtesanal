@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace PescaArtesanal_NoSQL_WindowsForms.Modelos
 {
-    public class Municipio
+    public class Departamento
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -12,18 +12,10 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Modelos
         [BsonElement("nombre")]
         public string? Nombre { get; set; }
 
-        [BsonElement("nombre_cuenca")]
-        public string? NombreCuenca { get; set; }
-
-        [BsonElement("nombre_departamento")]
-        public string? NombreDepartamento { get; set; }
-
-        public Municipio()
+        public Departamento()
         {
             Id = string.Empty;
             Nombre = string.Empty;
-            NombreCuenca = string.Empty;
-            NombreDepartamento = string.Empty;
         }
     }
 }

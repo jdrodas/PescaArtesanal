@@ -1,6 +1,6 @@
-using PescaArtesanal_WindowsForms.Formularios;
+using PescaArtesanal_NoSQL_WindowsForms.Formularios;
 
-namespace PescaArtesanal_WindowsForms
+namespace PescaArtesanal_NoSQL_WindowsForms
 {
     public partial class Principal : Form
     {
@@ -148,9 +148,9 @@ namespace PescaArtesanal_WindowsForms
 
         private void btnFormaReportesMunicipio_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<MunicipioReportes>();
-            btnFormaReportesMunicipio.BackColor = Color.SteelBlue;
-            btnFormaReportesMunicipio.ForeColor = Color.White;
+            //AbrirFormulario<MunicipioReportes>();
+            //btnFormaReportesMunicipio.BackColor = Color.SteelBlue;
+            //btnFormaReportesMunicipio.ForeColor = Color.White;
         }
 
         #endregion Botones Municipios
@@ -249,9 +249,9 @@ namespace PescaArtesanal_WindowsForms
         // TODO Implementar el formulario para generar reportes de método de pesca
         private void btnFormaReportesMetodo_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<MetodoReportes>();
-            btnFormaReportesMetodo.BackColor = Color.SteelBlue;
-            btnFormaReportesMetodo.ForeColor = Color.White;
+            //AbrirFormulario<MetodoReportes>();
+            //btnFormaReportesMetodo.BackColor = Color.SteelBlue;
+            //btnFormaReportesMetodo.ForeColor = Color.White;
         }
 
         #endregion Botones Métodos
@@ -264,9 +264,9 @@ namespace PescaArtesanal_WindowsForms
 
         private void btnFormaNuevaActividad_Click(object sender, EventArgs e)
         {
-            AbrirFormulario<ActividadNueva>();
-            btnFormaNuevaActividad.BackColor = Color.SteelBlue;
-            btnFormaNuevaActividad.ForeColor = Color.White;
+            //AbrirFormulario<ActividadNueva>();
+            //btnFormaNuevaActividad.BackColor = Color.SteelBlue;
+            //btnFormaNuevaActividad.ForeColor = Color.White;
         }
 
         // TODO Implementar el formulario para actualizar actividad de pesca

@@ -34,7 +34,7 @@
             label2 = new Label();
             txtNombreMunicipio = new TextBox();
             label6 = new Label();
-            txtCodigoMunicipio = new TextBox();
+            txtIdMunicipio = new TextBox();
             label3 = new Label();
             btnBorraMunicipio = new Button();
             SuspendLayout();
@@ -91,7 +91,7 @@
             // 
             txtNombreMunicipio.Enabled = false;
             txtNombreMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtNombreMunicipio.Location = new Point(550, 218);
+            txtNombreMunicipio.Location = new Point(247, 243);
             txtNombreMunicipio.Margin = new Padding(3, 2, 3, 2);
             txtNombreMunicipio.Name = "txtNombreMunicipio";
             txtNombreMunicipio.Size = new Size(276, 29);
@@ -101,40 +101,40 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label6.Location = new Point(346, 221);
+            label6.Location = new Point(63, 246);
             label6.Name = "label6";
             label6.Size = new Size(169, 21);
             label6.TabIndex = 14;
             label6.Text = "Nombre del Municipio:";
             // 
-            // txtCodigoMunicipio
+            // txtIdMunicipio
             // 
-            txtCodigoMunicipio.BackColor = Color.White;
-            txtCodigoMunicipio.Enabled = false;
-            txtCodigoMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtCodigoMunicipio.Location = new Point(247, 218);
-            txtCodigoMunicipio.Margin = new Padding(2);
-            txtCodigoMunicipio.Name = "txtCodigoMunicipio";
-            txtCodigoMunicipio.Size = new Size(60, 29);
-            txtCodigoMunicipio.TabIndex = 13;
-            txtCodigoMunicipio.TextAlign = HorizontalAlignment.Right;
+            txtIdMunicipio.BackColor = Color.White;
+            txtIdMunicipio.Enabled = false;
+            txtIdMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtIdMunicipio.Location = new Point(247, 187);
+            txtIdMunicipio.Margin = new Padding(2);
+            txtIdMunicipio.Name = "txtIdMunicipio";
+            txtIdMunicipio.Size = new Size(221, 29);
+            txtIdMunicipio.TabIndex = 13;
+            txtIdMunicipio.TextAlign = HorizontalAlignment.Right;
             // 
             // label3
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(76, 221);
+            label3.Location = new Point(113, 190);
             label3.Margin = new Padding(2, 0, 2, 0);
             label3.Name = "label3";
-            label3.Size = new Size(156, 21);
+            label3.Size = new Size(119, 21);
             label3.TabIndex = 12;
-            label3.Text = "Código seleccionado:";
+            label3.Text = "Id seleccionado:";
             label3.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnBorraMunicipio
             // 
             btnBorraMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            btnBorraMunicipio.Location = new Point(332, 292);
+            btnBorraMunicipio.Location = new Point(317, 350);
             btnBorraMunicipio.Margin = new Padding(3, 2, 3, 2);
             btnBorraMunicipio.Name = "btnBorraMunicipio";
             btnBorraMunicipio.Size = new Size(221, 30);
@@ -151,7 +151,7 @@
             Controls.Add(btnBorraMunicipio);
             Controls.Add(txtNombreMunicipio);
             Controls.Add(label6);
-            Controls.Add(txtCodigoMunicipio);
+            Controls.Add(txtIdMunicipio);
             Controls.Add(label3);
             Controls.Add(lbxInfoMunicipios);
             Controls.Add(label2);
@@ -174,7 +174,7 @@
         private Label label2;
         private TextBox txtNombreMunicipio;
         private Label label6;
-        private TextBox txtCodigoMunicipio;
+        private TextBox txtIdMunicipio;
         private Label label3;
         private Button btnBorraMunicipio;
     }

@@ -40,7 +40,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
         private void ActualizarListaCuencas()
         {
             lbxCuencas.DataSource = null;
-            lbxCuencas.DataSource = AccesoDatos.ObtieneListaNombresCuencas();
+            lbxCuencas.DataSource = AccesoDatos.ObtenerListaNombresCuencas();
 
             lbxCuencas.SelectedIndex = 0;
         }
@@ -62,7 +62,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             if (resultadoInsercion)
             {
                 MessageBox.Show(mensajeInsercion,
-                    "Se logró guardar el nuevo municipio",
+                    "Inserción Exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 

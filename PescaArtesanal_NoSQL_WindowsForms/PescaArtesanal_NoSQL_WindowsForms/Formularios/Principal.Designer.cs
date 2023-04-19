@@ -1,4 +1,4 @@
-﻿namespace PescaArtesanal_WindowsForms
+﻿namespace PescaArtesanal_NoSQL_WindowsForms
 {
     partial class Principal
     {
@@ -83,7 +83,7 @@
             panelContenedor.Controls.Add(panelTitulo);
             panelContenedor.Dock = DockStyle.Fill;
             panelContenedor.Location = new Point(0, 0);
-            panelContenedor.Margin = new Padding(2);
+            panelContenedor.Margin = new Padding(2, 2, 2, 2);
             panelContenedor.Name = "panelContenedor";
             panelContenedor.Size = new Size(1080, 513);
             panelContenedor.TabIndex = 0;
@@ -93,7 +93,7 @@
             panelFormularios.BackColor = Color.FromArgb(224, 224, 224);
             panelFormularios.Dock = DockStyle.Fill;
             panelFormularios.Location = new Point(200, 50);
-            panelFormularios.Margin = new Padding(2);
+            panelFormularios.Margin = new Padding(2, 2, 2, 2);
             panelFormularios.MaximumSize = new Size(880, 463);
             panelFormularios.MinimumSize = new Size(880, 463);
             panelFormularios.Name = "panelFormularios";
@@ -117,7 +117,7 @@
             panelMenu.Controls.Add(pbxLogoPesca);
             panelMenu.Dock = DockStyle.Left;
             panelMenu.Location = new Point(0, 50);
-            panelMenu.Margin = new Padding(2);
+            panelMenu.Margin = new Padding(2, 2, 2, 2);
             panelMenu.Name = "panelMenu";
             panelMenu.Size = new Size(200, 463);
             panelMenu.TabIndex = 1;
@@ -607,7 +607,7 @@
             pbxLogoPesca.BackColor = Color.FromArgb(255, 255, 192);
             pbxLogoPesca.Dock = DockStyle.Top;
             pbxLogoPesca.Location = new Point(0, 0);
-            pbxLogoPesca.Margin = new Padding(2);
+            pbxLogoPesca.Margin = new Padding(2, 2, 2, 2);
             pbxLogoPesca.Name = "pbxLogoPesca";
             pbxLogoPesca.Size = new Size(183, 55);
             pbxLogoPesca.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -620,7 +620,7 @@
             panelTitulo.Controls.Add(etiquetaTituloAplicacion);
             panelTitulo.Dock = DockStyle.Top;
             panelTitulo.Location = new Point(0, 0);
-            panelTitulo.Margin = new Padding(1);
+            panelTitulo.Margin = new Padding(1, 1, 1, 1);
             panelTitulo.Name = "panelTitulo";
             panelTitulo.Size = new Size(1080, 50);
             panelTitulo.TabIndex = 3;

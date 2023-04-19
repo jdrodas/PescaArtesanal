@@ -1,4 +1,4 @@
-﻿namespace PescaArtesanal_WindowsForms.Formularios
+﻿namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 {
     partial class MunicipioActualizado
     {
@@ -33,7 +33,7 @@
             label2 = new Label();
             lbxInfoMunicipios = new ListBox();
             label3 = new Label();
-            txtCodigoMunicipio = new TextBox();
+            txtIdMunicipio = new TextBox();
             lbxDepartamentos = new ListBox();
             label4 = new Label();
             lbxCuencas = new ListBox();
@@ -95,32 +95,32 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(82, 224);
+            label3.Location = new Point(119, 203);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
-            label3.Size = new Size(156, 21);
+            label3.Size = new Size(119, 21);
             label3.TabIndex = 4;
-            label3.Text = "Código seleccionado:";
+            label3.Text = "Id seleccionado:";
             label3.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // txtCodigoMunicipio
+            // txtIdMunicipio
             // 
-            txtCodigoMunicipio.BackColor = Color.White;
-            txtCodigoMunicipio.Enabled = false;
-            txtCodigoMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            txtCodigoMunicipio.Location = new Point(251, 216);
-            txtCodigoMunicipio.Margin = new Padding(1);
-            txtCodigoMunicipio.Name = "txtCodigoMunicipio";
-            txtCodigoMunicipio.Size = new Size(121, 29);
-            txtCodigoMunicipio.TabIndex = 5;
-            txtCodigoMunicipio.TextAlign = HorizontalAlignment.Right;
+            txtIdMunicipio.BackColor = Color.White;
+            txtIdMunicipio.Enabled = false;
+            txtIdMunicipio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtIdMunicipio.Location = new Point(251, 195);
+            txtIdMunicipio.Margin = new Padding(1);
+            txtIdMunicipio.Name = "txtIdMunicipio";
+            txtIdMunicipio.Size = new Size(289, 29);
+            txtIdMunicipio.TabIndex = 5;
+            txtIdMunicipio.TextAlign = HorizontalAlignment.Right;
             // 
             // lbxDepartamentos
             // 
             lbxDepartamentos.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxDepartamentos.FormattingEnabled = true;
             lbxDepartamentos.ItemHeight = 21;
-            lbxDepartamentos.Location = new Point(191, 288);
+            lbxDepartamentos.Location = new Point(193, 264);
             lbxDepartamentos.Margin = new Padding(3, 1, 3, 1);
             lbxDepartamentos.Name = "lbxDepartamentos";
             lbxDepartamentos.Size = new Size(271, 88);
@@ -130,7 +130,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label4.Location = new Point(52, 288);
+            label4.Location = new Point(54, 264);
             label4.Name = "label4";
             label4.Size = new Size(113, 21);
             label4.TabIndex = 6;
@@ -141,7 +141,7 @@
             lbxCuencas.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxCuencas.FormattingEnabled = true;
             lbxCuencas.ItemHeight = 21;
-            lbxCuencas.Location = new Point(568, 288);
+            lbxCuencas.Location = new Point(570, 264);
             lbxCuencas.Margin = new Padding(3, 1, 3, 1);
             lbxCuencas.Name = "lbxCuencas";
             lbxCuencas.Size = new Size(276, 88);
@@ -151,7 +151,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label5.Location = new Point(488, 288);
+            label5.Location = new Point(490, 264);
             label5.Name = "label5";
             label5.Size = new Size(64, 21);
             label5.TabIndex = 8;
@@ -201,7 +201,7 @@
             Controls.Add(label5);
             Controls.Add(lbxDepartamentos);
             Controls.Add(label4);
-            Controls.Add(txtCodigoMunicipio);
+            Controls.Add(txtIdMunicipio);
             Controls.Add(label3);
             Controls.Add(lbxInfoMunicipios);
             Controls.Add(label2);
@@ -225,7 +225,7 @@
         private Label label2;
         private ListBox lbxInfoMunicipios;
         private Label label3;
-        private TextBox txtCodigoMunicipio;
+        private TextBox txtIdMunicipio;
         private ListBox lbxDepartamentos;
         private Label label4;
         private ListBox lbxCuencas;

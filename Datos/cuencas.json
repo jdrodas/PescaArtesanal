@@ -1,18 +1,14 @@
 [
   {
-    "codigo": 1,
     "nombre": "Pacífico"
   },
   {
-    "codigo": 2,
     "nombre": "Magdalena"
   },
   {
-    "codigo": 3,
     "nombre": "Caribe"
   },
   {
-    "codigo": 4,
     "nombre": "Sinú"
   }
 ]
