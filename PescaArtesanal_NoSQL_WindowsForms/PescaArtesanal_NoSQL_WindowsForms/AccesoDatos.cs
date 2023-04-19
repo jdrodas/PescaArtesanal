@@ -54,7 +54,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionMunicipios = configDB.MunicipiosCollectionName;
-            var filtroMunicipio = new BsonDocument { { "_id", idMunicipio } };
+            var filtroMunicipio = new BsonDocument { { "_id", new ObjectId(idMunicipio) } };
 
             Municipio municipioEncontrado = miDB.GetCollection<Municipio>(coleccionMunicipios)
                 .Find(filtroMunicipio)

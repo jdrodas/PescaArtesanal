@@ -12,7 +12,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Modelos
         [BsonElement("codigo")]
         public int Codigo { get; set; }
 
-        [BsonElement("nombre_municipio")]
+        [BsonElement("nombre")]
         public string Nombre { get; set; }
 
         [BsonElement("nombre_cuenca")]
