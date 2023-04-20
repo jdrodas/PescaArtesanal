@@ -70,7 +70,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 .FirstOrDefault();
 
             return municipioEncontrado;
-
         }
 
         public static List<Municipio> ObtenerListaMunicipiosDepartamento(string nombreDepartamento)
@@ -200,7 +199,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                                             $"para el departamento {unMunicipio.NombreDepartamento} " +
                                             $"en la cuenca {unMunicipio.NombreCuenca}. No se puede actualizar el registro";
                     return false;
-
             }
             else
             {
@@ -454,5 +452,104 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         #endregion CRUD Cuencas
 
+        #region CRUD Metodos
+        #endregion CRUD Metodos
+
+        #region CRUD Actividades
+
+        public static Actividad ObtenerActividad(string idActividad)
+        {
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroActividad = new BsonDocument { { "_id", new ObjectId(idActividad) } };
+
+            Actividad actividadEncontrada = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroActividad)
+                .FirstOrDefault();
+
+            return actividadEncontrada;
+        }
+
+        public static List<Actividad> ObtenerListaActividades()
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(new BsonDocument())
+                .SortBy(actividad => actividad.Fecha)
+                .ToList();
+
+            return listaActividades;
+        }
+        
+        public static List<Actividad> ObtenerListaActividadesPorMunicipio(string nombreMunicipio)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroMunicipio = new BsonDocument { { "nombre_municipio", nombreMunicipio } };
+
+            var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroMunicipio)
+                .SortBy(actividad => actividad.Fecha)
+                .ToList();
+
+            return listaActividades;
+        }
+
+        public static List<Actividad> ObtenerListaActividadesPorDepartamento(string nombreDepartamento)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroDepartamento = new BsonDocument { { "nombre_departamento", nombreDepartamento } };
+
+            var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroDepartamento)
+                .SortBy(actividad => actividad.Fecha)
+                .ToList();
+
+            return listaActividades;
+        }
+
+        public static List<Actividad> ObtenerListaActividadesPorCuenca(string nombreCuenca)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroCuenca = new BsonDocument { { "nombre_cuenca", nombreCuenca } };
+
+            var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroCuenca)
+                .SortBy(actividad => actividad.Fecha)
+                .ToList();
+
+            return listaActividades;
+        }
+
+        public static List<Actividad> ObtenerListaActividadesPorMetodo(string nombreMetodo)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroMetodo = new BsonDocument { { "nombre_metodo", nombreMetodo } };
+
+            var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroMetodo)
+                .SortBy(actividad => actividad.Fecha)
+                .ToList();
+
+            return listaActividades;
+        }
+
+        //TODO Insertar Actividad
+        //TODO Actualizar Actividad
+        //TODO Eliminar Actividad
+
+        #endregion CRUD Actividades
     }
 }
