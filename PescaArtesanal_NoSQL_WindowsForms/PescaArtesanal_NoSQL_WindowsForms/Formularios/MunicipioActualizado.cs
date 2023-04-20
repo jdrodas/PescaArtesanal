@@ -70,8 +70,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             {
                 //Obtenemos el Id del municipio
                 string?[] infoMunicipio = lbxInfoMunicipios.SelectedItem!.ToString()!.Split('-');
-                string? nombreMunicipio = infoMunicipio[0];
-                string? nombreDepartamento = infoMunicipio[1];
+                string? nombreMunicipio = infoMunicipio[0]!.Trim();
+                string? nombreDepartamento = infoMunicipio[1]!.Trim();
 
                 //Leemos desde la DB, el municipio asociado al código
                 Municipio unMunicipio = AccesoDatos.ObtenerMunicipio(nombreMunicipio!, nombreDepartamento!);

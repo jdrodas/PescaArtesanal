@@ -1,286 +1,286 @@
 [
   {
-    "nombre_municipio": "Nuquí",
+    "nombre": "Nuquí",
     "nombre_departamento": "Chocó",
     "nombre_cuenca": "Pacífico"
   },
   {
-    "nombre_municipio": "San Marcos",
+    "nombre": "San Marcos",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Acandí",
+    "nombre": "Acandí",
     "nombre_departamento": "Chocó",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "San Antero",
+    "nombre": "San Antero",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Cartagena De Indias",
+    "nombre": "Cartagena De Indias",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Turbo marino",
+    "nombre": "Turbo marino",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Malambo",
+    "nombre": "Malambo",
     "nombre_departamento": "Atlántico",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Santiago De Tolú",
+    "nombre": "Santiago De Tolú",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Santa Marta",
+    "nombre": "Santa Marta",
     "nombre_departamento": "Magdalena",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Momil",
+    "nombre": "Momil",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Sinú"
   },
   {
-    "nombre_municipio": "Barranquilla",
+    "nombre": "Barranquilla",
     "nombre_departamento": "Atlántico",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "San Juan De Urabá",
+    "nombre": "San Juan De Urabá",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Dibulla",
+    "nombre": "Dibulla",
     "nombre_departamento": "La Guajira",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Bajo Baudó",
+    "nombre": "Bajo Baudó",
     "nombre_departamento": "Chocó",
     "nombre_cuenca": "Pacífico"
   },
   {
-    "nombre_municipio": "San Onofre",
+    "nombre": "San Onofre",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "San Bernardo Del Viento marino",
+    "nombre": "San Bernardo Del Viento marino",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "San Bernardo Del Viento continental",
+    "nombre": "San Bernardo Del Viento continental",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Sinú"
   },
   {
-    "nombre_municipio": "El Banco",
+    "nombre": "El Banco",
     "nombre_departamento": "Magdalena",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Córdoba",
+    "nombre": "Córdoba",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Ayapel",
+    "nombre": "Ayapel",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Riohacha",
+    "nombre": "Riohacha",
     "nombre_departamento": "La Guajira",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Lorica",
+    "nombre": "Lorica",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Sinú"
   },
   {
-    "nombre_municipio": "Bahía Solano",
+    "nombre": "Bahía Solano",
     "nombre_departamento": "Chocó",
     "nombre_cuenca": "Pacífico"
   },
   {
-    "nombre_municipio": "Achí",
+    "nombre": "Achí",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Nechí",
+    "nombre": "Nechí",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Cicuco",
+    "nombre": "Cicuco",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Sucre",
+    "nombre": "Sucre",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Caucasia",
+    "nombre": "Caucasia",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Necoclí",
+    "nombre": "Necoclí",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Tenerife",
+    "nombre": "Tenerife",
     "nombre_departamento": "Magdalena",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Puebloviejo",
+    "nombre": "Puebloviejo",
     "nombre_departamento": "Magdalena",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "San Jacinto Del Cauca",
+    "nombre": "San Jacinto Del Cauca",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Tierralta",
+    "nombre": "Tierralta",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Sinú"
   },
   {
-    "nombre_municipio": "Manaure",
+    "nombre": "Manaure",
     "nombre_departamento": "La Guajira",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Ciénaga",
+    "nombre": "Ciénaga",
     "nombre_departamento": "Magdalena",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Santa Cruz De Mompox",
+    "nombre": "Santa Cruz De Mompox",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Montecristo",
+    "nombre": "Montecristo",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Altos Del Rosario",
+    "nombre": "Altos Del Rosario",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Yaguará",
+    "nombre": "Yaguará",
     "nombre_departamento": "Huila",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Pinillos",
+    "nombre": "Pinillos",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Hobo",
+    "nombre": "Hobo",
     "nombre_departamento": "Huila",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Barrancabermeja",
+    "nombre": "Barrancabermeja",
     "nombre_departamento": "Santander",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "San Benito Abad",
+    "nombre": "San Benito Abad",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Santa Catalina",
+    "nombre": "Santa Catalina",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Caimito",
+    "nombre": "Caimito",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "La Dorada",
+    "nombre": "La Dorada",
     "nombre_departamento": "Caldas",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Buenavista",
+    "nombre": "Buenavista",
     "nombre_departamento": "Córdoba",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Magangué",
+    "nombre": "Magangué",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Chimichagua",
+    "nombre": "Chimichagua",
     "nombre_departamento": "Cesar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Puerto Wilches",
+    "nombre": "Puerto Wilches",
     "nombre_departamento": "Santander",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Uribia",
+    "nombre": "Uribia",
     "nombre_departamento": "La Guajira",
     "nombre_cuenca": "Caribe"
   },
   {
-    "nombre_municipio": "Galeras",
+    "nombre": "Galeras",
     "nombre_departamento": "Sucre",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Venecia",
+    "nombre": "Venecia",
     "nombre_departamento": "Antioquia",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Simití",
+    "nombre": "Simití",
     "nombre_departamento": "Bolívar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Juradó",
+    "nombre": "Juradó",
     "nombre_departamento": "Chocó",
     "nombre_cuenca": "Pacífico"
   },
   {
-    "nombre_municipio": "Tamalameque",
+    "nombre": "Tamalameque",
     "nombre_departamento": "Cesar",
     "nombre_cuenca": "Magdalena"
   },
   {
-    "nombre_municipio": "Pelaya",
+    "nombre": "Pelaya",
     "nombre_departamento": "Cesar",
     "nombre_cuenca": "Magdalena"
   }

@@ -49,7 +49,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Municipio municipioEncontrado = miDB.GetCollection<Municipio>(coleccionMunicipios)
                 .Find(filtroMunicipio)
-                .First();
+                .FirstOrDefault();
 
             return municipioEncontrado;
         }
@@ -67,7 +67,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Municipio municipioEncontrado = miDB.GetCollection<Municipio>(coleccionMunicipios)
                 .Find(filtroMunicipio)
-                .First();
+                .FirstOrDefault();
 
             return municipioEncontrado;
 
@@ -193,11 +193,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             //Primero se debe validar que no exista un municipio con la combinación nombre, nombre departamento
             Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
 
-            if (municipioExistente != null)
+            //Si la definición de municipio ya existe, no se hace actualización
+            if (unMunicipio.Equals(municipioExistente))
             {
-                mensajeActualizacion = $"Ya existe un municipio con el nombre {unMunicipio.Nombre} " +
-                    $"para el departamento {unMunicipio.NombreDepartamento}. No se puede actualizar el nuevo nombre";
-                return false;
+                    mensajeActualizacion = $"Ya existe un municipio con el nombre {unMunicipio.Nombre} " +
+                                            $"para el departamento {unMunicipio.NombreDepartamento} " +
+                                            $"en la cuenca {unMunicipio.NombreCuenca}. No se puede actualizar el registro";
+                    return false;
+
             }
             else
             {
@@ -259,7 +262,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Departamento departamentoEncontrado = miDB.GetCollection<Departamento>(coleccionDepartamentos)
                 .Find(filtroDepartamento)
-                .First();
+                .FirstOrDefault();
 
             return departamentoEncontrado.Id!;
         }
@@ -274,7 +277,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Departamento departamentoEncontrado = miDB.GetCollection<Departamento>(coleccionDepartamentos)
                 .Find(filtroDepartamento)
-                .First();
+                .FirstOrDefault();
 
             return departamentoEncontrado;
         }
@@ -361,7 +364,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Cuenca CuencaEncontrada = miDB.GetCollection<Cuenca>(coleccionCuencas)
                 .Find(filtroCuenca)
-                .First();
+                .FirstOrDefault();
 
             return CuencaEncontrada.Id!;
         }
@@ -376,7 +379,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             Cuenca CuencaEncontrada = miDB.GetCollection<Cuenca>(coleccionCuencas)
                 .Find(filtroCuenca)
-                .First();
+                .FirstOrDefault();
 
             return CuencaEncontrada;
         }

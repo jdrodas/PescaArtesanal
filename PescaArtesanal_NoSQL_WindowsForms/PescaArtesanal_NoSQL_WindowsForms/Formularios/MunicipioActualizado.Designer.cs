@@ -95,7 +95,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(119, 203);
+            label3.Location = new Point(119, 198);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
             label3.Size = new Size(119, 21);
@@ -113,7 +113,6 @@
             txtIdMunicipio.Name = "txtIdMunicipio";
             txtIdMunicipio.Size = new Size(289, 29);
             txtIdMunicipio.TabIndex = 5;
-            txtIdMunicipio.TextAlign = HorizontalAlignment.Right;
             // 
             // lbxDepartamentos
             // 
