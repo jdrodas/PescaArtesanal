@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PescaArtesanal_NoSQL_WindowsForms.Modelos;
+using System.Data;
 
 namespace PescaArtesanal_NoSQL_WindowsForms
 {
@@ -486,12 +487,16 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return listaActividades;
         }
         
-        public static List<Actividad> ObtenerListaActividadesPorMunicipio(string nombreMunicipio)
+        public static List<Actividad> ObtenerListaActividadesPorMunicipio(string nombreMunicipio, string nombreDepartamento)
         {
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionActividades = configDB.ActividadesCollectionName;
-            var filtroMunicipio = new BsonDocument { { "nombre_municipio", nombreMunicipio } };
+            var filtroMunicipio = new BsonDocument
+                                    {
+                                        { "nombre_municipio", nombreMunicipio},
+                                        { "nombre_departamento", nombreDepartamento }
+                                    };
 
             var listaActividades = miDB.GetCollection<Actividad>(coleccionActividades)
                 .Find(filtroMunicipio)
@@ -545,6 +550,67 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             return listaActividades;
         }
+
+        public static int ObtenerCantidadActividadesPorMunicipio(string nombreMunicipio, string nombreDepartamento)
+        {
+            var listaActividades = ObtenerListaActividadesPorMunicipio(nombreMunicipio, nombreDepartamento);
+            return listaActividades.Count;
+        }
+
+        public static int ObtenerCantidadActividadesPorDepartamento(string nombreDepartamento)
+        {
+            var listaActividades = ObtenerListaActividadesPorDepartamento(nombreDepartamento);
+            return listaActividades.Count;
+        }
+
+        public static int ObtenerCantidadActividadesPorCuenca(string nombreCuenca)
+        {
+            var listaActividades = ObtenerListaActividadesPorCuenca(nombreCuenca);
+            return listaActividades.Count;
+        }
+
+        public static int ObtenerCantidadActividadesPorMetodo(string nombreMetodo)
+        {
+            var listaActividades = ObtenerListaActividadesPorMetodo(nombreMetodo);
+            return listaActividades.Count;
+        }
+
+
+        public static DataTable ObtenerTablaActividadesPorMunicipio(string nombreMunicipio, string nombreDepartamento)
+        {
+            DataTable tablaResultado = new DataTable();
+
+            var listaActividades = ObtenerListaActividadesPorMunicipio(nombreMunicipio, nombreDepartamento);
+
+            if (listaActividades.Count > 0)
+            {
+                tablaResultado.Columns.Add(new DataColumn("fecha", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_departamento", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_cuenca", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_metodo", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("cantidad_pescado", typeof(double)));
+
+                DataRow filaActividad;
+
+                foreach (Actividad unaActividad in listaActividades)
+                {
+                    filaActividad = tablaResultado.NewRow();
+
+                    filaActividad["fecha"] = unaActividad.Fecha.ToShortDateString();
+                    filaActividad["nombre_municipio"] = unaActividad.NombreMunicipio;
+                    filaActividad["nombre_departamento"] = unaActividad.NombreDepartamento;
+                    filaActividad["nombre_cuenca"] = unaActividad.NombreCuenca;
+                    filaActividad["nombre_metodo"] = unaActividad.NombreMetodo;
+                    filaActividad["cantidad_pescado"] = unaActividad.CantidadPescado;
+
+                    tablaResultado.Rows.Add(filaActividad);
+                }
+            }
+
+            return tablaResultado;
+        }
+
 
         //TODO Insertar Actividad
         //TODO Actualizar Actividad

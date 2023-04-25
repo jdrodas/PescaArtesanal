@@ -148,9 +148,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         private void btnFormaReportesMunicipio_Click(object sender, EventArgs e)
         {
-            //AbrirFormulario<MunicipioReportes>();
-            //btnFormaReportesMunicipio.BackColor = Color.SteelBlue;
-            //btnFormaReportesMunicipio.ForeColor = Color.White;
+            AbrirFormulario<MunicipioReportes>();
+            btnFormaReportesMunicipio.BackColor = Color.SteelBlue;
+            btnFormaReportesMunicipio.ForeColor = Color.White;
         }
 
         #endregion Botones Municipios
