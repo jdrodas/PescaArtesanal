@@ -264,9 +264,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         private void btnFormaNuevaActividad_Click(object sender, EventArgs e)
         {
-            //AbrirFormulario<ActividadNueva>();
-            //btnFormaNuevaActividad.BackColor = Color.SteelBlue;
-            //btnFormaNuevaActividad.ForeColor = Color.White;
+            AbrirFormulario<ActividadNueva>();
+            btnFormaNuevaActividad.BackColor = Color.SteelBlue;
+            btnFormaNuevaActividad.ForeColor = Color.White;
         }
 
         // TODO Implementar el formulario para actualizar actividad de pesca

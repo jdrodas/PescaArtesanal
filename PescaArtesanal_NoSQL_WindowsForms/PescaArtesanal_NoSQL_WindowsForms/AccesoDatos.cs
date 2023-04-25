@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using PescaArtesanal_NoSQL_WindowsForms.Modelos;
 using System.Data;
+using ZstdSharp.Unsafe;
 
 namespace PescaArtesanal_NoSQL_WindowsForms
 {
@@ -454,17 +455,65 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         #endregion CRUD Cuencas
 
         #region CRUD Metodos
+
+        public static List<string> ObtenerListaNombresMetodos()
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var listaMetodos = miDB.GetCollection<Metodo>(coleccionMetodos)
+                .Find(new BsonDocument())
+                .SortBy(dpto => dpto.Nombre)
+                .ToList();
+
+            List<string> listaNombres = new List<string>();
+
+            foreach (Metodo unMetodo in listaMetodos)
+                listaNombres.Add(unMetodo.Nombre!);
+
+            return listaNombres;
+        }
+
         #endregion CRUD Metodos
 
         #region CRUD Actividades
 
+        public static string ObtenerIdActividad(Actividad unaActividad)
+        {
+            Actividad actividadEncontrada = ObtenerActividad(unaActividad.NombreMunicipio,
+                                                             unaActividad.NombreDepartamento,
+                                                             unaActividad.NombreMetodo,
+                                                             unaActividad.Fecha);
+            return actividadEncontrada.Id!;
+        }
+
         public static Actividad ObtenerActividad(string idActividad)
         {
-
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionActividades = configDB.ActividadesCollectionName;
             var filtroActividad = new BsonDocument { { "_id", new ObjectId(idActividad) } };
+
+            Actividad actividadEncontrada = miDB.GetCollection<Actividad>(coleccionActividades)
+                .Find(filtroActividad)
+                .FirstOrDefault();
+
+            return actividadEncontrada;
+        }
+
+        public static Actividad ObtenerActividad(string nombreMunicipio, string nombreDepartamento, string nombreMetodo, DateTime fecha)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+            var filtroActividad = new BsonDocument
+                                    {
+                                        { "nombre_municipio", nombreMunicipio},
+                                        { "nombre_departamento", nombreDepartamento },
+                                        { "nombre_metodo", nombreMetodo },
+                                        { "fecha", fecha }
+                                    };
 
             Actividad actividadEncontrada = miDB.GetCollection<Actividad>(coleccionActividades)
                 .Find(filtroActividad)
@@ -612,7 +661,36 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         }
 
 
+
         //TODO Insertar Actividad
+        public static bool InsertarActividad(Actividad unaActividad, out string mensajeInsercion)
+        {
+            mensajeInsercion = string.Empty;
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+            miColeccion.InsertOne(unaActividad);
+
+            //Necesitamos corroborar que la inserción fue exitosa
+            string? idActividad = ObtenerIdActividad(unaActividad);
+
+            if (string.IsNullOrEmpty(idActividad))
+            {
+                mensajeInsercion = "Fallo al realizar la inserción.";
+                return false;
+            }
+            else
+            {
+                mensajeInsercion = $"Inserción exitosa para la actividad en {unaActividad.NombreMunicipio} " +
+                    $"en el departamento {unaActividad.NombreDepartamento} utilizando {unaActividad.NombreMetodo}, " +
+                    $"realizada el día {unaActividad.Fecha.ToShortDateString()}";
+                return true;
+            }
+        }
+
+
         //TODO Actualizar Actividad
         //TODO Eliminar Actividad
 
