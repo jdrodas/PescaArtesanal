@@ -41,6 +41,8 @@
             dtpFecha = new DateTimePicker();
             txtxCantidadPescado = new TextBox();
             label6 = new Label();
+            label7 = new Label();
+            txtNombreCuenca = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -83,7 +85,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(19, 400);
+            label3.Location = new Point(19, 452);
             label3.Name = "label3";
             label3.Size = new Size(166, 28);
             label3.TabIndex = 3;
@@ -106,7 +108,7 @@
             lbxMetodos.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             lbxMetodos.FormattingEnabled = true;
             lbxMetodos.ItemHeight = 28;
-            lbxMetodos.Location = new Point(185, 385);
+            lbxMetodos.Location = new Point(185, 437);
             lbxMetodos.Margin = new Padding(3, 4, 3, 4);
             lbxMetodos.Name = "lbxMetodos";
             lbxMetodos.Size = new Size(309, 116);
@@ -134,6 +136,7 @@
             lbxMunicipios.Name = "lbxMunicipios";
             lbxMunicipios.Size = new Size(309, 116);
             lbxMunicipios.TabIndex = 10;
+            lbxMunicipios.SelectedIndexChanged += lbxMunicipios_SelectedIndexChanged;
             // 
             // label4
             // 
@@ -185,11 +188,34 @@
             label6.TabIndex = 14;
             label6.Text = "Cantidad Pescado:";
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label7.Location = new Point(99, 368);
+            label7.Name = "label7";
+            label7.Size = new Size(79, 28);
+            label7.TabIndex = 16;
+            label7.Text = "Cuenca:";
+            label7.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // txtNombreCuenca
+            // 
+            txtNombreCuenca.Enabled = false;
+            txtNombreCuenca.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtNombreCuenca.Location = new Point(184, 362);
+            txtNombreCuenca.Margin = new Padding(3, 5, 3, 5);
+            txtNombreCuenca.Name = "txtNombreCuenca";
+            txtNombreCuenca.Size = new Size(310, 34);
+            txtNombreCuenca.TabIndex = 15;
+            // 
             // ActividadNueva
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1006, 617);
+            Controls.Add(label7);
+            Controls.Add(txtNombreCuenca);
             Controls.Add(label6);
             Controls.Add(txtxCantidadPescado);
             Controls.Add(dtpFecha);
@@ -229,5 +255,7 @@
         private DateTimePicker dtpFecha;
         private TextBox txtxCantidadPescado;
         private Label label6;
+        private Label label7;
+        private TextBox txtNombreCuenca;
     }
 }

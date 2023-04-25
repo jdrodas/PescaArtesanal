@@ -3,7 +3,6 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using PescaArtesanal_NoSQL_WindowsForms.Modelos;
 using System.Data;
-using ZstdSharp.Unsafe;
 
 namespace PescaArtesanal_NoSQL_WindowsForms
 {
@@ -37,7 +36,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static string ObtenerIdMunicipio(string nombreMunicipio, string nombreDepartamento)
         {
-            Municipio municipioEncontrado = ObtenerMunicipio(nombreMunicipio,nombreDepartamento);
+            Municipio municipioEncontrado = ObtenerMunicipio(nombreMunicipio, nombreDepartamento);
             return municipioEncontrado.Id!;
         }
 
@@ -61,10 +60,10 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionMunicipios = configDB.MunicipiosCollectionName;
-            var filtroMunicipio = new BsonDocument 
-                                    { 
+            var filtroMunicipio = new BsonDocument
+                                    {
                                         { "nombre", nombreMunicipio},
-                                        { "nombre_departamento", nombreDepartamento } 
+                                        { "nombre_departamento", nombreDepartamento }
                                     };
 
             Municipio municipioEncontrado = miDB.GetCollection<Municipio>(coleccionMunicipios)
@@ -72,6 +71,12 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 .FirstOrDefault();
 
             return municipioEncontrado;
+        }
+
+        public static string ObtenerNombreCuencaMunicipio(string nombreMunicipio, string nombreDepartamento)
+        {
+            Municipio municipioEncontrado = ObtenerMunicipio(nombreMunicipio, nombreDepartamento);
+            return municipioEncontrado.NombreCuenca!;
         }
 
         public static List<Municipio> ObtenerListaMunicipiosDepartamento(string nombreDepartamento)
@@ -197,10 +202,10 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             //Si la definición de municipio ya existe, no se hace actualización
             if (unMunicipio.Equals(municipioExistente))
             {
-                    mensajeActualizacion = $"Ya existe un municipio con el nombre {unMunicipio.Nombre} " +
-                                            $"para el departamento {unMunicipio.NombreDepartamento} " +
-                                            $"en la cuenca {unMunicipio.NombreCuenca}. No se puede actualizar el registro";
-                    return false;
+                mensajeActualizacion = $"Ya existe un municipio con el nombre {unMunicipio.Nombre} " +
+                                        $"para el departamento {unMunicipio.NombreDepartamento} " +
+                                        $"en la cuenca {unMunicipio.NombreCuenca}. No se puede actualizar el registro";
+                return false;
             }
             else
             {
@@ -481,9 +486,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static string ObtenerIdActividad(Actividad unaActividad)
         {
-            Actividad actividadEncontrada = ObtenerActividad(unaActividad.NombreMunicipio,
-                                                             unaActividad.NombreDepartamento,
-                                                             unaActividad.NombreMetodo,
+            Actividad actividadEncontrada = ObtenerActividad(unaActividad.NombreMunicipio!,
+                                                             unaActividad.NombreDepartamento!,
+                                                             unaActividad.NombreMetodo!,
                                                              unaActividad.Fecha);
             return actividadEncontrada.Id!;
         }
@@ -535,7 +540,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             return listaActividades;
         }
-        
+
         public static List<Actividad> ObtenerListaActividadesPorMunicipio(string nombreMunicipio, string nombreDepartamento)
         {
             var clienteDB = new MongoClient(configDB.ConnectionString);
@@ -624,7 +629,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return listaActividades.Count;
         }
 
-
         public static DataTable ObtenerTablaActividadesPorMunicipio(string nombreMunicipio, string nombreDepartamento)
         {
             DataTable tablaResultado = new DataTable();
@@ -660,9 +664,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return tablaResultado;
         }
 
-
-
-        //TODO Insertar Actividad
         public static bool InsertarActividad(Actividad unaActividad, out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;
@@ -690,10 +691,71 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             }
         }
 
+        public static bool ActualizarActividad(Actividad unaActividad, out string mensajeActualizacion)
+        {
+            mensajeActualizacion = string.Empty;
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
 
-        //TODO Actualizar Actividad
-        //TODO Eliminar Actividad
+            //Primero validamos que exista la actividad que vamos a actualizar
+            Actividad actividadExistente = ObtenerActividad(unaActividad.Id!);
 
-        #endregion CRUD Actividades
+            //Si no existe actividad con ese ID, no se puede hacer actualización
+            if (actividadExistente.Id!.Equals(string.Empty))
+            {
+                mensajeActualizacion = $"No existe una actividad de pesca para actualizar con los datos suministrados";
+                return false;
+            }
+            else
+            {
+                var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+                var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id,
+                    unaActividad);
+
+                if (!resultadoActualizacion.IsAcknowledged)
+                    mensajeActualizacion = $"Error al actualizar la actividad en {unaActividad.NombreMunicipio} " +
+                        $"para el departamento {unaActividad.NombreDepartamento}";
+                else
+                    mensajeActualizacion = $"La actividad en {unaActividad.NombreMunicipio} " +
+                        $"para el departamento {unaActividad.NombreDepartamento} fue actualizada.";
+
+                return resultadoActualizacion.IsAcknowledged;
+            }
+        }
+
+        public static bool EliminarActividad(Actividad unaActividad, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            //Primero validamos que exista la actividad que vamos a actualizar
+            Actividad actividadExistente = ObtenerActividad(unaActividad.Id!);
+
+            //Si no existe actividad con ese ID, no se puede hacer eliminación
+            if (actividadExistente.Id!.Equals(string.Empty))
+            {
+                mensajeEliminacion = $"No existe actividad a eliminar con esa información";
+                return false;
+            }
+            else
+            {
+                var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+                var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unaActividad.Id);
+
+                if (!resultadoEliminacion.IsAcknowledged)
+                    mensajeEliminacion = $"Error al elimininar la actividad en {unaActividad.NombreMunicipio} " +
+                        $"del departamento {unaActividad.NombreDepartamento}";
+                else
+                    mensajeEliminacion = $"La actividad en {unaActividad.NombreMunicipio}  " +
+                        $"del departamento {unaActividad.NombreDepartamento} fue eliminada";
+
+                return resultadoEliminacion.IsAcknowledged;
+            }
+
+            #endregion CRUD Actividades
+        }
     }
 }

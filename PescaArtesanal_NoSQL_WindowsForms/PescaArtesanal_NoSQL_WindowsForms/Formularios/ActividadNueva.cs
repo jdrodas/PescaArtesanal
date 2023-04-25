@@ -83,15 +83,15 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             Actividad nuevaActividad = new Actividad();
             string mensajeInsercion = string.Empty;
             bool resultadoInsercion;
-            
+
             string separadorDecimal = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
 
             try
             {
-
                 nuevaActividad.NombreMetodo = lbxMetodos.SelectedItem!.ToString()!;
                 nuevaActividad.NombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
                 nuevaActividad.NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
+                nuevaActividad.NombreCuenca = txtNombreCuenca.Text;
                 nuevaActividad.Fecha = dtpFecha.Value;
                 nuevaActividad.CantidadPescado = double.Parse(txtxCantidadPescado.Text
                                                                 .Replace(",", separadorDecimal)
@@ -108,14 +108,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
                     resultadoInsercion = AccesoDatos.InsertarActividad(nuevaActividad,
                                         out mensajeInsercion);
                 }
-                
+
             }
             catch (FormatException unError)
             {
                 mensajeInsercion = $"Error de conversión de formato. La cantidad de pescado debe ser un número positivo mayor que cero. {unError.Message}";
                 resultadoInsercion = false;
             }
-            
+
             if (resultadoInsercion)
             {
                 MessageBox.Show(mensajeInsercion,
@@ -136,6 +136,17 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
                 "Inserción Fallida",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+            }
+        }
+
+        private void lbxMunicipios_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Aqui obtenemos el nombre de la cuenca
+            if (lbxMunicipios.SelectedItems.Count > 0)
+            {
+                string nombreMunicipio = lbxMunicipios.SelectedItem!.ToString()!;
+                string nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString()!;
+                txtNombreCuenca.Text = AccesoDatos.ObtenerNombreCuencaMunicipio(nombreMunicipio, nombreDepartamento);
             }
         }
     }
