@@ -664,6 +664,105 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return tablaResultado;
         }
 
+        public static DataTable ObtenerTablaActividadesPorDepartamento(string nombreDepartamento)
+        {
+            DataTable tablaResultado = new DataTable();
+
+            var listaActividades = ObtenerListaActividadesPorDepartamento(nombreDepartamento);
+
+            if (listaActividades.Count > 0)
+            {
+                tablaResultado.Columns.Add(new DataColumn("fecha", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));                
+                tablaResultado.Columns.Add(new DataColumn("nombre_cuenca", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_metodo", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("cantidad_pescado", typeof(double)));
+
+                DataRow filaActividad;
+
+                foreach (Actividad unaActividad in listaActividades)
+                {
+                    filaActividad = tablaResultado.NewRow();
+
+                    filaActividad["fecha"] = unaActividad.Fecha.ToShortDateString();
+                    filaActividad["nombre_municipio"] = unaActividad.NombreMunicipio;
+                    filaActividad["nombre_cuenca"] = unaActividad.NombreCuenca;
+                    filaActividad["nombre_metodo"] = unaActividad.NombreMetodo;
+                    filaActividad["cantidad_pescado"] = unaActividad.CantidadPescado;
+
+                    tablaResultado.Rows.Add(filaActividad);
+                }
+            }
+
+            return tablaResultado;
+        }
+
+        public static DataTable ObtenerTablaActividadesPorCuenca(string nombreCuenca)
+        {
+            DataTable tablaResultado = new DataTable();
+
+            var listaActividades = ObtenerListaActividadesPorCuenca(nombreCuenca);
+
+            if (listaActividades.Count > 0)
+            {
+                tablaResultado.Columns.Add(new DataColumn("fecha", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_departamento", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_metodo", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("cantidad_pescado", typeof(double)));
+
+                DataRow filaActividad;
+
+                foreach (Actividad unaActividad in listaActividades)
+                {
+                    filaActividad = tablaResultado.NewRow();
+
+                    filaActividad["fecha"] = unaActividad.Fecha.ToShortDateString();
+                    filaActividad["nombre_municipio"] = unaActividad.NombreMunicipio;
+                    filaActividad["nombre_departamento"] = unaActividad.NombreDepartamento;
+                    filaActividad["nombre_metodo"] = unaActividad.NombreMetodo;
+                    filaActividad["cantidad_pescado"] = unaActividad.CantidadPescado;
+
+                    tablaResultado.Rows.Add(filaActividad);
+                }
+            }
+
+            return tablaResultado;
+        }
+
+        public static DataTable ObtenerTablaActividadesPorMetodo(string nombreMetodo)
+        {
+            DataTable tablaResultado = new DataTable();
+
+            var listaActividades = ObtenerListaActividadesPorMetodo(nombreMetodo);
+
+            if (listaActividades.Count > 0)
+            {
+                tablaResultado.Columns.Add(new DataColumn("fecha", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_departamento", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("nombre_cuenca", typeof(string)));
+                tablaResultado.Columns.Add(new DataColumn("cantidad_pescado", typeof(double)));
+
+                DataRow filaActividad;
+
+                foreach (Actividad unaActividad in listaActividades)
+                {
+                    filaActividad = tablaResultado.NewRow();
+
+                    filaActividad["fecha"] = unaActividad.Fecha.ToShortDateString();
+                    filaActividad["nombre_municipio"] = unaActividad.NombreMunicipio;
+                    filaActividad["nombre_departamento"] = unaActividad.NombreDepartamento;
+                    filaActividad["nombre_cuenca"] = unaActividad.NombreCuenca;
+                    filaActividad["cantidad_pescado"] = unaActividad.CantidadPescado;
+
+                    tablaResultado.Rows.Add(filaActividad);
+                }
+            }
+
+            return tablaResultado;
+        }
+
         public static bool InsertarActividad(Actividad unaActividad, out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;

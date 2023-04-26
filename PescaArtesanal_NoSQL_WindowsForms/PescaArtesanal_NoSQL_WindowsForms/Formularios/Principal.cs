@@ -64,10 +64,22 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 btnFormaNuevaActividad.ForeColor = Color.Black;
             }
 
+            if (Application.OpenForms["DepartamentoReportes"] == null)
+            {
+                btnFormaReportesDepartamento.BackColor = Color.LightGray;
+                btnFormaReportesDepartamento.ForeColor = Color.Black;
+            }
+
             if (Application.OpenForms["MetodoReportes"] == null)
             {
                 btnFormaReportesMetodo.BackColor = Color.LightGray;
                 btnFormaReportesMetodo.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaReportes"] == null)
+            {
+                btnFormaReportesCuenca.BackColor = Color.LightGray;
+                btnFormaReportesCuenca.ForeColor = Color.Black;
             }
         }
 
@@ -180,10 +192,11 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         }
 
-        // TODO Implementar el formulario para generar reportes sobre cuenca
         private void btnFormaReportesCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaReportes>();
+            btnFormaReportesCuenca.BackColor = Color.SteelBlue;
+            btnFormaReportesCuenca.ForeColor = Color.White;
         }
 
         #endregion Botones Cuencas
@@ -213,10 +226,11 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         }
 
-        // TODO Implementar el formulario para generar reportes de Departamentos
         private void btnFormaReportesDepartamento_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<DepartamentoReportes>();
+            btnFormaReportesDepartamento.BackColor = Color.SteelBlue;
+            btnFormaReportesDepartamento.ForeColor = Color.White;
         }
 
         #endregion Botones Departamentos
@@ -249,9 +263,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         // TODO Implementar el formulario para generar reportes de método de pesca
         private void btnFormaReportesMetodo_Click(object sender, EventArgs e)
         {
-            //AbrirFormulario<MetodoReportes>();
-            //btnFormaReportesMetodo.BackColor = Color.SteelBlue;
-            //btnFormaReportesMetodo.ForeColor = Color.White;
+            AbrirFormulario<MetodoReportes>();
+            btnFormaReportesMetodo.BackColor = Color.SteelBlue;
+            btnFormaReportesMetodo.ForeColor = Color.White;
         }
 
         #endregion Botones Métodos
