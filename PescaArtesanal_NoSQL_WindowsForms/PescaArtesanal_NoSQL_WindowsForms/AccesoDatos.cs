@@ -217,8 +217,11 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                     mensajeActualizacion = $"Error al actualizar el municipio {unMunicipio.Nombre} " +
                         $"del departamento {unMunicipio.NombreDepartamento}";
                 else
+                {
                     mensajeActualizacion = $"El municipio {unMunicipio.Nombre} fue actualizado";
-
+                    //TODO Se debe actualizar todas las actividades que previamente se hayan vinculado al municipio previo
+                }
+                
                 return resultadoActualizacion.IsAcknowledged;
             }
         }
@@ -240,6 +243,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             }
             else
             {
+                //TODO Validar si hay actividades asociadas al municipio a eliminar
+                
                 var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
                 var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unMunicipio.Id);
 
@@ -334,6 +339,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unDepartamento.Id,
                 unDepartamento);
 
+            //TODO Validar si hay municipios vinculados al nombre previo del departamento
+            //TODO Validar si hay actividades asociadas al departamento
+
             return resultadoActualizacion.IsAcknowledged;
         }
 
@@ -346,6 +354,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Departamento>(coleccionDepartamentos);
             var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unDepartamento.Id);
+
+            //TODO Validar si hay actividades asociadas al departamento
 
             if (!resultadoEliminacion.IsAcknowledged)
                 mensajeEliminacion = $"Error al elimininar el departamento {unDepartamento.Nombre} ";
@@ -436,6 +446,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unCuenca.Id,
                 unCuenca);
 
+            //TODO Validar si hay municipios asociados al nombre de las cuencas
+
             return resultadoActualizacion.IsAcknowledged;
         }
 
@@ -453,6 +465,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 mensajeEliminacion = $"Error al elimininar el Cuenca {unCuenca.Nombre} ";
             else
                 mensajeEliminacion = $"El Cuenca {unCuenca.Nombre} fue eliminada";
+
+            //TODO Validar si hay actividades asociadas a la cuenca
 
             return resultadoEliminacion.IsAcknowledged;
         }
@@ -479,6 +493,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             return listaNombres;
         }
+
+        //TODO Validar si hay actividades asociadas al método de pesca
+
+        //TODO Implementar Acción de Inserción de Métodos de Pesca
+
+        //TODO Implementar Acción de Actualización de Métodos de Pesca
+
+        //TODO Implementar Acción de Eliminación de Métodos de Pesca
 
         #endregion CRUD Metodos
 
@@ -854,7 +876,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 return resultadoEliminacion.IsAcknowledged;
             }
 
-            #endregion CRUD Actividades
+
         }
+
+        #endregion CRUD Actividades
     }
 }

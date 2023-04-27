@@ -1,15 +1,4 @@
-﻿using PescaArtesanal_NoSQL_WindowsForms.Modelos;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
+﻿namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 {
     public partial class DepartamentoReportes : Form
     {
@@ -55,7 +44,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
                     txtTotalActividades.Text = totalActividadesDepartamento.ToString();
                     gbxActividades.Visible = true;
                 }
-            }            
+            }
         }
     }
 }
