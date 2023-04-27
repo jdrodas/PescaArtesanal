@@ -64,6 +64,12 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 btnFormaNuevaActividad.ForeColor = Color.Black;
             }
 
+            if (Application.OpenForms["DepartamentoNuevo"] == null)
+            {
+                btnFormaNuevoDepartamento.BackColor = Color.LightGray;
+                btnFormaNuevoDepartamento.ForeColor = Color.Black;
+            }
+
             if (Application.OpenForms["DepartamentoReportes"] == null)
             {
                 btnFormaReportesDepartamento.BackColor = Color.LightGray;
@@ -208,10 +214,11 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             VisualizaPanelCrud(panelCrudDepartamentos, btnFormasDepartamentos);
         }
 
-        // TODO Implementar el formulario para inserción de Departamentos
         private void btnFormaNuevoDepartamento_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<DepartamentoNuevo>();
+            btnFormaNuevoDepartamento.BackColor = Color.SteelBlue;
+            btnFormaNuevoDepartamento.ForeColor = Color.White;
         }
 
         // TODO Implementar el formulario para actualizar Departamentos

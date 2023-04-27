@@ -311,22 +311,44 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return listaNombres;
         }
 
-        public static bool InsertarDepartamento(Departamento unDepartamento)
+        public static bool InsertarDepartamento(Departamento unDepartamento, out string mensajeInsercion)
         {
+            mensajeInsercion = string.Empty;
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionDepartamentos = configDB.DepartamentosCollectionName;
 
             var miColeccion = miDB.GetCollection<Departamento>(coleccionDepartamentos);
-            miColeccion.InsertOne(unDepartamento);
 
-            //Necesitamos corroborar que la inserción fue exitosa
-            string? idDepartamento = ObtenerIdDepartamento(unDepartamento.Nombre!);
+            //Buscamos primero si ya existe un departamento registrado con ese nombre
+            //Se utiliza Linq para hacer consultas 
+            var listaDepartamentosExistentes = miColeccion.AsQueryable()
+                .Where(depto => depto.Nombre!.ToLower().Contains(unDepartamento.Nombre!.ToLower()))
+                .ToList();
 
-            if (string.IsNullOrEmpty(idDepartamento))
+            if (listaDepartamentosExistentes.Count > 0)
+            {
+                mensajeInsercion = $"Error de inserción. Ya existe un departamento con el nombre {unDepartamento.Nombre}";
                 return false;
+            }
             else
-                return true;
+            {
+                miColeccion.InsertOne(unDepartamento);
+
+                //Necesitamos corroborar que la inserción fue exitosa
+                string? idDepartamento = ObtenerIdDepartamento(unDepartamento.Nombre!);
+
+                if (string.IsNullOrEmpty(idDepartamento))
+                {
+                    mensajeInsercion = $"Error en DB al insertar registro de departamento";
+                    return false;
+                }
+                else
+                {
+                    mensajeInsercion = $"Inserción exitosa para nuevo departamento {unDepartamento.Nombre}";
+                    return true;
+                }
+            }
         }
 
         public static bool ActualizarDepartamento(Departamento unDepartamento)
