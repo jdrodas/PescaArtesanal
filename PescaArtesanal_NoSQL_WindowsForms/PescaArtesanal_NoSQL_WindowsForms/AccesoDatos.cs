@@ -94,6 +94,21 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return lista;
         }
 
+        public static List<Municipio> ObtenerListaMunicipiosCuenca(string nombreCuenca)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+            var filtroCuenca = new BsonDocument { { "nombre_cuenca", nombreCuenca } };
+
+            var lista = miDB.GetCollection<Municipio>(coleccionMunicipios)
+                .Find(filtroCuenca)
+                .SortBy(mpio => mpio.Nombre)
+                .ToList();
+
+            return lista;
+        }
+
         public static List<string> ObtenerListaNombresMunicipios()
         {
             var clienteDB = new MongoClient(configDB.ConnectionString);
@@ -150,6 +165,18 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 listaInfoMunicipios.Add($"{unMunicipio.Nombre} - {unMunicipio.NombreDepartamento} - {unMunicipio.NombreCuenca}");
 
             return listaInfoMunicipios;
+        }
+
+        public static int ObtenerCantidadMunicipiosDepartamento(string nombreDepartamento)
+        {
+            var listaMunicipios = ObtenerListaMunicipiosDepartamento(nombreDepartamento);
+            return listaMunicipios.Count;
+        }
+
+        public static int ObtenerCantidadMunicipiosCuenca(string nombreCuenca)
+        {
+            var listaMunicipios = ObtenerListaMunicipiosCuenca(nombreCuenca);
+            return listaMunicipios.Count;
         }
 
         public static bool InsertarMunicipio(Municipio unMunicipio, out string mensajeInsercion)
@@ -264,22 +291,21 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static string ObtenerIdDepartamento(string nombreDepartamento)
         {
-
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionDepartamentos = configDB.DepartamentosCollectionName;
-            var filtroDepartamento = new BsonDocument { { "nombre", nombreDepartamento } };
 
-            Departamento departamentoEncontrado = miDB.GetCollection<Departamento>(coleccionDepartamentos)
-                .Find(filtroDepartamento)
+            Departamento? departamentoEncontrado = miDB.GetCollection<Departamento>(coleccionDepartamentos)
+                .AsQueryable()
+                .Where(depto => depto.Nombre!.ToLower().Contains(nombreDepartamento!.ToLower()))
+                .ToList()
                 .FirstOrDefault();
 
-            return departamentoEncontrado.Id!;
+            return departamentoEncontrado!.Id!;
         }
 
         public static Departamento ObtenerDepartamento(string idDepartamento)
         {
-
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionDepartamentos = configDB.DepartamentosCollectionName;
@@ -314,29 +340,26 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         public static bool InsertarDepartamento(Departamento unDepartamento, out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;
-            var clienteDB = new MongoClient(configDB.ConnectionString);
-            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionDepartamentos = configDB.DepartamentosCollectionName;
-
-            var miColeccion = miDB.GetCollection<Departamento>(coleccionDepartamentos);
 
             //Buscamos primero si ya existe un departamento registrado con ese nombre
-            //Se utiliza Linq para hacer consultas 
-            var listaDepartamentosExistentes = miColeccion.AsQueryable()
-                .Where(depto => depto.Nombre!.ToLower().Contains(unDepartamento.Nombre!.ToLower()))
-                .ToList();
+            string IdDepartamentoExistente = ObtenerIdDepartamento(unDepartamento.Nombre!);
 
-            if (listaDepartamentosExistentes.Count > 0)
+            if (!string.IsNullOrEmpty(IdDepartamentoExistente))
             {
                 mensajeInsercion = $"Error de inserción. Ya existe un departamento con el nombre {unDepartamento.Nombre}";
                 return false;
             }
             else
             {
+                var clienteDB = new MongoClient(configDB.ConnectionString);
+                var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+                var coleccionDepartamentos = configDB.DepartamentosCollectionName;
+
+                var miColeccion = miDB.GetCollection<Departamento>(coleccionDepartamentos);
                 miColeccion.InsertOne(unDepartamento);
 
                 //Necesitamos corroborar que la inserción fue exitosa
-                string? idDepartamento = ObtenerIdDepartamento(unDepartamento.Nombre!);
+                string idDepartamento = ObtenerIdDepartamento(unDepartamento.Nombre!);
 
                 if (string.IsNullOrEmpty(idDepartamento))
                 {
@@ -351,8 +374,19 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             }
         }
 
-        public static bool ActualizarDepartamento(Departamento unDepartamento)
+        public static bool ActualizarDepartamento(Departamento unDepartamento, out string mensajeActualizacion)
         {
+            mensajeActualizacion = string.Empty;
+
+            //Buscamos primero si ya existe un departamento registrado con ese ID
+            Departamento departamentoExistente = ObtenerDepartamento(unDepartamento.Id!);
+
+            if (string.IsNullOrEmpty(departamentoExistente.Id))
+            {
+                mensajeActualizacion = $"Error de actualización. no existe un departamento para actualiza con ese ID";
+                return false;
+            }
+
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionDepartamentos = configDB.DepartamentosCollectionName;
@@ -361,23 +395,100 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unDepartamento.Id,
                 unDepartamento);
 
-            //TODO Validar si hay municipios vinculados al nombre previo del departamento
-            //TODO Validar si hay actividades asociadas al departamento
+            if (!resultadoActualizacion.IsAcknowledged)
+            {
+                mensajeActualizacion = $"Error al actualizar el nombre del departamento de {departamentoExistente.Nombre} " +
+                                        $"{unDepartamento.Nombre} ";
+                return false;
+            }
 
-            return resultadoActualizacion.IsAcknowledged;
+            mensajeActualizacion = $"El departamento {departamentoExistente.Nombre} fue actualizado a {unDepartamento.Nombre}. ";
+
+            int municipiosActualizables = ObtenerCantidadMunicipiosDepartamento(departamentoExistente.Nombre!);
+            if (municipiosActualizables > 0)
+            {
+                ActualizarDepartamentoEnMunicipios(departamentoExistente.Nombre!, unDepartamento.Nombre!);
+                mensajeActualizacion += $"Se actualizaron {municipiosActualizables} municipios asociados.";
+            }
+
+            int actividadesActualizables = ObtenerCantidadActividadesPorDepartamento(departamentoExistente.Nombre!);
+            if (actividadesActualizables > 0)
+            {
+                ActualizarDepartamentoEnActividades(departamentoExistente.Nombre!, unDepartamento.Nombre!);
+                mensajeActualizacion += $"Se actualizaron {actividadesActualizables} activiades asociadas.";
+            }
+
+            return resultadoActualizacion.IsAcknowledged;            
+        }
+
+        public static void ActualizarDepartamentoEnMunicipios(string departamentoAntiguo, string departamentoNuevo)
+        {
+            // Obtener municipios del departamento anterior
+            List<Municipio> municipiosActualizables = ObtenerListaMunicipiosDepartamento(departamentoAntiguo);
+
+            // Se actualiza nuevamente en la base de datos
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
+
+            // A cada uno de ellos, se le cambia el nombre del departamento
+            foreach (Municipio unMunicipio in municipiosActualizables)
+            {
+                unMunicipio.NombreDepartamento = departamentoNuevo;
+                miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id, unMunicipio);
+            }
+        }
+
+        public static void ActualizarDepartamentoEnActividades(string departamentoAntiguo, string departamentoNuevo)
+        {
+            // Obtener municipios del departamento anterior
+            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorDepartamento(departamentoAntiguo);
+
+            // Se actualiza nuevamente en la base de datos
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+
+            // A cada uno de ellos, se le cambia el nombre del departamento
+            foreach (Actividad unaActividad in actividadesActualizables)
+            {
+                unaActividad.NombreDepartamento = departamentoNuevo;
+                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
+            }
         }
 
         public static bool EliminarDepartamento(Departamento unDepartamento, out string mensajeEliminacion)
         {
             mensajeEliminacion = string.Empty;
+            //Validar si hay actividades asociadas al departamento a eliminar
+            int cantidadActividadesDepartamento = ObtenerCantidadActividadesPorDepartamento(unDepartamento.Nombre!);
+
+            if (cantidadActividadesDepartamento > 0)
+            {
+                mensajeEliminacion = $"No se puede eliminar Departamento {unDepartamento.Nombre} porque tiene " +
+                    $"asociadas {cantidadActividadesDepartamento} actividades de pesca";
+                return false;
+            }
+
+            //Validar si hay municipios asociados al departamento a eliminar
+            int cantidadMunicipiosDepartamento = ObtenerCantidadMunicipiosDepartamento(unDepartamento.Nombre!);
+            if(cantidadMunicipiosDepartamento>0)
+            {
+                mensajeEliminacion = $"No se puede eliminar Departamento {unDepartamento.Nombre} porque tiene " +
+                    $"asociados {cantidadMunicipiosDepartamento} municipios";
+                return false;
+            }
+
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionDepartamentos = configDB.DepartamentosCollectionName;
 
             var miColeccion = miDB.GetCollection<Departamento>(coleccionDepartamentos);
             var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unDepartamento.Id);
-
-            //TODO Validar si hay actividades asociadas al departamento
 
             if (!resultadoEliminacion.IsAcknowledged)
                 mensajeEliminacion = $"Error al elimininar el departamento {unDepartamento.Nombre} ";
@@ -471,6 +582,26 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             //TODO Validar si hay municipios asociados al nombre de las cuencas
 
             return resultadoActualizacion.IsAcknowledged;
+        }
+
+        public static void ActualizarCuencaEnMunicipios(string cuencaAntigua, string cuencaNueva)
+        {
+            // Obtener municipios de la cuenca anterior
+            List<Municipio> municipiosActualizables = ObtenerListaMunicipiosCuenca(cuencaAntigua);
+
+            // Se actualiza nuevamente en la base de datos
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
+
+            // A cada uno de ellos, se le cambia el nombre de la cuenca
+            foreach (Municipio unMunicipio in municipiosActualizables)
+            {
+                unMunicipio.NombreCuenca = cuencaNueva;
+                miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id, unMunicipio);
+            }
         }
 
         public static bool EliminarCuenca(Cuenca unCuenca, out string mensajeEliminacion)
