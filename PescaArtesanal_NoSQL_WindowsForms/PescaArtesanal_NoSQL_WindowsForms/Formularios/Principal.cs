@@ -94,6 +94,24 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 btnFormaReportesMetodo.ForeColor = Color.Black;
             }
 
+            if (Application.OpenForms["CuencaNueva"] == null)
+            {
+                btnFormaNuevaCuenca.BackColor = Color.LightGray;
+                btnFormaNuevaCuenca.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaActualizada"] == null)
+            {
+                btnFormaActualizaCuenca.BackColor = Color.LightGray;
+                btnFormaActualizaCuenca.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaBorrada"] == null)
+            {
+                btnFormaBorraCuenca.BackColor = Color.LightGray;
+                btnFormaBorraCuenca.ForeColor = Color.Black;
+            }
+
             if (Application.OpenForms["CuencaReportes"] == null)
             {
                 btnFormaReportesCuenca.BackColor = Color.LightGray;
@@ -192,22 +210,25 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             VisualizaPanelCrud(panelCrudCuencas, btnFormasCuencas);
         }
 
-        // TODO Implementar el formulario para insertar cuenca
         private void btnFormaNuevaCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaNueva>();
+            btnFormaNuevaCuenca.BackColor = Color.SteelBlue;
+            btnFormaNuevaCuenca.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para actualizar cuenca
         private void btnFormaActualizaCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaActualizada>();
+            btnFormaActualizaCuenca.BackColor = Color.SteelBlue;
+            btnFormaActualizaCuenca.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para borrar cuenca
         private void btnFormaBorraCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaBorrada>();
+            btnFormaBorraCuenca.BackColor = Color.SteelBlue;
+            btnFormaBorraCuenca.ForeColor = Color.White;
         }
 
         private void btnFormaReportesCuenca_Click(object sender, EventArgs e)
@@ -281,7 +302,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         }
 
-        // TODO Implementar el formulario para generar reportes de método de pesca
         private void btnFormaReportesMetodo_Click(object sender, EventArgs e)
         {
             AbrirFormulario<MetodoReportes>();

@@ -256,9 +256,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         public static bool EliminarMunicipio(Municipio unMunicipio, out string mensajeEliminacion)
         {
             mensajeEliminacion = string.Empty;
-            var clienteDB = new MongoClient(configDB.ConnectionString);
-            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionMunicipios = configDB.MunicipiosCollectionName;
 
             //Primero se debe validar que exista el municipio que se desea borrar
             Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Id!);
@@ -268,21 +265,31 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 mensajeEliminacion = $"No existe municipio a eliminar con el nombre {unMunicipio.Nombre}";
                 return false;
             }
-            else
+
+            //Luego, se debe validar si hay actividades asociadas al municipio a eliminar
+            int actividadesAsociadas = ObtenerCantidadActividadesPorMunicipio(unMunicipio.Nombre, unMunicipio.NombreDepartamento);
+
+            if(actividadesAsociadas>0)
             {
-                //TODO Validar si hay actividades asociadas al municipio a eliminar
-
-                var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
-                var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unMunicipio.Id);
-
-                if (!resultadoEliminacion.IsAcknowledged)
-                    mensajeEliminacion = $"Error al elimininar el municipio {unMunicipio.Nombre} " +
-                        $"del departamento {unMunicipio.NombreDepartamento}";
-                else
-                    mensajeEliminacion = $"El municipio {unMunicipio.Nombre} fue eliminado";
-
-                return resultadoEliminacion.IsAcknowledged;
+                mensajeEliminacion = $"No se puede eliminar el municipio {unMunicipio.Nombre} porque " +
+                    $"tiene asociadas {actividadesAsociadas} actividad(es) de pesca";
+                return false;
             }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
+            var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unMunicipio.Id);
+
+            if (!resultadoEliminacion.IsAcknowledged)
+                mensajeEliminacion = $"Error al elimininar el municipio {unMunicipio.Nombre} " +
+                    $"del departamento {unMunicipio.NombreDepartamento}";
+            else
+                mensajeEliminacion = $"El municipio {unMunicipio.Nombre} fue eliminado";
+
+            return resultadoEliminacion.IsAcknowledged;
         }
 
         #endregion CRUD Municipios
@@ -517,17 +524,20 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static string ObtenerIdCuenca(string nombreCuenca)
         {
-
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionCuencas = configDB.CuencasCollectionName;
-            var filtroCuenca = new BsonDocument { { "nombre", nombreCuenca } };
 
-            Cuenca CuencaEncontrada = miDB.GetCollection<Cuenca>(coleccionCuencas)
-                .Find(filtroCuenca)
+            Cuenca? cuencaEncontrada = miDB.GetCollection<Cuenca>(coleccionCuencas)
+                .AsQueryable()
+                .Where(cuenca => cuenca.Nombre!.ToLower().Contains(nombreCuenca!.ToLower()))
+                .ToList()
                 .FirstOrDefault();
 
-            return CuencaEncontrada.Id!;
+            if (cuencaEncontrada is null)
+                return string.Empty;
+
+            return cuencaEncontrada!.Id!;
         }
 
         public static Cuenca ObtenerCuenca(string idCuenca)
@@ -564,35 +574,86 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return listaNombres;
         }
 
-        public static bool InsertarCuenca(Cuenca unCuenca)
+        public static bool InsertarCuenca(Cuenca unaCuenca, out string mensajeInsercion)
         {
-            var clienteDB = new MongoClient(configDB.ConnectionString);
-            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionCuencas = configDB.CuencasCollectionName;
+            mensajeInsercion = string.Empty;
 
-            var miColeccion = miDB.GetCollection<Cuenca>(coleccionCuencas);
-            miColeccion.InsertOne(unCuenca);
+            //Buscamos primero si ya existe una cuenca registrada con ese nombre
+            string IdCuencaExistente = ObtenerIdCuenca(unaCuenca.Nombre!);
 
-            //Necesitamos corroborar que la inserción fue exitosa
-            string? idCuenca = ObtenerIdCuenca(unCuenca.Nombre!);
-
-            if (string.IsNullOrEmpty(idCuenca))
+            if (!string.IsNullOrEmpty(IdCuencaExistente))
+            {
+                mensajeInsercion = $"Error de inserción. Ya existe una cuenca con el nombre {unaCuenca.Nombre}";
                 return false;
+            }
             else
-                return true;
+            {
+                var clienteDB = new MongoClient(configDB.ConnectionString);
+                var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+                var coleccionCuenca = configDB.CuencasCollectionName;
+
+                var miColeccion = miDB.GetCollection<Cuenca>(coleccionCuenca);
+                miColeccion.InsertOne(unaCuenca);
+
+                //Necesitamos corroborar que la inserción fue exitosa
+                string idCuenca = ObtenerIdCuenca(unaCuenca.Nombre!);
+
+                if (string.IsNullOrEmpty(idCuenca))
+                {
+                    mensajeInsercion = $"Error en DB al insertar registro de cuenca";
+                    return false;
+                }
+                else
+                {
+                    mensajeInsercion = $"Inserción exitosa para nueva cuenca {unaCuenca.Nombre}";
+                    return true;
+                }
+            }
         }
 
-        public static bool ActualizarCuenca(Cuenca unCuenca)
+        public static bool ActualizarCuenca(Cuenca unaCuenca, out string mensajeActualizacion)
         {
+            mensajeActualizacion = string.Empty;
+
+            //Buscamos primero si ya existe un cuenca registrada con ese ID
+            Cuenca cuencaExistente = ObtenerCuenca(unaCuenca.Id!);
+
+            if (string.IsNullOrEmpty(cuencaExistente.Id))
+            {
+                mensajeActualizacion = $"Error de actualización. no existe una cuenca para actualizar con ese ID";
+                return false;
+            }
+
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionCuencas = configDB.CuencasCollectionName;
 
             var miColeccion = miDB.GetCollection<Cuenca>(coleccionCuencas);
-            var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unCuenca.Id,
-                unCuenca);
+            var resultadoActualizacion = miColeccion.ReplaceOne(cuenca => cuenca.Id == unaCuenca.Id,
+                unaCuenca);
 
-            //TODO Validar si hay municipios asociados al nombre de las cuencas
+            if (!resultadoActualizacion.IsAcknowledged)
+            {
+                mensajeActualizacion = $"Error al actualizar el nombre de la cuenca de {cuencaExistente.Nombre} " +
+                                        $"{unaCuenca.Nombre} ";
+                return false;
+            }
+
+            mensajeActualizacion = $"La cuenca {cuencaExistente.Nombre} fue actualizada a {unaCuenca.Nombre}. ";
+
+            int municipiosActualizables = ObtenerCantidadMunicipiosCuenca(cuencaExistente.Nombre!);
+            if (municipiosActualizables > 0)
+            {
+                ActualizarCuencaEnMunicipios(cuencaExistente.Nombre!, unaCuenca.Nombre!);
+                mensajeActualizacion += $"Se actualizaron {municipiosActualizables} municipio(s) asociados.";
+            }
+
+            int actividadesActualizables = ObtenerCantidadActividadesPorCuenca(cuencaExistente.Nombre!);
+            if (actividadesActualizables > 0)
+            {
+                ActualizarCuencaEnActividades(cuencaExistente.Nombre!, unaCuenca.Nombre!);
+                mensajeActualizacion += $"Se actualizaron {actividadesActualizables} actividad(es) asociadas.";
+            }
 
             return resultadoActualizacion.IsAcknowledged;
         }
@@ -617,22 +678,69 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             }
         }
 
-        public static bool EliminarCuenca(Cuenca unCuenca, out string mensajeEliminacion)
+        public static void ActualizarCuencaEnActividades(string cuencaAntigua, string cuencaNueva)
         {
-            mensajeEliminacion = string.Empty;
+            // Obtener actividades de la cuenca anterior
+            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorCuenca(cuencaAntigua);
+
+            // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionCuencas = configDB.CuencasCollectionName;
+            var coleccionActividades = configDB.ActividadesCollectionName;
 
-            var miColeccion = miDB.GetCollection<Cuenca>(coleccionCuencas);
-            var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unCuenca.Id);
+            var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+
+            // A cada uno de ellos, se le cambia el nombre de la cuenca
+            foreach (Actividad unaActividad in actividadesActualizables)
+            {
+                unaActividad.NombreCuenca = cuencaNueva;
+                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
+            }
+        }
+
+        public static bool EliminarCuenca(Cuenca unaCuenca, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+
+            //Buscamos primero si ya existe una cuenca registrada con ese ID
+            Cuenca cuencaExistente = ObtenerCuenca(unaCuenca.Id!);
+
+            if (string.IsNullOrEmpty(cuencaExistente.Id))
+            {
+                mensajeEliminacion = $"Error de eliminación. No existe una cuenca para eliminar con ese ID";
+                return false;
+            }
+
+            //Validar si hay actividades asociadas a la cuenca a eliminar
+            int cantidadActividadesCuenca = ObtenerCantidadActividadesPorCuenca(unaCuenca.Nombre!);
+
+            if (cantidadActividadesCuenca > 0)
+            {
+                mensajeEliminacion = $"No se puede eliminar cuenca {unaCuenca.Nombre} porque tiene " +
+                    $"asociadas {cantidadActividadesCuenca} actividades de pesca";
+                return false;
+            }
+
+            //Validar si hay municipios asociados al departamento a eliminar
+            int cantidadMunicipiosCuenca = ObtenerCantidadMunicipiosCuenca(unaCuenca.Nombre!);
+            if (cantidadMunicipiosCuenca > 0)
+            {
+                mensajeEliminacion = $"No se puede eliminar cuenca {unaCuenca.Nombre} porque tiene " +
+                    $"asociados {cantidadMunicipiosCuenca} municipios";
+                return false;
+            }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionCuenca = configDB.CuencasCollectionName;
+
+            var miColeccion = miDB.GetCollection<Cuenca>(coleccionCuenca);
+            var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unaCuenca.Id);
 
             if (!resultadoEliminacion.IsAcknowledged)
-                mensajeEliminacion = $"Error al elimininar el Cuenca {unCuenca.Nombre} ";
+                mensajeEliminacion = $"Error al eliminar la cuenca {unaCuenca.Nombre} ";
             else
-                mensajeEliminacion = $"El Cuenca {unCuenca.Nombre} fue eliminada";
-
-            //TODO Validar si hay actividades asociadas a la cuenca
+                mensajeEliminacion = $"La cuenca {unaCuenca.Nombre} fue eliminada";
 
             return resultadoEliminacion.IsAcknowledged;
         }
