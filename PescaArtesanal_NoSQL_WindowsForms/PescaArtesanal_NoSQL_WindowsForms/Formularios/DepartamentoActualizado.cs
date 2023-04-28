@@ -2,9 +2,9 @@
 
 namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 {
-    public partial class DepartamentoNuevo : Form
+    public partial class DepartamentoActualizado : Form
     {
-        public DepartamentoNuevo()
+        public DepartamentoActualizado()
         {
             InitializeComponent();
         }
@@ -14,7 +14,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             this.Close();
         }
 
-        private void DepartamentoNuevo_Load(object sender, EventArgs e)
+        private void DepartamentoActualizado_Load(object sender, EventArgs e)
         {
             ActualizarListaDepartamentos();
         }
@@ -27,20 +27,21 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             lbxDepartamentos.SelectedIndex = 0;
         }
 
-        private void btnGuardarDepartamento_Click(object sender, EventArgs e)
+        private void btnActualizarDepartamento_Click(object sender, EventArgs e)
         {
-            Departamento nuevoDepartamento = new Departamento
+            Departamento unDepartamento = new Departamento
             {
+                Id = txtIdDepartamento.Text,
                 Nombre = txtNombreDepartamento.Text
             };
 
-            string? mensajeInsercion;
-            bool resultadoInsercion = AccesoDatos.InsertarDepartamento(nuevoDepartamento,
-                                        out mensajeInsercion);
+            string? mensajeActualizacion;
+            bool resultadoActualizacion = AccesoDatos.ActualizarDepartamento(unDepartamento,
+                                        out mensajeActualizacion);
 
-            if (resultadoInsercion)
+            if (resultadoActualizacion)
             {
-                MessageBox.Show(mensajeInsercion,
+                MessageBox.Show(mensajeActualizacion,
                     "Inserción Exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -50,11 +51,20 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             }
             else
             {
-                MessageBox.Show(mensajeInsercion,
+                MessageBox.Show(mensajeActualizacion,
                 "Inserción Fallida",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
             }
+        }
+
+        private void lbxDepartamentos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string? nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
+            string idDepartamento = AccesoDatos.ObtenerIdDepartamento(nombreDepartamento!);
+
+            txtIdDepartamento.Text = idDepartamento;
+            txtNombreDepartamento.Text = nombreDepartamento;
         }
     }
 }

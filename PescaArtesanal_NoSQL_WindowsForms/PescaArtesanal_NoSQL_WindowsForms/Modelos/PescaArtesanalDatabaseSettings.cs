@@ -1,6 +1,4 @@
-﻿using SharpCompress.Compressors.Xz;
-
-namespace PescaArtesanal_NoSQL_WindowsForms.Modelos
+﻿namespace PescaArtesanal_NoSQL_WindowsForms.Modelos
 {
     public class PescaArtesanalDatabaseSettings
     {

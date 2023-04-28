@@ -248,7 +248,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                     mensajeActualizacion = $"El municipio {unMunicipio.Nombre} fue actualizado";
                     //TODO Se debe actualizar todas las actividades que previamente se hayan vinculado al municipio previo
                 }
-                
+
                 return resultadoActualizacion.IsAcknowledged;
             }
         }
@@ -271,7 +271,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             else
             {
                 //TODO Validar si hay actividades asociadas al municipio a eliminar
-                
+
                 var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
                 var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unMunicipio.Id);
 
@@ -300,6 +300,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 .Where(depto => depto.Nombre!.ToLower().Contains(nombreDepartamento!.ToLower()))
                 .ToList()
                 .FirstOrDefault();
+
+            if (departamentoEncontrado is null)
+                return string.Empty;
 
             return departamentoEncontrado!.Id!;
         }
@@ -408,17 +411,17 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             if (municipiosActualizables > 0)
             {
                 ActualizarDepartamentoEnMunicipios(departamentoExistente.Nombre!, unDepartamento.Nombre!);
-                mensajeActualizacion += $"Se actualizaron {municipiosActualizables} municipios asociados.";
+                mensajeActualizacion += $"Se actualizaron {municipiosActualizables} municipio(s) asociados.";
             }
 
             int actividadesActualizables = ObtenerCantidadActividadesPorDepartamento(departamentoExistente.Nombre!);
             if (actividadesActualizables > 0)
             {
                 ActualizarDepartamentoEnActividades(departamentoExistente.Nombre!, unDepartamento.Nombre!);
-                mensajeActualizacion += $"Se actualizaron {actividadesActualizables} activiades asociadas.";
+                mensajeActualizacion += $"Se actualizaron {actividadesActualizables} actividad(es) asociadas.";
             }
 
-            return resultadoActualizacion.IsAcknowledged;            
+            return resultadoActualizacion.IsAcknowledged;
         }
 
         public static void ActualizarDepartamentoEnMunicipios(string departamentoAntiguo, string departamentoNuevo)
@@ -476,7 +479,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             //Validar si hay municipios asociados al departamento a eliminar
             int cantidadMunicipiosDepartamento = ObtenerCantidadMunicipiosDepartamento(unDepartamento.Nombre!);
-            if(cantidadMunicipiosDepartamento>0)
+            if (cantidadMunicipiosDepartamento > 0)
             {
                 mensajeEliminacion = $"No se puede eliminar Departamento {unDepartamento.Nombre} porque tiene " +
                     $"asociados {cantidadMunicipiosDepartamento} municipios";
@@ -848,7 +851,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             if (listaActividades.Count > 0)
             {
                 tablaResultado.Columns.Add(new DataColumn("fecha", typeof(string)));
-                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));                
+                tablaResultado.Columns.Add(new DataColumn("nombre_municipio", typeof(string)));
                 tablaResultado.Columns.Add(new DataColumn("nombre_cuenca", typeof(string)));
                 tablaResultado.Columns.Add(new DataColumn("nombre_metodo", typeof(string)));
                 tablaResultado.Columns.Add(new DataColumn("cantidad_pescado", typeof(double)));
