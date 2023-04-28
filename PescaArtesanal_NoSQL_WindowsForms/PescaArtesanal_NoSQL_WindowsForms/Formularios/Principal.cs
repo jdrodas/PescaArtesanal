@@ -88,6 +88,24 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 btnFormaReportesDepartamento.ForeColor = Color.Black;
             }
 
+            if (Application.OpenForms["MetodoNuevo"] == null)
+            {
+                btnFormaNuevoMetodo.BackColor = Color.LightGray;
+                btnFormaNuevoMetodo.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["MetodoActualizado"] == null)
+            {
+                btnFormaActualizaMetodo.BackColor = Color.LightGray;
+                btnFormaActualizaMetodo.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["MetodoBorrado"] == null)
+            {
+                btnFormaBorraMetodo.BackColor = Color.LightGray;
+                btnFormaBorraMetodo.ForeColor = Color.Black;
+            }
+
             if (Application.OpenForms["MetodoReportes"] == null)
             {
                 btnFormaReportesMetodo.BackColor = Color.LightGray;
@@ -284,22 +302,25 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             VisualizaPanelCrud(panelCrudMetodos, btnFormasMetodos);
         }
 
-        // TODO Implementar el formulario para inserción de método de pesca
         private void btnFormaNuevoMetodo_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<MetodoNuevo>();
+            btnFormaNuevoMetodo.BackColor = Color.SteelBlue;
+            btnFormaNuevoMetodo.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para actualizar método de pesca
         private void btnFormaActualizaMetodo_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<MetodoActualizado>();
+            btnFormaActualizaMetodo.BackColor = Color.SteelBlue;
+            btnFormaActualizaMetodo.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para borrar método de pesca
         private void btnFormaBorraMetodo_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<MetodoBorrado>();
+            btnFormaBorraMetodo.BackColor = Color.SteelBlue;
+            btnFormaBorraMetodo.ForeColor = Color.White;
         }
 
         private void btnFormaReportesMetodo_Click(object sender, EventArgs e)

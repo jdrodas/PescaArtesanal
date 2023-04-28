@@ -267,7 +267,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             }
 
             //Luego, se debe validar si hay actividades asociadas al municipio a eliminar
-            int actividadesAsociadas = ObtenerCantidadActividadesPorMunicipio(unMunicipio.Nombre, unMunicipio.NombreDepartamento);
+            int actividadesAsociadas = ObtenerCantidadActividadesPorMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
 
             if(actividadesAsociadas>0)
             {
@@ -749,6 +749,39 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         #region CRUD Metodos
 
+        public static string ObtenerIdMetodo(string nombreMetodo)
+        {
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            Metodo? MetodoEncontrado = miDB.GetCollection<Metodo>(coleccionMetodos)
+                .AsQueryable()
+                .Where(Metodo => Metodo.Nombre!.ToLower().Contains(nombreMetodo!.ToLower()))
+                .ToList()
+                .FirstOrDefault();
+
+            if (MetodoEncontrado is null)
+                return string.Empty;
+
+            return MetodoEncontrado!.Id!;
+        }
+
+        public static Metodo ObtenerMetodo(string idMetodo)
+        {
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+            var filtroMetodo = new BsonDocument { { "_id", new ObjectId(idMetodo) } };
+
+            Metodo MetodoEncontrado = miDB.GetCollection<Metodo>(coleccionMetodos)
+                .Find(filtroMetodo)
+                .FirstOrDefault();
+
+            return MetodoEncontrado;
+        }
+
         public static List<string> ObtenerListaNombresMetodos()
         {
             var clienteDB = new MongoClient(configDB.ConnectionString);
@@ -768,13 +801,140 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return listaNombres;
         }
 
-        //TODO Validar si hay actividades asociadas al método de pesca
+        public static bool InsertarMetodo(Metodo unMetodo, out string mensajeInsercion)
+        {
+            mensajeInsercion = string.Empty;
 
-        //TODO Implementar Acción de Inserción de Métodos de Pesca
+            //Buscamos primero si ya existe un Metodo registrado con ese nombre
+            string IdMetodoExistente = ObtenerIdMetodo(unMetodo.Nombre!);
 
-        //TODO Implementar Acción de Actualización de Métodos de Pesca
+            if (!string.IsNullOrEmpty(IdMetodoExistente))
+            {
+                mensajeInsercion = $"Error de inserción. Ya existe un Metodo con el nombre {unMetodo.Nombre}";
+                return false;
+            }
+            else
+            {
+                var clienteDB = new MongoClient(configDB.ConnectionString);
+                var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+                var coleccionMetodo = configDB.MetodosCollectionName;
 
-        //TODO Implementar Acción de Eliminación de Métodos de Pesca
+                var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodo);
+                miColeccion.InsertOne(unMetodo);
+
+                //Necesitamos corroborar que la inserción fue exitosa
+                string idMetodo = ObtenerIdMetodo(unMetodo.Nombre!);
+
+                if (string.IsNullOrEmpty(idMetodo))
+                {
+                    mensajeInsercion = $"Error en DB al insertar registro de Metodo";
+                    return false;
+                }
+                else
+                {
+                    mensajeInsercion = $"Inserción exitosa para nuevo Metodo {unMetodo.Nombre}";
+                    return true;
+                }
+            }
+        }
+
+        public static bool ActualizarMetodo(Metodo unMetodo, out string mensajeActualizacion)
+        {
+            mensajeActualizacion = string.Empty;
+
+            //Buscamos primero si ya existe un Metodo registrada con ese ID
+            Metodo MetodoExistente = ObtenerMetodo(unMetodo.Id!);
+
+            if (string.IsNullOrEmpty(MetodoExistente.Id))
+            {
+                mensajeActualizacion = $"Error de actualización. no existe una Metodo para actualizar con ese ID";
+                return false;
+            }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodos = configDB.MetodosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodos);
+            var resultadoActualizacion = miColeccion.ReplaceOne(Metodo => Metodo.Id == unMetodo.Id,
+                unMetodo);
+
+            if (!resultadoActualizacion.IsAcknowledged)
+            {
+                mensajeActualizacion = $"Error al actualizar el nombre del Metodo de {MetodoExistente.Nombre} " +
+                                        $"{unMetodo.Nombre} ";
+                return false;
+            }
+
+            mensajeActualizacion = $"El Metodo {MetodoExistente.Nombre} fue actualizado a {unMetodo.Nombre}. ";
+
+            int actividadesActualizables = ObtenerCantidadActividadesPorMetodo(MetodoExistente.Nombre!);
+            if (actividadesActualizables > 0)
+            {
+                ActualizarMetodoEnActividades(MetodoExistente.Nombre!, unMetodo.Nombre!);
+                mensajeActualizacion += $"Se actualizaron {actividadesActualizables} actividad(es) asociadas.";
+            }
+
+            return resultadoActualizacion.IsAcknowledged;
+        }
+
+        public static void ActualizarMetodoEnActividades(string MetodoAntiguo, string MetodoNuevo)
+        {
+            // Obtener actividades de la Metodo anterior
+            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorMetodo(MetodoAntiguo);
+
+            // Se actualiza nuevamente en la base de datos
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+
+            // A cada uno de ellos, se le cambia el nombre de la Metodo
+            foreach (Actividad unaActividad in actividadesActualizables)
+            {
+                unaActividad.NombreMetodo = MetodoNuevo;
+                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
+            }
+        }
+
+        public static bool EliminarMetodo(Metodo unMetodo, out string mensajeEliminacion)
+        {
+            mensajeEliminacion = string.Empty;
+
+            //Buscamos primero si ya existe una Metodo registrada con ese ID
+            Metodo MetodoExistente = ObtenerMetodo(unMetodo.Id!);
+
+            if (string.IsNullOrEmpty(MetodoExistente.Id))
+            {
+                mensajeEliminacion = $"Error de eliminación. No existe una Metodo para eliminar con ese ID";
+                return false;
+            }
+
+            //Validar si hay actividades asociadas a la Metodo a eliminar
+            int cantidadActividadesMetodo = ObtenerCantidadActividadesPorMetodo(unMetodo.Nombre!);
+
+            if (cantidadActividadesMetodo > 0)
+            {
+                mensajeEliminacion = $"No se puede eliminar Metodo {unMetodo.Nombre} porque tiene " +
+                    $"asociadas {cantidadActividadesMetodo} actividades de pesca";
+                return false;
+            }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMetodo = configDB.MetodosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Metodo>(coleccionMetodo);
+            var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unMetodo.Id);
+
+            if (!resultadoEliminacion.IsAcknowledged)
+                mensajeEliminacion = $"Error al eliminar el Metodo {unMetodo.Nombre} ";
+            else
+                mensajeEliminacion = $"El Metodo {unMetodo.Nombre} fue eliminado";
+
+            return resultadoEliminacion.IsAcknowledged;
+        }
 
         #endregion CRUD Metodos
 
