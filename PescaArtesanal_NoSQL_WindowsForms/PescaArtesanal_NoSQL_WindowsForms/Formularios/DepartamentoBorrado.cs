@@ -2,9 +2,9 @@
 
 namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 {
-    public partial class DepartamentoActualizado : Form
+    public partial class DepartamentoBorrado : Form
     {
-        public DepartamentoActualizado()
+        public DepartamentoBorrado()
         {
             InitializeComponent();
         }
@@ -14,7 +14,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             this.Close();
         }
 
-        private void DepartamentoActualizado_Load(object sender, EventArgs e)
+        private void DepartamentoBorrado_Load(object sender, EventArgs e)
         {
             ActualizarListaDepartamentos();
         }
@@ -27,37 +27,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
             lbxDepartamentos.SelectedIndex = 0;
         }
 
-        private void btnActualizarDepartamento_Click(object sender, EventArgs e)
-        {
-            Departamento unDepartamento = new Departamento
-            {
-                Id = txtIdDepartamento.Text,
-                Nombre = txtNombreDepartamento.Text
-            };
-
-            string? mensajeActualizacion;
-            bool resultadoActualizacion = AccesoDatos.ActualizarDepartamento(unDepartamento,
-                                        out mensajeActualizacion);
-
-            if (resultadoActualizacion)
-            {
-                MessageBox.Show(mensajeActualizacion,
-                    "Inserción Exitosa",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                //Si la actualización fue exitosa, se puede cerrar el formulario
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show(mensajeActualizacion,
-                "Inserción Fallida",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-            }
-        }
-
         private void lbxDepartamentos_SelectedIndexChanged(object sender, EventArgs e)
         {
             string? nombreDepartamento = lbxDepartamentos.SelectedItem!.ToString();
@@ -65,6 +34,37 @@ namespace PescaArtesanal_NoSQL_WindowsForms.Formularios
 
             txtIdDepartamento.Text = idDepartamento;
             txtNombreDepartamento.Text = nombreDepartamento;
+        }
+
+        private void btnBorrarDepartamento_Click(object sender, EventArgs e)
+        {
+            Departamento unDepartamento = new Departamento
+            {
+                Id = txtIdDepartamento.Text,
+                Nombre = txtNombreDepartamento.Text
+            };
+
+            string? mensajeEliminacion;
+            bool resultadoEliminacion = AccesoDatos.EliminarDepartamento(unDepartamento,
+                                        out mensajeEliminacion);
+
+            if (resultadoEliminacion)
+            {
+                MessageBox.Show(mensajeEliminacion,
+                    "Inserción Exitosa",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                //Si la eliminación fue exitosa, se puede cerrar el formulario
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show(mensajeEliminacion,
+                "Inserción Fallida",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            }
         }
     }
 }

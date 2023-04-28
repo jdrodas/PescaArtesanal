@@ -467,6 +467,16 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         public static bool EliminarDepartamento(Departamento unDepartamento, out string mensajeEliminacion)
         {
             mensajeEliminacion = string.Empty;
+
+            //Buscamos primero si ya existe un departamento registrado con ese ID
+            Departamento departamentoExistente = ObtenerDepartamento(unDepartamento.Id!);
+
+            if (string.IsNullOrEmpty(departamentoExistente.Id))
+            {
+                mensajeEliminacion = $"Error de eliminación. No existe un departamento para eliminar con ese ID";
+                return false;
+            }
+
             //Validar si hay actividades asociadas al departamento a eliminar
             int cantidadActividadesDepartamento = ObtenerCantidadActividadesPorDepartamento(unDepartamento.Nombre!);
 
@@ -494,7 +504,7 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             var resultadoEliminacion = miColeccion.DeleteOne(documento => documento.Id == unDepartamento.Id);
 
             if (!resultadoEliminacion.IsAcknowledged)
-                mensajeEliminacion = $"Error al elimininar el departamento {unDepartamento.Nombre} ";
+                mensajeEliminacion = $"Error al eliminar el departamento {unDepartamento.Nombre} ";
             else
                 mensajeEliminacion = $"El departamento {unDepartamento.Nombre} fue eliminado";
 

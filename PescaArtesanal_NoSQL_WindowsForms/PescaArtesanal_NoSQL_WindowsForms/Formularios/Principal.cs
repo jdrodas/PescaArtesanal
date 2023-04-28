@@ -76,6 +76,12 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 btnFormaActualizaDepartamento.ForeColor = Color.Black;
             }
 
+            if (Application.OpenForms["DepartamentoBorrado"] == null)
+            {
+                btnFormaBorraDepartamento.BackColor = Color.LightGray;
+                btnFormaBorraDepartamento.ForeColor = Color.Black;
+            }
+
             if (Application.OpenForms["DepartamentoReportes"] == null)
             {
                 btnFormaReportesDepartamento.BackColor = Color.LightGray;
@@ -234,10 +240,11 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             btnFormaActualizaDepartamento.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para borrar Departamentos
         private void btnFormaBorraDepartamento_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<DepartamentoBorrado>();
+            btnFormaBorraDepartamento.BackColor = Color.SteelBlue;
+            btnFormaBorraDepartamento.ForeColor = Color.White;
         }
 
         private void btnFormaReportesDepartamento_Click(object sender, EventArgs e)
