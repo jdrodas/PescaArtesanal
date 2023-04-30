@@ -162,7 +162,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             List<string> listaInfoMunicipios = new List<string>();
 
             foreach (Municipio unMunicipio in listaMunicipios)
-                listaInfoMunicipios.Add($"{unMunicipio.Nombre} - {unMunicipio.NombreDepartamento} - {unMunicipio.NombreCuenca}");
+                listaInfoMunicipios.Add($"{unMunicipio.Nombre} - " +
+                    $"{unMunicipio.NombreDepartamento} - {unMunicipio.NombreCuenca}");
 
             return listaInfoMunicipios;
         }
@@ -182,11 +183,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
         public static bool InsertarMunicipio(Municipio unMunicipio, out string mensajeInsercion)
         {
             mensajeInsercion = string.Empty;
-            var clienteDB = new MongoClient(configDB.ConnectionString);
-            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionMunicipios = configDB.MunicipiosCollectionName;
-
-            //Primero se debe validar que no exista ya un documento con ese nombre de municipio para ese departamento
+            
+            //Primero se debe validar que no exista ya un municipio para ese departamento con ese nombre
             Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
 
             if (municipioExistente != null)
@@ -195,33 +193,32 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                     $"para el departamento {unMunicipio.NombreDepartamento}";
                 return false;
             }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
+            miColeccion.InsertOne(unMunicipio);
+
+            //Necesitamos corroborar que la inserción fue exitosa
+            string? idMunicipio = ObtenerIdMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
+
+            if (string.IsNullOrEmpty(idMunicipio))
+            {
+                mensajeInsercion = "Fallo al realizar la inserción.";
+                return false;
+            }
             else
             {
-                var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
-                miColeccion.InsertOne(unMunicipio);
-
-                //Necesitamos corroborar que la inserción fue exitosa
-                string? idMunicipio = ObtenerIdMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
-
-                if (string.IsNullOrEmpty(idMunicipio))
-                {
-                    mensajeInsercion = "Fallo al realizar la inserción.";
-                    return false;
-                }
-                else
-                {
-                    mensajeInsercion = $"Inserción exitosa para el municipio {unMunicipio.Nombre} en el departamento {unMunicipio.NombreDepartamento}";
-                    return true;
-                }
+                mensajeInsercion = $"Inserción exitosa para el municipio {unMunicipio.Nombre} en el departamento {unMunicipio.NombreDepartamento}";
+                return true;
             }
         }
 
         public static bool ActualizarMunicipio(Municipio unMunicipio, out string mensajeActualizacion)
         {
             mensajeActualizacion = string.Empty;
-            var clienteDB = new MongoClient(configDB.ConnectionString);
-            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
-            var coleccionMunicipios = configDB.MunicipiosCollectionName;
 
             //Primero se debe validar que no exista un municipio con la combinación nombre, nombre departamento
             Municipio municipioExistente = ObtenerMunicipio(unMunicipio.Nombre!, unMunicipio.NombreDepartamento!);
@@ -234,22 +231,48 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                                         $"en la cuenca {unMunicipio.NombreCuenca}. No se puede actualizar el registro";
                 return false;
             }
+
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionMunicipios = configDB.MunicipiosCollectionName;
+
+            var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
+            var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id,
+                unMunicipio);
+
+            if (!resultadoActualizacion.IsAcknowledged)
+                mensajeActualizacion = $"Error al actualizar el municipio {unMunicipio.Nombre} " +
+                    $"del departamento {unMunicipio.NombreDepartamento}";
             else
             {
-                var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
-                var resultadoActualizacion = miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id,
-                    unMunicipio);
+                mensajeActualizacion = $"El municipio {unMunicipio.Nombre} fue actualizado";
+                
+                //Actualizar todas las actividades que previamente se hayan vinculado al municipio previo
+                ActualizarMunicipioEnActividades(municipioExistente, unMunicipio);
+            }
 
-                if (!resultadoActualizacion.IsAcknowledged)
-                    mensajeActualizacion = $"Error al actualizar el municipio {unMunicipio.Nombre} " +
-                        $"del departamento {unMunicipio.NombreDepartamento}";
-                else
-                {
-                    mensajeActualizacion = $"El municipio {unMunicipio.Nombre} fue actualizado";
-                    //TODO Se debe actualizar todas las actividades que previamente se hayan vinculado al municipio previo
-                }
+            return resultadoActualizacion.IsAcknowledged;
+        }
 
-                return resultadoActualizacion.IsAcknowledged;
+        public static void ActualizarMunicipioEnActividades(Municipio municipioAntiguo, Municipio municipioNuevo)
+        {
+            // Obtener actividades de la cuenca anterior
+            List<Actividad> actividadesActualizables = 
+                ObtenerListaActividadesPorMunicipio(municipioAntiguo.Nombre!,municipioAntiguo.NombreDepartamento!);
+
+            // Se actualiza nuevamente en la base de datos
+            var clienteDB = new MongoClient(configDB.ConnectionString);
+            var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
+            var coleccionActividades = configDB.ActividadesCollectionName;
+
+            var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
+
+            // A cada uno de ellos, se le cambia el nombre de la cuenca
+            foreach (Actividad unaActividad in actividadesActualizables)
+            {
+                unaActividad.NombreMunicipio = municipioNuevo.Nombre;
+                unaActividad.NombreDepartamento = municipioNuevo.NombreDepartamento;
+                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
             }
         }
 
