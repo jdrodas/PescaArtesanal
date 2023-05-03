@@ -1,0 +1,55 @@
+[{
+  "fecha": {
+    "$date": "2023-04-24T23:30:48.021Z"
+  },
+  "cantidad_pescado": 1.76,
+  "nombre_cuenca": "Pacífico",
+  "nombre_departamento": "Chocó",
+  "nombre_metodo": "Arpón",
+  "nombre_municipio": "Nuquí"
+},{
+  "nombre_municipio": "Altos de Mi Finquita",
+  "nombre_departamento": "Antioquia",
+  "nombre_cuenca": "Sinú",
+  "nombre_metodo": "Atarraya",
+  "cantidad_pescado": 2.35,
+  "fecha": {
+    "$date": "2023-04-14T03:14:33.519Z"
+  }
+},{
+  "nombre_municipio": "La Dorada",
+  "nombre_departamento": "Caldas",
+  "nombre_cuenca": "Sinú",
+  "nombre_metodo": "Red",
+  "cantidad_pescado": 1.78,
+  "fecha": {
+    "$date": "2023-04-07T11:27:05.507Z"
+  }
+},{
+  "nombre_municipio": "Altos de Mi Finquita",
+  "nombre_departamento": "Antioquia",
+  "nombre_cuenca": "Sinú",
+  "nombre_metodo": "Buceo",
+  "cantidad_pescado": 0.478,
+  "fecha": {
+    "$date": "2023-04-23T11:43:10.342Z"
+  }
+},{
+  "nombre_municipio": "Mi finca diagonal",
+  "nombre_departamento": "Antioquia",
+  "nombre_cuenca": "Caribe",
+  "nombre_metodo": "Atarraya",
+  "cantidad_pescado": 3.56,
+  "fecha": {
+    "$date": "2023-02-16T00:52:04.635Z"
+  }
+},{
+  "nombre_municipio": "Altos de Mi Finquita",
+  "nombre_departamento": "Antioquia",
+  "nombre_cuenca": "Sinú",
+  "nombre_metodo": "Arpón",
+  "cantidad_pescado": 2.45,
+  "fecha": {
+    "$date": "2023-04-28T22:54:47.768Z"
+  }
+}]

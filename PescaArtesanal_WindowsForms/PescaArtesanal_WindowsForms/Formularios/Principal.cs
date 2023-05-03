@@ -69,6 +69,30 @@ namespace PescaArtesanal_WindowsForms
                 btnFormaReportesMetodo.BackColor = Color.LightGray;
                 btnFormaReportesMetodo.ForeColor = Color.Black;
             }
+
+            if (Application.OpenForms["CuencaNueva"] == null)
+            {
+                btnFormaNuevaCuenca.BackColor = Color.LightGray;
+                btnFormaNuevaCuenca.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaActualizada"] == null)
+            {
+                btnFormaActualizaCuenca.BackColor = Color.LightGray;
+                btnFormaActualizaCuenca.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaBorrada"] == null)
+            {
+                btnFormaBorraCuenca.BackColor = Color.LightGray;
+                btnFormaBorraCuenca.ForeColor = Color.Black;
+            }
+
+            if (Application.OpenForms["CuencaReportes"] == null)
+            {
+                btnFormaReportesCuenca.BackColor = Color.LightGray;
+                btnFormaReportesCuenca.ForeColor = Color.Black;
+            }
         }
 
         private void VisualizaPanelCrud(Panel elPanel, Button botonCrud)
@@ -162,28 +186,32 @@ namespace PescaArtesanal_WindowsForms
             VisualizaPanelCrud(panelCrudCuencas, btnFormasCuencas);
         }
 
-        // TODO Implementar el formulario para insertar cuenca
         private void btnFormaNuevaCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaNueva>();
+            btnFormaNuevaCuenca.BackColor = Color.SteelBlue;
+            btnFormaNuevaCuenca.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para actualizar cuenca
         private void btnFormaActualizaCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaActualizada>();
+            btnFormaActualizaCuenca.BackColor = Color.SteelBlue;
+            btnFormaActualizaCuenca.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para borrar cuenca
         private void btnFormaBorraCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaBorrada>();
+            btnFormaBorraCuenca.BackColor = Color.SteelBlue;
+            btnFormaBorraCuenca.ForeColor = Color.White;
         }
 
-        // TODO Implementar el formulario para generar reportes sobre cuenca
         private void btnFormaReportesCuenca_Click(object sender, EventArgs e)
         {
-
+            AbrirFormulario<CuencaReportes>();
+            btnFormaReportesCuenca.BackColor = Color.SteelBlue;
+            btnFormaReportesCuenca.ForeColor = Color.White;
         }
 
         #endregion Botones Cuencas

@@ -1,19 +1,10 @@
 ﻿using PescaArtesanal_WindowsForms.Modelos;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace PescaArtesanal_WindowsForms.Formularios
 {
-    public partial class MunicipioNuevo : Form
+    public partial class CuencaNueva : Form
     {
-        public MunicipioNuevo()
+        public CuencaNueva()
         {
             InitializeComponent();
         }
@@ -23,18 +14,9 @@ namespace PescaArtesanal_WindowsForms.Formularios
             this.Close();
         }
 
-        private void MunicipioNuevo_Load(object sender, EventArgs e)
+        private void CuencaNueva_Load(object sender, EventArgs e)
         {
-            ActualizarListaDepartamentos();
             ActualizarListaCuencas();
-        }
-
-        private void ActualizarListaDepartamentos()
-        {
-            lbxDepartamentos.DataSource = null;
-            lbxDepartamentos.DataSource = AccesoDatos.ObtenerListaNombresDepartamentos();
-
-            lbxDepartamentos.SelectedIndex = 0;
         }
 
         private void ActualizarListaCuencas()
@@ -45,24 +27,21 @@ namespace PescaArtesanal_WindowsForms.Formularios
             lbxCuencas.SelectedIndex = 0;
         }
 
-        private void btnGuardaMunicipio_Click(object sender, EventArgs e)
+        private void btnGuardarCuenca_Click(object sender, EventArgs e)
         {
-            Municipio nuevoMunicipio = new Municipio
+            Cuenca nuevaCuenca = new Cuenca
             {
-                NombreCuenca = lbxCuencas.SelectedItem!.ToString(),
-                NombreDepartamento = lbxDepartamentos.SelectedItem!.ToString(),
-                Nombre = txtNombreMunicipio.Text
+                Nombre = txtNombreCuenca.Text
             };
 
             string? mensajeInsercion;
-
-            bool resultadoInsercion = AccesoDatos.InsertarMunicipio(nuevoMunicipio,
+            bool resultadoInsercion = AccesoDatos.InsertarCuenca(nuevaCuenca,
                                         out mensajeInsercion);
 
             if (resultadoInsercion)
             {
                 MessageBox.Show(mensajeInsercion,
-                    "Se logró guardar el nuevo municipio",
+                    "Inserción Exitosa",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 

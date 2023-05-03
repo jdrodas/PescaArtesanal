@@ -288,7 +288,7 @@ namespace PescaArtesanal_WindowsForms
             return codigoCuenca;
         }
 
-        public static List<Cuenca> ObtieneListaCuencas()
+        public static List<Cuenca> ObtenerListaCuencas()
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
@@ -299,7 +299,7 @@ namespace PescaArtesanal_WindowsForms
             }
         }
 
-        public static List<string> ObtieneListaNombresCuencas()
+        public static List<string> ObtenerListaNombresCuencas()
         {
             using (IDbConnection cxnDB = new SQLiteConnection(cadenaConexion))
             {
