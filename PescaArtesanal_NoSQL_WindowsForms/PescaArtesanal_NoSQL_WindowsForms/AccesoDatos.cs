@@ -232,6 +232,9 @@ namespace PescaArtesanal_NoSQL_WindowsForms
                 return false;
             }
 
+            //Aqui obtenemos el Municipio antes del cambio, para usarlo en la actualización masiva
+            municipioExistente = ObtenerMunicipio(unMunicipio.Id!);
+
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
             var coleccionMunicipios = configDB.MunicipiosCollectionName;
@@ -256,10 +259,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static void ActualizarMunicipioEnActividades(Municipio municipioAntiguo, Municipio municipioNuevo)
         {
-            // Obtener actividades de la cuenca anterior
-            List<Actividad> actividadesActualizables = 
-                ObtenerListaActividadesPorMunicipio(municipioAntiguo.Nombre!,municipioAntiguo.NombreDepartamento!);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -267,13 +266,16 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
 
-            // A cada uno de ellos, se le cambia el nombre de la cuenca
-            foreach (Actividad unaActividad in actividadesActualizables)
-            {
-                unaActividad.NombreMunicipio = municipioNuevo.Nombre;
-                unaActividad.NombreDepartamento = municipioNuevo.NombreDepartamento;
-                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
-            }
+            var BuilderFiltro = Builders<Actividad>.Filter;
+            var filtroMunicipio = BuilderFiltro.Eq(actividad => actividad.NombreMunicipio, municipioAntiguo.Nombre) &
+                                  BuilderFiltro.Eq(actividad => actividad.NombreDepartamento, municipioAntiguo.NombreDepartamento);
+
+            var actualizadorActividades = Builders<Actividad>.Update
+                .Set(actividad => actividad.NombreMunicipio, municipioNuevo.Nombre)
+                .Set(actividad => actividad.NombreDepartamento, municipioNuevo.NombreDepartamento);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroMunicipio, actualizadorActividades);
         }
 
         public static bool EliminarMunicipio(Municipio unMunicipio, out string mensajeEliminacion)
@@ -456,9 +458,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static void ActualizarDepartamentoEnMunicipios(string departamentoAntiguo, string departamentoNuevo)
         {
-            // Obtener municipios del departamento anterior
-            List<Municipio> municipiosActualizables = ObtenerListaMunicipiosDepartamento(departamentoAntiguo);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -466,19 +465,18 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
 
-            // A cada uno de ellos, se le cambia el nombre del departamento
-            foreach (Municipio unMunicipio in municipiosActualizables)
-            {
-                unMunicipio.NombreDepartamento = departamentoNuevo;
-                miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id, unMunicipio);
-            }
+            var filtroDepartamento = Builders<Municipio>.Filter
+                .Eq(municipio => municipio.NombreDepartamento, departamentoAntiguo);
+
+            var actualizadorMunicipios = Builders<Municipio>.Update
+                .Set(municipio => municipio.NombreDepartamento, departamentoNuevo);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroDepartamento, actualizadorMunicipios);
         }
 
         public static void ActualizarDepartamentoEnActividades(string departamentoAntiguo, string departamentoNuevo)
         {
-            // Obtener municipios del departamento anterior
-            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorDepartamento(departamentoAntiguo);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -486,12 +484,15 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
 
-            // A cada uno de ellos, se le cambia el nombre del departamento
-            foreach (Actividad unaActividad in actividadesActualizables)
-            {
-                unaActividad.NombreDepartamento = departamentoNuevo;
-                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
-            }
+            var filtroDepartamento = Builders<Actividad>.Filter
+                .Eq(actividad => actividad.NombreDepartamento, departamentoAntiguo);
+
+            var actualizadorActividades = Builders<Actividad>.Update
+                .Set(actividad => actividad.NombreDepartamento, departamentoNuevo);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroDepartamento, actualizadorActividades);
+
         }
 
         public static bool EliminarDepartamento(Departamento unDepartamento, out string mensajeEliminacion)
@@ -683,9 +684,6 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
         public static void ActualizarCuencaEnMunicipios(string cuencaAntigua, string cuencaNueva)
         {
-            // Obtener municipios de la cuenca anterior
-            List<Municipio> municipiosActualizables = ObtenerListaMunicipiosCuenca(cuencaAntigua);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -693,19 +691,18 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Municipio>(coleccionMunicipios);
 
-            // A cada uno de ellos, se le cambia el nombre de la cuenca
-            foreach (Municipio unMunicipio in municipiosActualizables)
-            {
-                unMunicipio.NombreCuenca = cuencaNueva;
-                miColeccion.ReplaceOne(documento => documento.Id == unMunicipio.Id, unMunicipio);
-            }
+            var filtroCuenca = Builders<Municipio>.Filter
+                .Eq(municipio => municipio.NombreCuenca, cuencaAntigua);
+
+            var actualizadorMuninicipios = Builders<Municipio>.Update
+                .Set(municipio => municipio.NombreCuenca, cuencaNueva);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroCuenca, actualizadorMuninicipios);
         }
 
         public static void ActualizarCuencaEnActividades(string cuencaAntigua, string cuencaNueva)
         {
-            // Obtener actividades de la cuenca anterior
-            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorCuenca(cuencaAntigua);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -713,12 +710,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
 
-            // A cada uno de ellos, se le cambia el nombre de la cuenca
-            foreach (Actividad unaActividad in actividadesActualizables)
-            {
-                unaActividad.NombreCuenca = cuencaNueva;
-                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
-            }
+            var filtroCuenca = Builders<Actividad>.Filter
+                .Eq(actividad => actividad.NombreCuenca, cuencaAntigua);
+
+            var actualizadorActividades = Builders<Actividad>.Update
+                .Set(actividad => actividad.NombreCuenca, cuencaNueva);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroCuenca, actualizadorActividades);
         }
 
         public static bool EliminarCuenca(Cuenca unaCuenca, out string mensajeEliminacion)
@@ -901,11 +900,8 @@ namespace PescaArtesanal_NoSQL_WindowsForms
             return resultadoActualizacion.IsAcknowledged;
         }
 
-        public static void ActualizarMetodoEnActividades(string MetodoAntiguo, string MetodoNuevo)
+        public static void ActualizarMetodoEnActividades(string metodoAntiguo, string metodoNuevo)
         {
-            // Obtener actividades de la Metodo anterior
-            List<Actividad> actividadesActualizables = ObtenerListaActividadesPorMetodo(MetodoAntiguo);
-
             // Se actualiza nuevamente en la base de datos
             var clienteDB = new MongoClient(configDB.ConnectionString);
             var miDB = clienteDB.GetDatabase(configDB.DatabaseName);
@@ -913,12 +909,14 @@ namespace PescaArtesanal_NoSQL_WindowsForms
 
             var miColeccion = miDB.GetCollection<Actividad>(coleccionActividades);
 
-            // A cada uno de ellos, se le cambia el nombre de la Metodo
-            foreach (Actividad unaActividad in actividadesActualizables)
-            {
-                unaActividad.NombreMetodo = MetodoNuevo;
-                miColeccion.ReplaceOne(documento => documento.Id == unaActividad.Id, unaActividad);
-            }
+            var filtroMetodo = Builders<Actividad>.Filter
+                .Eq(actividad => actividad.NombreMetodo, metodoAntiguo);
+
+            var actualizadorActividades = Builders<Actividad>.Update
+                .Set(actividad => actividad.NombreMetodo, metodoNuevo);
+
+            // Se invoca la actualización masiva con el método UpdateMany
+            miColeccion.UpdateMany(filtroMetodo, actualizadorActividades);
         }
 
         public static bool EliminarMetodo(Metodo unMetodo, out string mensajeEliminacion)
