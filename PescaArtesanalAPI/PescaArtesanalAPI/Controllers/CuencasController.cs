@@ -53,6 +53,19 @@ namespace PescaArtesanalAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update(Cuenca unaCuenca)
+        {
+            var cuencaExistente = await _cuencasService.GetAsync(unaCuenca.Id!);
+
+            if (cuencaExistente is null)
+                return NotFound();
+            
+            unaCuenca.Id = cuencaExistente.Id;
+            await _cuencasService.UpdateAsync(unaCuenca.Id!, unaCuenca);
+            return NoContent();
+        }
+
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
