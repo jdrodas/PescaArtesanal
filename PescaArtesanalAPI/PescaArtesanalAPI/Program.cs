@@ -14,6 +14,7 @@ builder.Services.Configure<PescaArtesanalDatabaseSettings>(
 
 //Aqui agregamos los servicios asociados para cada EndPoint
 builder.Services.AddSingleton<DepartamentosService>();
+builder.Services.AddSingleton<CuencasService>();
 
 var app = builder.Build();
 
