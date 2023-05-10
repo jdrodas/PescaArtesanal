@@ -16,6 +16,7 @@ builder.Services.Configure<PescaArtesanalDatabaseSettings>(
 builder.Services.AddSingleton<DepartamentosService>();
 builder.Services.AddSingleton<CuencasService>();
 builder.Services.AddSingleton<MetodosService>();
+builder.Services.AddSingleton<MunicipiosService>();
 
 var app = builder.Build();
 

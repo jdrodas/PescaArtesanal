@@ -44,12 +44,12 @@ namespace PescaArtesanalAPI.Controllers
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, Metodo unMetodo)
         {
-            var departamentoExistente = await _metodosService.GetAsync(id);
+            var metodoExistente = await _metodosService.GetAsync(id);
 
-            if (departamentoExistente is null)
+            if (metodoExistente is null)
                 return NotFound();
 
-            unMetodo.Id = departamentoExistente.Id;
+            unMetodo.Id = metodoExistente.Id;
             await _metodosService.UpdateAsync(id, unMetodo);
             return NoContent();
         }

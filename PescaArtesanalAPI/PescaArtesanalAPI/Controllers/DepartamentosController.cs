@@ -33,6 +33,14 @@ namespace PescaArtesanalAPI.Controllers
 
             return unDepartamento;
         }
+        [HttpGet("{id:length(24)}/Municipios")]
+        public async Task<List<Municipio>> GetMunicipiosDelDepartamento(string id)
+        {
+            var unDepartamento = await _departamentosService.GetAsync(id);
+            var losMunicipios = await _departamentosService.GetMunicipiosDelDepartamento(unDepartamento.Nombre!);
+
+            return losMunicipios;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post(Departamento unDepartamento)

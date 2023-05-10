@@ -8,6 +8,7 @@ namespace PescaArtesanalAPI.Services
     public class DepartamentosService
     {
         private readonly IMongoCollection<Departamento> _departamentosCollection;
+        private readonly IMongoCollection<Municipio> _municipiosCollection;
 
         public DepartamentosService(IOptions<PescaArtesanalDatabaseSettings> PescaArtesanalDatabaseSettings)
         {
@@ -19,6 +20,9 @@ namespace PescaArtesanalAPI.Services
 
             _departamentosCollection = mongoDatabase.GetCollection<Departamento>(
                 PescaArtesanalDatabaseSettings.Value.DepartamentosCollectionName);
+
+            _municipiosCollection = mongoDatabase.GetCollection<Municipio>(
+                PescaArtesanalDatabaseSettings.Value.MunicipiosCollectionName);
         }
 
         public async Task<List<Departamento>> GetAsync()
@@ -30,6 +34,21 @@ namespace PescaArtesanalAPI.Services
                 .ToListAsync();
 
             return losDepartamentos;
+        }
+
+        public async Task<List<Municipio>> GetMunicipiosDelDepartamento(string nombreDepartamento)
+        {
+
+
+            //Esto equivale a un metodo llamado ObtenerDepartamentos que devuelve una lista de Departamentos
+            var filtroDepartamento = new BsonDocument { { "nombre_departamento", nombreDepartamento } };
+
+            var losMunicipios = await _municipiosCollection
+                .Find(filtroDepartamento)
+                .SortBy(Municipio => Municipio.Nombre)
+                .ToListAsync();
+
+            return losMunicipios;
         }
 
         public async Task<Departamento> GetAsync(string id)
