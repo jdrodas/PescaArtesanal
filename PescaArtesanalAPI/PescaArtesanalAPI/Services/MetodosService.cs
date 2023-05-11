@@ -23,8 +23,6 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<List<Metodo>> GetAsync()
         {
-            //Esto equivale a un metodo llamado ObtenerMetodos que
-            //devuelve una lista de Metodos
             var losMetodos = await _metodosCollection
                 .Find(_ => true)
                 .SortBy(metodo => metodo.Nombre)
@@ -35,24 +33,28 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<Metodo> GetAsync(string id)
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamento por ID
-            var unMetodo = await _metodosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var unMetodo = await _metodosCollection
+                .Find(metodo => metodo.Id == id)
+                .FirstOrDefaultAsync();
             return unMetodo;
         }
 
         public async Task CreateAsync(Metodo unMetodo)
         {
-            await _metodosCollection.InsertOneAsync(unMetodo);
+            await _metodosCollection
+                .InsertOneAsync(unMetodo);
         }
 
         public async Task UpdateAsync(string id, Metodo unMetodo)
         {
-            await _metodosCollection.ReplaceOneAsync(x => x.Id == id, unMetodo);
+            await _metodosCollection
+                .ReplaceOneAsync(metodo => metodo.Id == id, unMetodo);
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _metodosCollection.DeleteOneAsync(x => x.Id == id);
+            await _metodosCollection
+                .DeleteOneAsync(metodo => metodo.Id == id);
         }
     }
 }

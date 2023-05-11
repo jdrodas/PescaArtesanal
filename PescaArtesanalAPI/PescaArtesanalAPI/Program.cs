@@ -17,6 +17,8 @@ builder.Services.AddSingleton<DepartamentosService>();
 builder.Services.AddSingleton<CuencasService>();
 builder.Services.AddSingleton<MetodosService>();
 builder.Services.AddSingleton<MunicipiosService>();
+builder.Services.AddSingleton<ActividadesService>();
+
 
 var app = builder.Build();
 

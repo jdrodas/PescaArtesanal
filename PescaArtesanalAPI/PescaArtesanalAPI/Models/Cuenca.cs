@@ -13,12 +13,6 @@ namespace PescaArtesanalAPI.Models
 
         [BsonElement("nombre")]
         [JsonPropertyName("Nombre")]
-        public string? Nombre { get; set; }
-
-        public Cuenca()
-        {
-            Id = string.Empty;
-            Nombre = string.Empty;
-        }
+        public string Nombre { get; set; } = null!;
     }
 }

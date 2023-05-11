@@ -23,7 +23,6 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<List<Cuenca>> GetAsync()
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamentos que devuelve una lista de Departamentos
             var lasCuencas = await _cuencasCollection
                 .Find(_ => true)
                 .SortBy(cuenca => cuenca.Nombre)
@@ -34,24 +33,29 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<Cuenca> GetAsync(string id)
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamento por ID
-            var unaCuenca = await _cuencasCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var unaCuenca = await _cuencasCollection
+                .Find(cuenca => cuenca.Id == id)
+                .FirstOrDefaultAsync();
+            
             return unaCuenca;
         }
 
         public async Task CreateAsync(Cuenca unaCuenca)
         {
-            await _cuencasCollection.InsertOneAsync(unaCuenca);
+            await _cuencasCollection
+                .InsertOneAsync(unaCuenca);
         }
 
         public async Task UpdateAsync(string id, Cuenca unaCuenca)
         {
-            await _cuencasCollection.ReplaceOneAsync(x => x.Id == id, unaCuenca);
+            await _cuencasCollection
+                .ReplaceOneAsync(cuenca => cuenca.Id == id, unaCuenca);
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _cuencasCollection.DeleteOneAsync(x => x.Id == id);
+            await _cuencasCollection
+                .DeleteOneAsync(cuenca => cuenca.Id == id);
         }
     }
 }

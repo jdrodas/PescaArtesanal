@@ -27,7 +27,6 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<List<Departamento>> GetAsync()
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamentos que devuelve una lista de Departamentos
             var losDepartamentos = await _departamentosCollection
                 .Find(_ => true)
                 .SortBy(departamento => departamento.Nombre)
@@ -35,12 +34,17 @@ namespace PescaArtesanalAPI.Services
 
             return losDepartamentos;
         }
+        public async Task<Departamento> GetAsync(string id)
+        {
+            var unDepartamento = await _departamentosCollection
+                .Find(departamento => departamento.Id == id)
+                .FirstOrDefaultAsync();
+            
+            return unDepartamento;
+        }
 
         public async Task<List<Municipio>> GetMunicipiosDelDepartamento(string nombreDepartamento)
         {
-
-
-            //Esto equivale a un metodo llamado ObtenerDepartamentos que devuelve una lista de Departamentos
             var filtroDepartamento = new BsonDocument { { "nombre_departamento", nombreDepartamento } };
 
             var losMunicipios = await _municipiosCollection
@@ -51,26 +55,22 @@ namespace PescaArtesanalAPI.Services
             return losMunicipios;
         }
 
-        public async Task<Departamento> GetAsync(string id)
-        {
-            //Esto equivale a un metodo llamado ObtenerDepartamento por ID
-            var unDepartamento = await _departamentosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-            return unDepartamento;
-        }
-
         public async Task CreateAsync(Departamento unDepartamento)
         {
-            await _departamentosCollection.InsertOneAsync(unDepartamento);
+            await _departamentosCollection
+                .InsertOneAsync(unDepartamento);
         }
 
         public async Task UpdateAsync(string id, Departamento unDepartamento)
         {
-            await _departamentosCollection.ReplaceOneAsync(x => x.Id == id, unDepartamento);
+            await _departamentosCollection
+                .ReplaceOneAsync(departamento => departamento.Id == id, unDepartamento);
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _departamentosCollection.DeleteOneAsync(x => x.Id == id);
+            await _departamentosCollection
+                .DeleteOneAsync(departamento => departamento.Id == id);
         }
     }
 }

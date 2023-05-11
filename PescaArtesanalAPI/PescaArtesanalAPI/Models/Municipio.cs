@@ -12,20 +12,12 @@ namespace PescaArtesanalAPI.Models
         public string? Id { get; set; }
 
         [BsonElement("nombre")]
-        public string? Nombre { get; set; }
+        public string Nombre { get; set; } = null!;
 
         [BsonElement("nombre_cuenca")]
-        public string? NombreCuenca { get; set; }
+        public string NombreCuenca { get; set; } = null!;
 
         [BsonElement("nombre_departamento")]
-        public string? NombreDepartamento { get; set; }
-
-        public Municipio()
-        {
-            Id = string.Empty;
-            Nombre = string.Empty;
-            NombreCuenca = string.Empty;
-            NombreDepartamento = string.Empty;
-        }
+        public string NombreDepartamento { get; set; } = null!;
     }
 }

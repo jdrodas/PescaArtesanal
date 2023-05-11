@@ -22,7 +22,6 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<List<Municipio>> GetAsync()
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamentos que devuelve una lista de Departamentos
             var losMunicipios = await _municipiosCollection
                 .Find(_ => true)
                 .SortBy(municipio => municipio.Nombre)
@@ -33,24 +32,29 @@ namespace PescaArtesanalAPI.Services
 
         public async Task<Municipio> GetAsync(string id)
         {
-            //Esto equivale a un metodo llamado ObtenerDepartamento por ID
-            var unMunicipio = await _municipiosCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var unMunicipio = await _municipiosCollection
+                .Find(municipio => municipio.Id == id)
+                .FirstOrDefaultAsync();
+            
             return unMunicipio;
         }
 
         public async Task CreateAsync(Municipio unMunicipio)
         {
-            await _municipiosCollection.InsertOneAsync(unMunicipio);
+            await _municipiosCollection
+                .InsertOneAsync(unMunicipio);
         }
 
         public async Task UpdateAsync(string id, Municipio unMunicipio)
         {
-            await _municipiosCollection.ReplaceOneAsync(x => x.Id == id, unMunicipio);
+            await _municipiosCollection
+                .ReplaceOneAsync(municipio => municipio.Id == id, unMunicipio);
         }
 
         public async Task RemoveAsync(string id)
         {
-            await _municipiosCollection.DeleteOneAsync(x => x.Id == id);
+            await _municipiosCollection
+                .DeleteOneAsync(x => x.Id == id);
         }
     }
 }

@@ -18,14 +18,17 @@ namespace PescaArtesanalAPI.Controllers
         [HttpGet]
         public async Task<List<Cuenca>> Get()
         {
-            var lasCuencas = await _cuencasService.GetAsync();
+            var lasCuencas = await _cuencasService
+                .GetAsync();
+            
             return lasCuencas;
         }
 
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Cuenca>> Get(string id)
         {
-            var unaCuenca = await _cuencasService.GetAsync(id);
+            var unaCuenca = await _cuencasService
+                .GetAsync(id);
 
             if (unaCuenca is null)
                 return NotFound();
@@ -36,45 +39,54 @@ namespace PescaArtesanalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Cuenca unaCuenca)
         {
-            await _cuencasService.CreateAsync(unaCuenca);
+            await _cuencasService
+                .CreateAsync(unaCuenca);
+            
             return CreatedAtAction(nameof(Get), new { id = unaCuenca.Id }, unaCuenca);
         }
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, Cuenca unaCuenca)
         {
-            var cuencaExistente = await _cuencasService.GetAsync(id);
+            var cuencaExistente = await _cuencasService
+                .GetAsync(id);
 
             if (cuencaExistente is null)
                 return NotFound();
 
-            unaCuenca.Id = cuencaExistente.Id;
-            await _cuencasService.UpdateAsync(id, unaCuenca);
+            await _cuencasService
+                .UpdateAsync(id, unaCuenca);
+            
             return NoContent();
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(Cuenca unaCuenca)
         {
-            var cuencaExistente = await _cuencasService.GetAsync(unaCuenca.Id!);
+            var cuencaExistente = await _cuencasService
+                .GetAsync(unaCuenca.Id!);
 
             if (cuencaExistente is null)
                 return NotFound();
+
+            await _cuencasService
+                .UpdateAsync(unaCuenca.Id!, unaCuenca);
             
-            unaCuenca.Id = cuencaExistente.Id;
-            await _cuencasService.UpdateAsync(unaCuenca.Id!, unaCuenca);
             return NoContent();
         }
 
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var unaCuenca = await _cuencasService.GetAsync(id);
+            var unaCuenca = await _cuencasService
+                .GetAsync(id);
 
             if (unaCuenca is null)
                 return NotFound();
 
-            await _cuencasService.RemoveAsync(id);
+            await _cuencasService
+                .RemoveAsync(id);
+            
             return NoContent();
         }
     }

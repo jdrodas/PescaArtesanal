@@ -19,14 +19,17 @@ namespace PescaArtesanalAPI.Controllers
         [HttpGet]
         public async Task<List<Departamento>> Get()
         {
-            var losDepartamentos = await _departamentosService.GetAsync();
+            var losDepartamentos = await _departamentosService
+                .GetAsync();
+            
             return losDepartamentos;
         }
 
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Departamento>> Get(string id)
         {
-            var unDepartamento = await _departamentosService.GetAsync(id);
+            var unDepartamento = await _departamentosService
+                .GetAsync(id);
 
             if (unDepartamento is null)
                 return NotFound();
@@ -36,8 +39,10 @@ namespace PescaArtesanalAPI.Controllers
         [HttpGet("{id:length(24)}/Municipios")]
         public async Task<List<Municipio>> GetMunicipiosDelDepartamento(string id)
         {
-            var unDepartamento = await _departamentosService.GetAsync(id);
-            var losMunicipios = await _departamentosService.GetMunicipiosDelDepartamento(unDepartamento.Nombre!);
+            var unDepartamento = await _departamentosService
+                .GetAsync(id);
+            var losMunicipios = await _departamentosService
+                .GetMunicipiosDelDepartamento(unDepartamento.Nombre!);
 
             return losMunicipios;
         }
@@ -45,27 +50,46 @@ namespace PescaArtesanalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Departamento unDepartamento)
         {
-            await _departamentosService.CreateAsync(unDepartamento);
+            await _departamentosService
+                .CreateAsync(unDepartamento);
+            
             return CreatedAtAction(nameof(Get), new { id = unDepartamento.Id }, unDepartamento);
         }
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, Departamento unDepartamento)
         {
-            var departamentoExistente = await _departamentosService.GetAsync(id);
+            var departamentoExistente = await _departamentosService
+                .GetAsync(id);
 
             if (departamentoExistente is null)
                 return NotFound();
 
-            unDepartamento.Id = departamentoExistente.Id;
-            await _departamentosService.UpdateAsync(id, unDepartamento);
+            await _departamentosService
+                .UpdateAsync(id, unDepartamento);
+            return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Departamento unDepartamento)
+        {
+            var departamentoExistente = await _departamentosService
+                .GetAsync(unDepartamento.Id!);
+
+            if (departamentoExistente is null)
+                return NotFound();
+
+            await _departamentosService
+                .UpdateAsync(unDepartamento.Id!, unDepartamento);
+            
             return NoContent();
         }
 
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var unDepartamento = await _departamentosService.GetAsync(id);
+            var unDepartamento = await _departamentosService
+                .GetAsync(id);
             
             if (unDepartamento is null)
                 return NotFound();
